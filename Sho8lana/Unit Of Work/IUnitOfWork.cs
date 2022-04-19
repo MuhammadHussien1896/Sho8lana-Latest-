@@ -13,6 +13,6 @@ namespace Sho8lana.Unit_Of_Work
         public IBaseRepository<CustomerRequest> CustomerRequests { get;  }
         public IBaseRepository<Category> Categories { get; }
 
-        int complete();
+        Task<int> complete();
     }
 }

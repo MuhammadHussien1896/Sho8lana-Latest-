@@ -27,7 +27,7 @@ namespace Sho8lana.Unit_Of_Work
         public IBaseRepository<CustomerRequest> CustomerRequests { get; private set; }
         public IBaseRepository<Category> Categories { get; private set; }
 
-        public async int complete()
+        public async Task<int> complete()
         {
             return await dbContext.SaveChangesAsync();
         }
