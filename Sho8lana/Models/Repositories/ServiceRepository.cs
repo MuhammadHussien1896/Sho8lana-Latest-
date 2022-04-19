@@ -1,4 +1,4 @@
-﻿using GraduationProject.Models.Repositories;
+﻿using Sho8lana.Models.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Sho8lana.Data;
 
@@ -13,9 +13,9 @@ namespace Sho8lana.Models.Repositories
             this.appDbContext = appDbContext;
         }
 
-        public IEnumerable<Service> GetAllByCategory(int CategoryId)
+        public async Task<IEnumerable<Service>> GetAllByCategory(int CategoryId)
         {
-            return appDbContext.Services.Include(s => s.Customer).Where(s => s.CategoryId == CategoryId).ToList();
+            return await appDbContext.Services.Include(s => s.Customer).Where(s => s.CategoryId == CategoryId).ToListAsync();
         }
     }
 }

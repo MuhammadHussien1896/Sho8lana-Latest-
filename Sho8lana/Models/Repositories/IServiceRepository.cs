@@ -1,7 +1,7 @@
 ﻿namespace Sho8lana.Models.Repositories
 {
-    public interface IServiceRepository
+    public interface IServiceRepository : IBaseRepository<Service>
     {
-        IEnumerable<Service> GetAllByCategory(int CategoryId);
+        public Task<IEnumerable<Service>> GetAllByCategory(int CategoryId);
     }
 }

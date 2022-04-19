@@ -1,7 +1,8 @@
-﻿using Sho8lana.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Sho8lana.Data;
 using System.Linq.Expressions;
 
-namespace GraduationProject.Models.Repositories
+namespace Sho8lana.Models.Repositories
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
@@ -17,26 +18,26 @@ namespace GraduationProject.Models.Repositories
             //appDbContext.SaveChanges();
         }
 
-        public void Delete(int id)
+        public async void Delete(int id)
         {
-            T entity = this.GetById(id);
+            T entity = await this.GetById(id);
             appDbContext.Set<T>().Remove(entity);
             //appDbContext.SaveChanges();
         }
 
-        public List<T> GetAll()
+        public async Task<List<T>> GetAll()
         {
-            return appDbContext.Set<T>().ToList();
+            return await appDbContext.Set<T>().ToListAsync();
         }
 
-        public T GetById(int id)
+        public async Task<T> GetById(int id)
         {
-            T entity = appDbContext.Set<T>().Find(id);
+            T entity = await appDbContext.Set<T>().FindAsync(id);
             return entity;
         }
-        public T GetBy(Expression<Func<T,bool>> expression)
+        public async Task<T> GetBy(Expression<Func<T,bool>> expression)
         {
-            T entity = appDbContext.Set<T>().Single(expression);
+            T entity = await appDbContext.Set<T>().SingleAsync(expression);
             return entity;
         }
 
