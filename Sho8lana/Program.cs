@@ -22,6 +22,7 @@ builder.Services.AddDefaultIdentity<Customer>(options => options.SignIn.RequireC
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,8 +1,27 @@
-﻿body {
+﻿@font-face {
+    font-family: "Noto Kufi arabic";
+    src: url(../../Fonts/static/NotoKufiArabic-Medium.ttf);
+}
+body {
+    font-family: "Noto Kufi arabic";
 }
 
 
 .profileimage{
     border-radius:20%;
     border:7px solid white;
+}
+.CategoryText{
+    font-size:1rem !important
+}
+
+.ratings {
+    margin-right: 10px
+}
+.ratings i {
+    color: #cecece;
+    font-size: 20px;
+}
+.rating-color {
+    color: #fbc634 !important
 }
