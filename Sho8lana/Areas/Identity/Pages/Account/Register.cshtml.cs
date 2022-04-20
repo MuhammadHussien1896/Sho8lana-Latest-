@@ -116,6 +116,13 @@ namespace Sho8lana.Areas.Identity.Pages.Account
                 var user = CreateUser();
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                //manual registration
+                user.FirstName = "Mohamed";
+                user.LastName = "Maher";
+                user.Country = "Egypt";
+                user.City = "Alex";
+                user.Area = "Hadra";
+                user.Gender = "Male";
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
