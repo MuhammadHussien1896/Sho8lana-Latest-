@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sho8lana.Models;
+using Sho8lana.Unit_Of_Work;
 using System.Diagnostics;
 
 namespace Sho8lana.Controllers
@@ -8,17 +9,22 @@ namespace Sho8lana.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IUnitOfWork _context;
+
+        public HomeController(ILogger<HomeController> logger,IUnitOfWork context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var categories = await _context.Categories.GetAll();
+            return View(categories);
+
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Privacy()
         {
             return View();
         }
