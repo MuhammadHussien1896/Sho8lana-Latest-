@@ -29,6 +29,10 @@ namespace Sho8lana.Models.Repositories
         {
             return await appDbContext.Set<T>().ToListAsync();
         }
+        public IEnumerable<T> GetAllSync()
+        {
+            return appDbContext.Set<T>().ToList();
+        }
 
         public async Task<T> GetById(int id)
         {
