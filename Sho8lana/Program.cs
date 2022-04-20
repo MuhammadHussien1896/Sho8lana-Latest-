@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseLazyLoadingProxies().UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<Customer,IdentityRole>()
@@ -23,6 +23,7 @@ builder.Services.AddIdentity<Customer,IdentityRole>()
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
 
 var app = builder.Build();
 
