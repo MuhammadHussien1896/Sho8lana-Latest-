@@ -7,6 +7,7 @@ namespace Sho8lana.Models
     {
         public Service()
         {
+            PublishDate         = DateTime.Now;
             Medias              = new List<Media>();
             CustomerRequests    = new List<CustomerRequest>();
             Contracts           = new List<Contract>();
@@ -28,21 +29,21 @@ namespace Sho8lana.Models
         public float Rate { get; set; }
 
         //navigation Properities
-        public ICollection<Media> Medias { get; set; }
+        public virtual ICollection<Media> Medias { get; set; }
         
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
 
 
         [ForeignKey("Customer")]
         public string CustomerId { get; set; }
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
 
         public virtual ICollection<CustomerRequest> CustomerRequests { get; set; }
 
         public virtual ICollection<Contract> Contracts { get; set; }
-        public ICollection<ServiceMessage> ServiceMessages { get; set; }
+        public virtual ICollection<ServiceMessage> ServiceMessages { get; set; }
 
     }
 }
