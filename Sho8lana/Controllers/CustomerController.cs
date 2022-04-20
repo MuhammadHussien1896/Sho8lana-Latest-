@@ -19,17 +19,16 @@ namespace Sho8lana.Controllers
         {
             return View();
         }
-        public IActionResult IncomingRequests()
+        public async Task<IActionResult> IncomingRequests()
         {
-            var customerId = userManager.GetUserId(User);
-            var task = context.Customers.GetBy(c => c.Id == customerId);
-            if (task.IsCompletedSuccessfully)
+            var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
+            if (customer != null)
             {
-                var customer = task.Result;
+                
                 //if this customer has a request that contain a service that he owned it
                 //then this is an incoming request to him
                 var IncomingRequests = customer.CustomerRequests
-                                        .Where(r => r.Service.CustomerId == customerId);
+                                        .Where(r => r.Service.CustomerId == customer.Id);
                 return View(IncomingRequests);
             }
             else
@@ -38,16 +37,15 @@ namespace Sho8lana.Controllers
             }
             
         }
-        public IActionResult OutgoingRequests()
+        public async Task<IActionResult> OutgoingRequests()
         {
-            var customerId = userManager.GetUserId(User);
-            var task = context.Customers.GetBy(c => c.Id == customerId);
-            if (task.IsCompletedSuccessfully)
+            var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
+            if (customer != null)
             {
-                var customer = task.Result;
+                
                 //return the requested requests
                 var OutgoingRequests = customer.CustomerRequests
-                                        .Where(r => r.CustomerId == customerId);
+                                        .Where(r => r.CustomerId == customer.Id);
                 return View(OutgoingRequests);
             }
             else
@@ -56,11 +54,11 @@ namespace Sho8lana.Controllers
             }
         }
 
-        public IActionResult DeleteRequest(int requestId)
+        public async Task<IActionResult> DeleteRequest(int requestId)
         {
             context.CustomerRequests.Delete(requestId);
-            var task = context.complete();
-            if (task.IsCompletedSuccessfully)
+            var deletedRecords = await context.complete();
+            if (deletedRecords > 0)
             {
                 return View();
 
@@ -72,13 +70,12 @@ namespace Sho8lana.Controllers
             
         }
 
-        public IActionResult ActiveContracts()
+        public async Task<IActionResult> ActiveContracts()
         {
-            var customerId = userManager.GetUserId(User);
-            var task = context.Customers.GetBy(c => c.Id == customerId);
-            if (task.IsCompletedSuccessfully)
+            var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
+            if (customer != null)
             {
-                var customer = task.Result;
+                
                 //return the active contracts
                 var contracts = customer.Contracts.Where(c => c.IsDone == false);
                 return View(contracts);
@@ -89,13 +86,12 @@ namespace Sho8lana.Controllers
             }
         }
 
-        public IActionResult DoneContracts()
+        public async Task<IActionResult> DoneContracts()
         {
-            var customerId = userManager.GetUserId(User);
-            var task = context.Customers.GetBy(c => c.Id == customerId);
-            if (task.IsCompletedSuccessfully)
+            var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
+            if (customer != null)
             {
-                var customer = task.Result;
+                
                 //return contracts from history
                 var contracts = customer.Contracts.Where(c => c.IsDone == true);
                 return View(contracts);
