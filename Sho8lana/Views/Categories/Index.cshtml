@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Services";
+}
+    <section id="services" class="services section-bg">
+        <div class="container" data-aos="fade-up">
+
+            <div class="section-title">
+                <h2>Services</h2>
+                <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+            </div>
+            <div class="row gy-4">
+            @{
+                for (var j = 0; j < 20; j++)
+                {
+                    
+               
+                foreach (var service in Model)
+                {
+
+                <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="icon-box iconbox-blue">
+                        <a asp-controller="Categories" asp-action="index" asp-route-id="@service.CategoryId">
+                            <img class="w-100 "src="~/Images/CategoriesImage/@service.Medias[0].MediaPath">
+                            <h4>@service.Title</h4>
+                        </a>
+                        <div style="text-align:start;direction:rtl">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="ratings"> 
+                            @{
+                                for (var i = 0; i < (int)5-@service.Rate/2; i++)
+                                {
+                                  <i class="fa fa-star"></i>   
+                                }
+                                for (var i = 0; i < (int)@service.Rate/2; i++)
+                                {
+                                  <i class="fa fa-star rating-color"></i> 
+                                }
+
+                            }
+
+                            </div>
+                        </div>
+                        <div>تبدأ من : <span>@service.Price $</span> </div>
+                            @{
+                                if (@service.IsCash)
+                                {
+                                    <div>متاح التعامل بالكاش او الفيزا</div>
+                                }
+                                else
+                                {
+                                    <div>متاح التعامل بالفيزا فقط </div>
+                                }
+                            }
+                    </div>
+                    </div>
+                </div>
+  
+                }
+            }
+            }
+                      </div>
+                      
+        </div>
+    </section>

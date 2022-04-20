@@ -15,7 +15,7 @@ namespace Sho8lana.Models.Repositories
 
         public async Task<IEnumerable<Service>> GetAllByCategory(int CategoryId)
         {
-            return await appDbContext.Services.Include(s => s.Customer).Where(s => s.CategoryId == CategoryId).ToListAsync();
+            return await appDbContext.Services.Include(s => s.Customer).Include(s=>s.Medias).Where(s => s.CategoryId == CategoryId).ToListAsync();
         }
     }
 }
