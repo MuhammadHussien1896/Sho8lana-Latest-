@@ -51,7 +51,7 @@ namespace Sho8lana.Models
         public virtual ICollection<Service> Services { get; set; }
         public virtual ICollection<CustomerRequest> CustomerRequests { get; set; }
         public virtual ICollection<Contract> Contracts { get; set; }
-        public ICollection<ServiceMessage> ServiceMessages { get; set; }
+        public virtual ICollection<ServiceMessage> ServiceMessages { get; set; }
 
     }
 
