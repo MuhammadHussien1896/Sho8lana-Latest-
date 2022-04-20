@@ -5,6 +5,10 @@ namespace Sho8lana.Models
 {
     public class ServiceMessage
     {
+        public ServiceMessage()
+        {
+            MessageDate = DateTime.Now;
+        }
         [Key]
         public int MessageId { get; set; }
 
