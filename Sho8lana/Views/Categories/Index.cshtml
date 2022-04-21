@@ -1,64 +1,110 @@
 ﻿@{
     ViewData["Title"] = "Services";
 }
-    <section id="services" class="services section-bg">
-        <div class="container" data-aos="fade-up">
-
-            <div class="section-title">
+    <section id="services" class="services section-bg" style="direction:rtl">
+        <div class="row justify-content-around" data-aos="fade-up">
+@*            <div class="section-title">
                 <h2>Services</h2>
                 <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+            </div>*@
+            <div class="col-3 h-100" style="direction:rtl">
+                 <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;direction:rtl">
+                    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                      <span class="fs-4">خدماتنا</span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-auto">
+                    @{
+                        foreach (var item in ViewBag.Categories)
+                        {
+                            if (ViewBag.Id == @item.CategoryId)
+                            {
+                            <li class="nav-item">
+                                <a asp-controller="Categories" asp-action="index" asp-route-id="@item.CategoryId" class="categorylinks nav-link text-dark active" aria-current="page">
+                                    @item.Name
+                                </a>
+                                </li>
+
+                            }
+                            else
+                            {
+                             <li class="nav-item">
+                                <a asp-controller="Categories" asp-action="index" asp-route-id="@item.CategoryId" class="categorylinks nav-link text-dark" aria-current="page">
+                                    @item.Name
+                                </a>
+                            </li>
+                            }
+
+                                
+                            }
+                        }
+                    </ul>
+                  </div>
             </div>
-            <div class="row gy-4">
+            <div class="col-8" >
             @{
-                for (var j = 0; j < 20; j++)
-                {
-                    
-               
                 foreach (var service in Model)
                 {
-
-                <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
+                    if (service.IsFreelancer)
+                    {
+                    <div class="col-lg-3 col-md-5 d-flex align-items-start h-100" data-aos="zoom-in" data-aos-delay="100" style="min-height:fit-content">
                     <div class="icon-box iconbox-blue">
-                        <a asp-controller="Categories" asp-action="index" asp-route-id="@service.CategoryId">
+                        <a>
                             <img class="w-100 "src="~/Images/CategoriesImage/@service.Medias[0].MediaPath">
                             <h4>@service.Title</h4>
                         </a>
                         <div style="text-align:start;direction:rtl">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="ratings"> 
-                            @{
-                                for (var i = 0; i < (int)5-@service.Rate/2; i++)
-                                {
-                                  <i class="fa fa-star"></i>   
-                                }
-                                for (var i = 0; i < (int)@service.Rate/2; i++)
-                                {
-                                  <i class="fa fa-star rating-color"></i> 
-                                }
-
-                            }
-
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="ratings"> 
+                                    @{
+                                        for (var i = 0; i < (int)5-@service.Rate/2; i++)
+                                        {
+                                            <i class="fa fa-star"></i>   
+                                        }
+                                        for (var i = 0; i < (int)@service.Rate/2; i++)
+                                        {
+                                            <i class="fa fa-star rating-color"></i> 
+                                        }
+                                    }
+                                </div>
                             </div>
-                        </div>
-                        <div>تبدأ من : <span>@service.Price $</span> </div>
-                            @{
-                                if (@service.IsCash)
-                                {
-                                    <div>متاح التعامل بالكاش او الفيزا</div>
+                            <div>تبدأ من : <span>@service.Price $</span> </div>
+                                @{
+                                    if (@service.IsCash)
+                                    {
+                                        <div>متاح التعامل بالكاش او الفيزا</div>
+                                    }
+                                    else
+                                    {
+                                        <div>متاح التعامل بالفيزا فقط </div>
+                                    }
                                 }
-                                else
-                                {
-                                    <div>متاح التعامل بالفيزا فقط </div>
-                                }
-                            }
+                      <div class="col-5 position-absolute bottom-0 start-0 mt-5">
+                      <img src="~/Images/CategoriesImage/@service.Medias[0].MediaPath" class="rounded-circle img-thumbnail w-50"/>
+                      <p>Mahmoud</p>
                     </div>
+                        </div>
+
                     </div>
                 </div>
-  
-                }
+            }}
             }
-            }
-                      </div>
-                      
+            </div>
         </div>
     </section>
+    <script>
+        window.addEventListener("load", () => {
+    let links = document.querySelectorAll(".categorylinks");
+    links.forEach((ele) => {
+        ele.onclick = () => {
+            let link = document.querySelectorAll(".active");
+            link.forEach((ele)=>{
+             ele.classList.remove("active")
+            })
+            ele.classList.add("active")
+        }
+    })
+})
+        </script>
+
+   <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
