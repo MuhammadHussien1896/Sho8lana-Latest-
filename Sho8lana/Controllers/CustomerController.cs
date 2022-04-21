@@ -24,12 +24,25 @@ namespace Sho8lana.Controllers
             var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
             if (customer != null)
             {
+                var customerServices = customer.Services.ToList();
+                if (customerServices.Count == 0)
+                {
+                    return View(null);
+                }
+                else
+                {
+                    
+                    List<CustomerRequest> IncomingRequests = new List<CustomerRequest>();
+                    foreach (var service in customerServices)
+                    {
+                        foreach (var request in service.CustomerRequests)
+                        {
+                            IncomingRequests.Add(request);
+                        }
+                    }
+                    return View(IncomingRequests);
+                }
                 
-                //if this customer has a request that contain a service that he owned it
-                //then this is an incoming request to him
-                var IncomingRequests = customer.CustomerRequests
-                                        .Where(r => r.Service.CustomerId == customer.Id);
-                return View(IncomingRequests);
             }
             else
             {
@@ -42,10 +55,7 @@ namespace Sho8lana.Controllers
             var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
             if (customer != null)
             {
-                
-                //return the requested requests
-                var OutgoingRequests = customer.CustomerRequests
-                                        .Where(r => r.CustomerId == customer.Id);
+                var OutgoingRequests = customer.CustomerRequests.ToList();                   
                 return View(OutgoingRequests);
             }
             else

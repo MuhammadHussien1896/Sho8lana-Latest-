@@ -1,0 +1,31 @@
+﻿@model IEnumerable<CustomerRequest>
+@{
+    ViewData["Title"] = "IncomingRequests";
+}
+
+<h1 class="text-center">IncomingRequests</h1>
+
+@if(Model.Count() == 0)
+{
+    <h1 class="text-center">There is no incoming Requests</h1>
+}
+else
+{
+    foreach(var request in Model)
+    {
+        <div class="card">
+            <div class="card-header">
+                    Request comming from @request.Customer.FirstName @request.Customer.LastName 
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">About @request.Service.Title</h5>
+            <p class="card-text">@request.Customer.FirstName @request.Customer.LastName wants to begin a contract with you !
+                <span>@request.RequestDate</span>
+            </p>
+            <a href="#" class="btn btn-primary">Accept Request</a>
+            <a href="#" class="btn btn-danger">Cancel Request</a>
+            </div>
+        </div>
+    }
+}
+
