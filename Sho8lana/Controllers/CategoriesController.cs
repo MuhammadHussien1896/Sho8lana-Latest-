@@ -18,5 +18,11 @@ namespace Sho8lana.Controllers
             var services =await _context.Services.GetAllByCategory(id);
             return View(services);
         }
+        
+        public async Task<IActionResult> Search(string text)
+        {
+            var services = await _context.Services.GetAllBy(s => s.Description.Contains(text));
+            return View("index",services);
+        }
     }
 }

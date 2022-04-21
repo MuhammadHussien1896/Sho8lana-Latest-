@@ -9,6 +9,7 @@ namespace Sho8lana.Models.Repositories
         public Task<T> GetById(int id);
         public Task<T> GetById(string id);
         public Task<T> GetBy(Expression<Func<T, bool>> expression);
+        public Task<IEnumerable<T>> GetAllBy(Expression<Func<T, bool>> expression);
         public Task<List<T>> GetAll();
     
         public void Delete(int id);
