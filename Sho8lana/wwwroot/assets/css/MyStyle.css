@@ -1,16 +1,16 @@
-<<<<<<< HEAD
+
 ﻿body {
-    padding:0px;
-    margin:0px;
-    box-sizing:border-box;
-=======
-﻿@font-face {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+﻿@font-face{
     font-family: "Noto Kufi arabic";
     src: url(../../Fonts/static/NotoKufiArabic-Medium.ttf);
 }
 body {
     font-family: "Noto Kufi arabic";
->>>>>>> master
+
 }
 
 
@@ -18,7 +18,6 @@ body {
     border-radius:20%;
     border:7px solid white;
 }
-<<<<<<< HEAD
 
 /*Start Register*/
 .register {
@@ -141,7 +140,7 @@ body {
     color: #495057;
 }
 /*End Register*/
-=======
+
 .CategoryText{
     font-size:1rem !important
 }
@@ -156,4 +155,4 @@ body {
 .rating-color {
     color: #fbc634 !important
 }
->>>>>>> master
+
