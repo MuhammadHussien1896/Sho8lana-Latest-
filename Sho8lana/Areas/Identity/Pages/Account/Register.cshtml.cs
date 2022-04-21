@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Sho8lana.Models;
@@ -79,6 +80,8 @@ namespace Sho8lana.Areas.Identity.Pages.Account
         /// 
         public List<Governorate> govern { get; set; }
         public List<City> cities { get; set; }
+
+
         public class InputModel
         {
 
