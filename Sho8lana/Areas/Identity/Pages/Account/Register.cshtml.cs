@@ -148,7 +148,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-<<<<<<< HEAD
+
                 //var user = CreateUser();
 
                 //await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -172,6 +172,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account
                 var user = CreateUser();
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+>>>>>>> master
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
