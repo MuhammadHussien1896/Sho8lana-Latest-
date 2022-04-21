@@ -119,8 +119,9 @@ h1, h2, h3, h4, h5, h6 {
   padding: 20px 0;
 }
 #header.header-scrolled, #header.header-inner-pages {
-  background: rgba(24, 6, 185, 0.8);
-  padding: 12px 0;
+    background: rgba(116, 15, 214, 0.9) 100%;
+    padding: 12px 0;
+
 }
 #header .logo {
   font-size: 32px;
@@ -1417,4 +1418,7 @@ section {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
   text-decoration: none;
+}
+.inputplaceholder::placeholder {
+    text-align: center,
 }

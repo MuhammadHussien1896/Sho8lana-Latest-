@@ -11,7 +11,7 @@ namespace Sho8lana.Models.Repositories
         public Task<T> GetBy(Expression<Func<T, bool>> expression);
         public Task<IEnumerable<T>> GetAllBy(Expression<Func<T, bool>> expression);
         public Task<List<T>> GetAll();
-    
+        public IEnumerable<T> GetAllSync();
         public void Delete(int id);
         public void Delete(string id);
         
