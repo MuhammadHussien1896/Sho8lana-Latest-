@@ -1,23 +1,22 @@
-
 ﻿body {
     padding: 0px;
     margin: 0px;
     box-sizing: border-box;
 }
-﻿@font-face{
-    font-family: "Noto Kufi arabic";
-    src: url(../../Fonts/static/NotoKufiArabic-Medium.ttf);
-}
 body {
     font-family: "Noto Kufi arabic";
 
 }
-
+@font-face{
+    font-family: "Noto Kufi arabic";
+    src: url(../../Fonts/static/NotoKufiArabic-Medium.ttf);
+}
 
 .profileimage{
     border-radius:20%;
     border:7px solid white;
 }
+
 
 /*Start Register*/
 .register {
@@ -31,19 +30,18 @@ body {
     color: #fff;
     margin-top: 4%;
 }
-
-    .register-left input {
-        border: none;
-        border-radius: 1.5rem;
-        padding: 2%;
-        width: 60%;
-        background: #f8f9fa;
-        font-weight: bold;
-        color: #383d41;
-        margin-top: 30%;
-        margin-bottom: 3%;
-        cursor: pointer;
-    }
+.register-left input {
+    border: none;
+    border-radius: 1.5rem;
+    padding: 2%;
+    width: 60%;
+    background: #f8f9fa;
+    font-weight: bold;
+    color: #383d41;
+    margin-top: 30%;
+    margin-bottom: 3%;
+    cursor: pointer;
+}
 
 .register-right {
     background: #f8f9fa;
@@ -102,7 +100,6 @@ body {
     width: 50%;
     cursor: pointer;
 }
-
 .register .nav-tabs {
     margin-top: 3%;
     border: none;
@@ -111,28 +108,24 @@ body {
     width: 28%;
     float: right;
 }
-
-    .register .nav-tabs .nav-link {
-        padding: 2%;
-        height: 34px;
-        font-weight: 600;
-        color: #fff;
-        border-top-right-radius: 1.5rem;
-        border-bottom-right-radius: 1.5rem;
-    }
-
-        .register .nav-tabs .nav-link:hover {
-            border: none;
-        }
-
-        .register .nav-tabs .nav-link.active {
-            width: 100px;
-            color: #0062cc;
-            border: 2px solid #0062cc;
-            border-top-left-radius: 1.5rem;
-            border-bottom-left-radius: 1.5rem;
-        }
-
+.register .nav-tabs .nav-link {
+    padding: 2%;
+    height: 34px;
+    font-weight: 600;
+    color: #fff;
+    border-top-right-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+}
+.register .nav-tabs .nav-link:hover {
+    border: none;
+}
+.register .nav-tabs .nav-link.active {
+    width: 100px;
+    color: #0062cc;
+    border: 2px solid #0062cc;
+    border-top-left-radius: 1.5rem;
+    border-bottom-left-radius: 1.5rem;
+}
 .register-heading {
     text-align: center;
     margin-top: 8%;
@@ -140,7 +133,6 @@ body {
     color: #495057;
 }
 /*End Register*/
-
 .CategoryText{
     font-size:1rem !important
 }
@@ -155,4 +147,3 @@ body {
 .rating-color {
     color: #fbc634 !important
 }
-
