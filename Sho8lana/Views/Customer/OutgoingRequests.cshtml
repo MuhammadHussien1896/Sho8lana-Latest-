@@ -1,39 +1,60 @@
 ﻿@model IEnumerable<CustomerRequest>
 @{
-    ViewData["Title"] = "OutgoingRequests";
+    ViewData["Title"] = "الطلبات الصادرة";
 }
 
-<h1 class="text-center">OutgoingRequests</h1>
+<h1 class="text-center">الطلبات الصادرة</h1>
 
 @if(Model.Count() == 0)
 {
-    <h1 class="text-center">There is no outgoing Requests</h1>
+    <h1 class="text-center mt-5">لا يوجد طلبات صادرة حالياً</h1>
 }
 else
 {
     foreach(var request in Model)
     {
-        <div class="card">
+        <div class="card mt-3">
             @if (request.Service.IsFreelancer)
             {
                 <div class="card-header">
-                    You requested a Service from @request.Service.Customer.FirstName @request.Service.Customer.LastName
+                   @request.Service.Customer.FirstName @request.Service.Customer.LastName لقد طلبت خدمة من العميل 
                 </div>
             }
             else
             {
                 <div class="card-header">
-                    You Applied to a job for @request.Service.Customer.FirstName @request.Service.Customer.LastName 
+                    @request.Service.Customer.FirstName @request.Service.Customer.LastName لقد ارسلت طلب عمل للعميل  
                 </div>
             }
             <div class="card-body">
-            <h5 class="card-title">About @request.Service.Title</h5>
-            <p class="card-text">You can cancel this request any time !
-                <small class="text-muted">@request.RequestDate</small>
+            <h5 class="card-title"> @request.Service.Title عن خدمة</h5>
+            <p class="card-text">تذكر يمكنك إلغاء الطلب في أي وقت قبل قبوله من الطرف الاخر   
+                <br/>
+                <small class="text-muted">@request.RequestDate : تاريخ الطلب</small>
             </p>
-            <a href="#" class="btn btn-danger">Cancel Request</a>
+            @*<a href="#" class="btn btn-danger">إلغاء الطلب</a>*@
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              إلغاء الطلب
+            </button>
             </div>
         </div>
     }
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">أنت على وشك إلغاء الطلب هل أنت متأكد ؟</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    بالضغط على زر المسح سيتم مسح الطلب نهائياً !
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">العودة</button>
+                    <button type="button" class="btn btn-danger" asp-controller="Customer" asp-action="DeleteRequest">مسح الطلب</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 }
 
