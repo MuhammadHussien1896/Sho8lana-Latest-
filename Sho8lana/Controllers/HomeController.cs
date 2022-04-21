@@ -24,6 +24,7 @@ namespace Sho8lana.Controllers
 
         }
 
+
         public async Task<IActionResult> Privacy()
         {
             return View();
