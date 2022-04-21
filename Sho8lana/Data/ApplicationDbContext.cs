@@ -13,11 +13,18 @@ namespace Sho8lana.Data
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Media> Medias { get; set; }
         public virtual DbSet<ServiceMessage> ServiceMessages { get; set; }
+        public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<Governorate> Governorates { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
-
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Customer>().Ignore(i => i.PhoneNumberConfirmed);
+        }
 
     }
 }
