@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Sho8lana.Models;
+using Sho8lana.Models.ViewModels;
 using Sho8lana.Unit_Of_Work;
 
 namespace Sho8lana.Controllers
@@ -21,27 +22,33 @@ namespace Sho8lana.Controllers
         }
         public async Task<IActionResult> IncomingRequests()
         {
-            var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
+            string customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(c => c.Id == customerId);
             if (customer != null)
             {
-                var customerServices = customer.Services.ToList();
-                if (customerServices.Count == 0)
-                {
-                    return View(null);
-                }
-                else
-                {
+
+                //first approach to get customer incoming requests
+                var incomingRequests = await context.CustomerRequests.GetAllBy(r => r.Service.CustomerId == customer.Id);
+                return View(incomingRequests);
+                //secondApproach approach to get customer incoming requests
+                //var customerServices = customer.Services.ToList();
+                //if (customerServices.Count == 0)
+                //{
+                //    return View(null);
+                //}
+                //else
+                //{
                     
-                    List<CustomerRequest> IncomingRequests = new List<CustomerRequest>();
-                    foreach (var service in customerServices)
-                    {
-                        foreach (var request in service.CustomerRequests)
-                        {
-                            IncomingRequests.Add(request);
-                        }
-                    }
-                    return View(IncomingRequests);
-                }
+                //    List<CustomerRequest> IncomingRequests = new List<CustomerRequest>();
+                //    foreach (var service in customerServices)
+                //    {
+                //        foreach (var request in service.CustomerRequests)
+                //        {
+                //            IncomingRequests.Add(request);
+                //        }
+                //    }
+                //    return View(IncomingRequests);
+                //}
                 
             }
             else
@@ -52,7 +59,8 @@ namespace Sho8lana.Controllers
         }
         public async Task<IActionResult> OutgoingRequests()
         {
-            var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
+            string customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(c => c.Id == customerId);
             if (customer != null)
             {
                 var OutgoingRequests = customer.CustomerRequests.ToList();                   
@@ -64,47 +72,67 @@ namespace Sho8lana.Controllers
             }
         }
 
-        public async Task<IActionResult> DeleteRequest(int requestId)
+        //incoming and outgoing requests at the same action or page
+        public async Task<IActionResult> CustomerRequests()
         {
-            context.CustomerRequests.Delete(requestId);
-            var deletedRecords = await context.complete();
-            if (deletedRecords > 0)
+            string customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(c => c.Id == customerId);
+            if (customer != null)
             {
-                return View();
-
+                var incomingRequests = await context.CustomerRequests.GetAllBy(r => r.Service.CustomerId == customer.Id);
+                var outgoingRequests = customer.CustomerRequests.ToList();
+                CustomerRequestViewModel model = new CustomerRequestViewModel()
+                {
+                    IncomingRequests = incomingRequests.ToList(),
+                    OutgoingRequests = outgoingRequests
+                };
+                return View(model);
             }
             else
             {
                 return NotFound();
             }
-            
         }
 
-        public async Task<IActionResult> ActiveContracts()
+        public async Task<IActionResult> DeleteRequest(int? requestId)
         {
-            var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
+            if(requestId!= null)
+            {
+                context.CustomerRequests.Delete((int)requestId);
+                var deletedRecords = await context.complete();
+                if (deletedRecords > 0)
+                {
+                    return View();
+
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+             
+        }
+
+        public async Task<IActionResult> CustomerContracts()
+        {
+            string customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(c => c.Id == customerId);
             if (customer != null)
             {
-                
+
                 //return the active contracts
-                var contracts = customer.Contracts.Where(c => c.IsDone == false);
-                return View(contracts);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-        public async Task<IActionResult> DoneContracts()
-        {
-            var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
-            if (customer != null)
-            {
-                
-                //return contracts from history
-                var contracts = customer.Contracts.Where(c => c.IsDone == true);
-                return View(contracts);
+                var contracts = await context.Contracts
+                                                .GetAllBy(c => c.CustomerId == customerId || c.Service.CustomerId == customerId);
+                ContractViewModel model = new ContractViewModel()
+                {
+                    ActiveContracts     = contracts.Where(c => c.IsDone == false).ToList(),
+                    DoneContracts       = contracts.Where(c => c.IsDone == true).ToList()
+                };
+                return View(model);
             }
             else
             {
@@ -121,8 +149,8 @@ namespace Sho8lana.Controllers
         //dump actions
         public async Task<IActionResult> AddService()
         {
-            //var customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
+            string customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(c => c.Id == customerId);
             if (customer != null)
             {
                 
@@ -146,19 +174,23 @@ namespace Sho8lana.Controllers
             
         }
 
-        public async Task<IActionResult> RequestService()
+        public async Task<IActionResult> RequestService(int serviceId)
         {
-            //var customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(c => c.Email == User.Identity.Name);
+            string customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(c => c.Id == customerId);
             if (customer != null)
             {
                 
                 
-                if(customer.Services.Any(s => s.ServiceId == 1))
+                if(customer.Services.Any(s => s.ServiceId == serviceId))
                 {
                     return Content("you cant request your own service !");
                 }
-                CustomerRequest customerRequest = new CustomerRequest() {Customer = customer,ServiceId=1 };
+                CustomerRequest customerRequest = new CustomerRequest() 
+                {
+                    Customer = customer,
+                    ServiceId= serviceId
+                };
                 context.CustomerRequests.Add(customerRequest);
                 await context.complete();
                 return Content("Request added!");
