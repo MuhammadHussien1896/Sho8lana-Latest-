@@ -57,5 +57,11 @@ namespace Sho8lana.Models.Repositories
             appDbContext.Set<T>().Update(entity);
             //appDbContext.SaveChanges();
         }
+
+        public async Task<IEnumerable<T>> GetAllBy(Expression<Func<T, bool>> expression)
+        {
+            IEnumerable<T> entity = await appDbContext.Set<T>().Where(expression).ToListAsync();
+            return entity;
+        }
     }
 }
