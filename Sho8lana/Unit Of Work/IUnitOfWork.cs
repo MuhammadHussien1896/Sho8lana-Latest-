@@ -12,6 +12,8 @@ namespace Sho8lana.Unit_Of_Work
         public IBaseRepository<Media> Medias { get;  }
         public IBaseRepository<CustomerRequest> CustomerRequests { get;  }
         public IBaseRepository<Category> Categories { get; }
+        public IBaseRepository<Governorate> Governorates { get; }
+        public IBaseRepository<City> Cities { get; }
 
         Task<int> complete();
     }
