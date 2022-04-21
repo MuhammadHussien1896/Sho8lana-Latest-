@@ -13,7 +13,7 @@ namespace Sho8lana.Models
         public string city_name_en { get; set; }
         [ForeignKey("Governorate")]
         public int GovernorateId { get; set; }
-        public Governorate Governorate { get; set; }
+        public virtual Governorate Governorate { get; set; }
 
     }
 }

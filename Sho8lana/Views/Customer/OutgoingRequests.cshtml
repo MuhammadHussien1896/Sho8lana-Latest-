@@ -1,0 +1,39 @@
+﻿@model IEnumerable<CustomerRequest>
+@{
+    ViewData["Title"] = "OutgoingRequests";
+}
+
+<h1 class="text-center">OutgoingRequests</h1>
+
+@if(Model.Count() == 0)
+{
+    <h1 class="text-center">There is no outgoing Requests</h1>
+}
+else
+{
+    foreach(var request in Model)
+    {
+        <div class="card">
+            @if (request.Service.IsFreelancer)
+            {
+                <div class="card-header">
+                    You requested a Service from @request.Service.Customer.FirstName @request.Service.Customer.LastName
+                </div>
+            }
+            else
+            {
+                <div class="card-header">
+                    You Applied to a job for @request.Service.Customer.FirstName @request.Service.Customer.LastName 
+                </div>
+            }
+            <div class="card-body">
+            <h5 class="card-title">About @request.Service.Title</h5>
+            <p class="card-text">You can cancel this request any time !
+                <span>@request.RequestDate</span>
+            </p>
+            <a href="#" class="btn btn-danger">Cancel Request</a>
+            </div>
+        </div>
+    }
+}
+

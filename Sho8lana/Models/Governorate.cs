@@ -10,6 +10,6 @@ namespace Sho8lana.Models
         public string Governorate_name_ar { get; set; }
         [StringLength(50, MinimumLength = 3)]
         public string Governorate_name_en { get; set; }
-        public IEnumerable<City> cities { get; set; }
+        public virtual IEnumerable<City> cities { get; set; }
     }
 }
