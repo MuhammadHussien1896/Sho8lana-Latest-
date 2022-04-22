@@ -32,7 +32,7 @@ namespace Sho8lana.Models
         //navigation Properities
         public virtual ICollection<Media> Medias { get; set; }
         
-        [ForeignKey("Category")]
+        [ForeignKey("Category"),Required(ErrorMessage ="Category is Required")]
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
 

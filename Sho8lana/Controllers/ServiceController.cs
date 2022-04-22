@@ -14,8 +14,9 @@ namespace Sho8lana.Controllers
 {
     public class ServiceController : Controller
     {
+        string [] supportedTypes = new[] { "jpg", "jpeg", "png", "gif", "JPG", "JPEG", "PNG", "GIF" };
         
-       
+
         private readonly IUnitOfWork _context ;
 
         public ServiceController(IUnitOfWork context)
@@ -23,7 +24,7 @@ namespace Sho8lana.Controllers
             _context = context;
             
         }
-        
+
         /*
         // GET: Service
         public async Task<IActionResult> Index()
@@ -32,7 +33,8 @@ namespace Sho8lana.Controllers
             var applicationDbContext = _context.Services.Include(s => s.Category).Include(s => s.Customer);
             return View(await applicationDbContext.ToListAsync());
         }
-
+        */
+        
         // GET: Service/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -40,19 +42,17 @@ namespace Sho8lana.Controllers
             {
                 return NotFound();
             }
+            var service = await _context.Services.GetBy(s=>s.ServiceId==id);
 
-            var service = await _context.Services
-                .Include(s => s.Category)
-                .Include(s => s.Customer)
-                .FirstOrDefaultAsync(m => m.ServiceId == id);
-            if (service == null)
+            if(service == null)
             {
                 return NotFound();
             }
 
             return View(service);
+
+
         }
-        */
         // GET: Service/Create
         public IActionResult Create()
         {
@@ -69,19 +69,10 @@ namespace Sho8lana.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,Rate,CategoryId,CustomerId")] Service service,List<IFormFile> Medias)
         {
+            int i = 1;
             if (ModelState.IsValid)
             {
-                //IMAGE
-                foreach(var image in Medias)
-                {
-                    using(var stream = new FileStream("./wwwroot/assets/img/services/" + image.FileName, FileMode.Create))
-                    {
-                        image.CopyTo(stream);
-                    }
-                }
-                
-            ///////////////////////////////////////////////////////
-            
+               
                 // publish date
                 service.PublishDate = DateTime.Now;
 
@@ -91,14 +82,43 @@ namespace Sho8lana.Controllers
                 var customerId = claims.Value;
                 
                 service.CustomerId = customerId;
+                //add service to database
+                if (Medias.Count > 4)
+                {
+                    return View(service);
+                }
+                else
+                {
+                    var s = _context.Services.Add(service);
+                    await _context.complete();
 
-                _context.Services.Add(service);
-                //await _context.SaveChangesAsync();
-                await _context.complete();
+                    //loop for every image in media list 
+                    foreach (var image in Medias)
+                    {
+                        
+                        var path = "./wwwroot/assets/img/services/" + s.ServiceId + "-" + s.Title + "-" + i + ".jpg";
+
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            image.CopyTo(stream);
+                            Media media = new Media()
+                            {
+                                ServiceId = s.ServiceId,
+                                MediaPath = s.ServiceId + "-" + s.Title + "-" + i + ".jpg"
+                            };
+                            //add image to medias table
+                            _context.Medias.Add(media);
+                            await _context.complete();
+
+                        }
+                        i++;
+                    }
+                }
+                ////////////////////////////////////////////////////////////
                 return RedirectToAction(nameof(Index));
             }
             var categories = _context.Categories.GetAllSync();
-            ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryId", service.CategoryId);
+            ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
             
             return View(service);
         }
