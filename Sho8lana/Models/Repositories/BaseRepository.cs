@@ -12,9 +12,10 @@ namespace Sho8lana.Models.Repositories
         {
             this.appDbContext = appDbContext;
         }
-        public void Add(T entity)
+        public T Add(T entity)
         {
             appDbContext.Set<T>().Add(entity);
+            return (entity);
             //appDbContext.SaveChanges();
         }
 
