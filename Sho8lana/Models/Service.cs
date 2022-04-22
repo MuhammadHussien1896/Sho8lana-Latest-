@@ -25,6 +25,7 @@ namespace Sho8lana.Models
         public bool IsCash { get; set; }
         public bool IsFreelancer { get; set; }
         public DateTime PublishDate { get; set; }
+        public bool IsAccepted { get; set; }
 
         public float Rate { get; set; }
 
