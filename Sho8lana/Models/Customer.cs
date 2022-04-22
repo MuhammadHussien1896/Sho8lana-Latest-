@@ -18,6 +18,7 @@ namespace Sho8lana.Models
             CustomerRequests    = new List<CustomerRequest>();
             Contracts           = new List<Contract>();
             ServiceMessages     = new List<ServiceMessage>();
+            Notifications       = new List<Notification>();
         }
         [Required,StringLength(15,MinimumLength =3,ErrorMessage ="Firstname must be between 3-15 characters")]
         [RegularExpression("[a-zA-z]+")]
@@ -46,12 +47,14 @@ namespace Sho8lana.Models
         public bool IsVerified { get; set; }
         [DataType(DataType.Currency)]
         public float Balance { get; set; }
+        
 
         //navigation properties
         public virtual ICollection<Service> Services { get; set; }
         public virtual ICollection<CustomerRequest> CustomerRequests { get; set; }
         public virtual ICollection<Contract> Contracts { get; set; }
         public virtual ICollection<ServiceMessage> ServiceMessages { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
 
     }
 

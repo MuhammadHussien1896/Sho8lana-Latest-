@@ -17,7 +17,7 @@ namespace Sho8lana.Models
         public int ServiceId { get; set; }
         [Required]
         public string Description { get; set; }
-        [Required,StringLength(25,MinimumLength =5,ErrorMessage ="Title must be between 5-25 characters")]
+        [Required,StringLength(50,MinimumLength =5,ErrorMessage ="Title must be between 5-25 characters")]
         public string Title { get; set; }
         [DataType(DataType.Currency)]
         public float Price { get; set; }

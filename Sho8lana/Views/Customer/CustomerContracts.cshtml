@@ -1,36 +1,35 @@
-﻿@model CustomerRequestViewModel
+﻿@model ContractViewModel
 @{
-    ViewData["Title"] = "الطلبات";
+    ViewData["Title"] = "العقود";
 }
 
-    <div class="row">
+<div class="row">
       <div class="col-4">
         <div class="list-group" id="list-tab" role="tablist">
-          <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">الطلبات الواردة</a>
-          <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list" href="#list-profile" role="tab" aria-controls="list-profile">الطلبات الصادرة</a>
-        </div>
+          <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">العقود المنتظرة</a>
+          <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list" href="#list-profile" role="tab" aria-controls="list-profile">العقود قيد التنفيذ</a>
+          <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list" href="#list-messages" role="tab" aria-controls="list-messages">العقود المنتهية</a>
+      </div>
       </div>
       <div class="col-8">
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
 
-            @if(Model.IncomingRequests.Count() == 0)
+            @if(Model.PendingContracts.Count() == 0)
             {
-                <h1 class="text-center">لا يوجد طلبات واردة حالياَ</h1>
+                <h1 class="text-center mt-5">لا توجد عقود في انتظار البدء</h1>
             }
             else
             {
-                foreach(var request in Model.IncomingRequests)
+                foreach(var contract in Model.PendingContracts)
                 {
                     <div class="card mt-3">
                         <div class="card-header">
-                                @request.Customer.FirstName @request.Customer.LastName لديك طلب قادم من طرف  
+                                @contract.Customer.FirstName @contract.Customer.LastName لديك طلب قادم من طرف  
                         </div>
                         <div class="card-body">
-                        <h5 class="card-title">@request.Service.Title عن خدمة</h5>
-                        <p class="card-text"> يريد بدأ التعاقد معك @request.Customer.FirstName @request.Customer.LastName
-                            <br/>
-                            <small class="text-muted">@request.RequestDate : تاريخ الطلب </small>
+                        <h5 class="card-title">@contract.Service.Title عن خدمة</h5>
+                        <p class="card-text"> يريد بدأ التعاقد معك @contract.Customer.FirstName @contract.Customer.LastName
                         </p>
                         <a href="#" class="btn btn-primary">قبول الطلب</a>
                         @*<a href="#" class="btn btn-danger">Cancel Request</a>*@
@@ -79,32 +78,31 @@
 
           <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
 
-            @if(Model.OutgoingRequests.Count() == 0)
+            @if(Model.ActiveContracts.Count() == 0)
             {
-                <h1 class="text-center mt-5">لا يوجد طلبات صادرة حالياً</h1>
+                <h1 class="text-center mt-5">لا توجد عقود قيد التنفيذ</h1>
             }
             else
             {
-                foreach(var request in Model.OutgoingRequests)
+                foreach(var contract in Model.ActiveContracts)
                 {
                     <div class="card mt-3">
-                        @if (request.Service.IsFreelancer)
+                        @if (contract.Service.IsFreelancer)
                         {
                             <div class="card-header">
-                               @request.Service.Customer.FirstName @request.Service.Customer.LastName لقد طلبت خدمة من العميل 
+                               @contract.Service.Customer.FirstName @contract.Service.Customer.LastName لقد طلبت خدمة من العميل 
                             </div>
                         }
                         else
                         {
                             <div class="card-header">
-                                @request.Service.Customer.FirstName @request.Service.Customer.LastName لقد ارسلت طلب عمل للعميل  
+                                @contract.Service.Customer.FirstName @contract.Service.Customer.LastName لقد ارسلت طلب عمل للعميل  
                             </div>
                         }
                         <div class="card-body">
-                        <h5 class="card-title"> @request.Service.Title عن خدمة</h5>
+                        <h5 class="card-title"> @contract.Service.Title عن خدمة</h5>
                         <p class="card-text">تذكر يمكنك إلغاء الطلب في أي وقت قبل قبوله من الطرف الاخر   
-                            <br/>
-                            <small class="text-muted">@request.RequestDate : تاريخ الطلب</small>
+                            
                         </p>
                         @*<a href="#" class="btn btn-danger">إلغاء الطلب</a>*@
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -133,9 +131,66 @@
             } 
           
           </div>
+
+          <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
+            
+              @if(Model.DoneContracts.Count() == 0)
+            {
+                <h1 class="text-center mt-5">لا توجد عقود منتهية</h1>
+            }
+            else
+            {
+                foreach(var contract in Model.DoneContracts)
+                {
+                    <div class="card mt-3">
+                        @if (contract.Service.IsFreelancer)
+                        {
+                            <div class="card-header">
+                               @contract.Service.Customer.FirstName @contract.Service.Customer.LastName لقد طلبت خدمة من العميل 
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="card-header">
+                                @contract.Service.Customer.FirstName @contract.Service.Customer.LastName لقد ارسلت طلب عمل للعميل  
+                            </div>
+                        }
+                        <div class="card-body">
+                        <h5 class="card-title"> @contract.Service.Title عن خدمة</h5>
+                        <p class="card-text">تذكر يمكنك إلغاء الطلب في أي وقت قبل قبوله من الطرف الاخر   
+                            
+                        </p>
+                        @*<a href="#" class="btn btn-danger">إلغاء الطلب</a>*@
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                          إلغاء الطلب
+                        </button>
+                        </div>
+                    </div>
+                }
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">أنت على وشك إلغاء الطلب هل أنت متأكد ؟</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                بالضغط على زر المسح سيتم مسح الطلب نهائياً !
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">العودة</button>
+                                <button type="button" class="btn btn-danger" asp-controller="Customer" asp-action="DeleteRequest">مسح الطلب</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                }
+
+
+
+          </div>
           
         </div>
       </div>
     </div>
-
 
