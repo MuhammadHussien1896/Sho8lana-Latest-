@@ -8,13 +8,6 @@
                 <p> أحصل على أفضل الخدمات بأفضل الأسعار</p>
             </div>
         </div>
-            <div class="col-12 my-5 d-flex justify-content-center">
-                <form asp-action="Hiring" asp-controller="Categories"  asp-route-id="@ViewBag.Id">
-                <input type="checkbox" checked data-toggle="toggle" data-on="خدمات" data-off="طلبات"
-                    data-onstyle="success" data-offstyle="primary" id="checkbox"
-                >
-                </form>            
-                </div>
             <div class="col-3" style="direction:rtl">
                  <div class="d-flex flex-column flex-shrink-0 mb-5 icon-box iconbox-blue w-100" style="width: 280px;direction:rtl">
                     <a href="/" class="d-flex align-items-center justify-content-center link-dark text-decoration-none">
@@ -27,18 +20,22 @@
                             if (ViewBag.Id == @item.CategoryId)
                             {
                                 <li class="nav-item">
-                                    <a asp-controller="Categories" asp-action="index" asp-route-id="@item.CategoryId" class="categorylinks nav-link text-dark active" aria-current="page">
-                                        @item.Name
-                                    </a>
+                                <form asp-controller="Categories" asp-action="Search" >
+                                    <input type="hidden" value="ViewBag.Text" name="text">
+                                    <input type="hidden" value="@item.CategoryId" name="text">
+                                    <input type="submit" value="@item.Name" class="categorylinks nav-link text-dark active w-100">
+                                </form>
                                 </li>
 
                             }
                             else
                             {
                                 <li class="nav-item">
-                                    <a asp-controller="Categories" asp-action="index" asp-route-id="@item.CategoryId" class="categorylinks nav-link text-dark" aria-current="page">
-                                        @item.Name
-                                    </a>
+                                <form asp-controller="Categories" asp-action="Search" method="get">
+                                    <input type="hidden" value="@ViewBag.Text" name="text">
+                                    <input type="hidden" value="@item.CategoryId" name="categoryId">
+                                    <input type="submit" value="@item.Name" class="categorylinks nav-link text-dark w-100">
+                                </form>
                                 </li>
                             }   
                         }
@@ -50,15 +47,17 @@
             @{
                 foreach (var service in Model)
                 {
+                    if (service.IsFreelancer)
+                    {
                         <div class="card-deck ">
-                            <div class="card col-lg-3 col-md-4 col-sm-6 border-0">
+                            <div class="card col-lg-3 col-md-4 col-sm-6">
                                 <div class="position-relative">
                                 <a>
                                     <img class="card-img-top" src="~/Images/CategoriesImage/@service.Medias[0].MediaPath">
                                 </a>
-                                <img src="~/Images/@service.Customer.ProfileImage" class="position-absolute bottom-0 start-0 img-thumbnail rounded-circle w-25" />
+                                <img src="~/Images/@service.Customer.ProfileImage" class="position-absolute bottom-0 start-0 img-thumbnail rounded-circle w-25" >
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body px-0">
                                      <p class="card-title h5 mb-3">@service.Title</p>
                                         <div style="text-align:start;direction:rtl">
                                             <div class="d-flex justify-content-between align-items-center">
@@ -91,15 +90,8 @@
                                     </div>
                                 </div>
                             </div>
-                        }}
+                        }}}
                 </div>
             </div>
     </section>
 
-    <script>
-           let ele= document.getElementById("checkbox");
-           ele.onchange=()=>{setTimeout(()=>{
-               ele.form.submit()
-           },500)};
-            
-    </script>

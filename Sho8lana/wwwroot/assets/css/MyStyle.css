@@ -9,7 +9,7 @@ body {
 }
 @font-face{
     font-family: "Noto Kufi arabic";
-    src: url(../../Fonts/static/NotoKufiArabic-Medium.ttf);
+    src: url(../../Fonts/static/NotoKufiArabic-Regular.ttf);
 }
 
 .profileimage{

@@ -24,12 +24,11 @@
     <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
     <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css" rel="stylesheet" />
 
     <!-- Template Main CSS File -->
     <link href="~/assets/css/style.css" rel="stylesheet">
     <link href="~/assets/css/MyStyle.css" rel="stylesheet">
-    
-    
 
 
 </head>
@@ -45,11 +44,11 @@
 
             <nav id="navbar" class="navbar">
                 <ul>
-                    <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-                    <li><a class="nav-link scrollto" href="#about">About</a></li>
-                    <li><a class="nav-link scrollto" href="#services">Services</a></li>
-                    <li><a class="nav-link scrollto" href="#features">Features</a></li>
-                    <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+                    <li><a class="nav-link scrollto active" asp-controller="Home" asp-action="index" asp-fragment="hero">Home</a></li>
+                    <li><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="about">About</a></li>
+                    <li><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="services">Services</a></li>
+                    <li><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="features">Features</a></li>
+                    <li><a class="nav-link scrollto"  asp-controller="Home" asp-action="index" asp-fragment="contact">Contact</a></li>
                     <partial name="_LoginPartial"/>
                     <li class="dropdown w-100"><i class="fa-solid fa-magnifying-glass nav-link text-light"></i></li>
                     <li><a class="getstarted scrollto" href="#about">Get Started</a></li>
@@ -59,12 +58,12 @@
             </nav><!-- .navbar -->
 
         </div>
+         <form asp-action="Search" asp-controller="Categories" method="Get" style="display:none">
+           <div class="input-group">
+                <input type="text" name="text" class="form-control" placeholder="أكتب ماتريد البحث عنه " aria-label="Recipient's username" aria-describedby="basic-addon2">
+           </div>
+         </form>
     </header><!-- End Header -->
-                            <form asp-action="search" asp-controller="Categories" method="Get" style="display:none">
-                                <div class="input-group">
-                                    <input type="text" name="text" class="form-control" placeholder="أكتب ماتريد البحث عنه " aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                </div>
-                            </form>
     <!-- ======= Hero Section ======= -->
 
 
@@ -153,6 +152,7 @@
     <div id="preloader"></div>
 
     <!-- Vendor JS Files -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/assets/vendor/purecounter/purecounter.js"></script>
     <script src="~/assets/vendor/aos/aos.js"></script>
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -160,6 +160,7 @@
     <script src="~/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
     <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
     <script src="~/assets/vendor/php-email-form/validate.js"></script>
+    <script src="~/assets/vendor/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
 
     <!-- Template Main JS File -->
     <script src="~/assets/js/main.js"></script>
