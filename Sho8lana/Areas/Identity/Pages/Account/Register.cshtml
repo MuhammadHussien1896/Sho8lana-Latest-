@@ -3,37 +3,41 @@
 @{
     ViewData["Title"] = "Register";
 }
-@*<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>*@
-
-@*<link href="~/assets/css/MyStyle.css" rel="stylesheet" />*@
-@*<h1>@ViewData["Title"]</h1>*@
-
+@*
+    <script>
+    //window.addEventListener("load",()=>{
+    //    var citySel=document.getElementById("city");
+    ////@foreach (var item in Model.govern)
+    ////{
+    ////   //<option value="@item.Governorate_name_en">@item.Governorate_name_ar</option>
+    ////   //citySel.options
+    ////}
+    //});
+    </script>*@
 <div class="row">
-   
-        <div class="container register">
-            <div class="row">
-                <div class="col-md-3 register-left">
-                    <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
-                    <h3>Welcome</h3>
-                    <p>Lorem</p>
-                    <input type="submit" name="" value="Login" /><br />
-                </div>
-                <div class="col-md-9 register-right">
-                    <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Customer</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Freelancer</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                            <h3 class="register-heading">Register</h3>
-                             <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
+                <h3>Welcome</h3>
+                <p>Lorem</p>
+                <input type="submit" name="" value="Login" /><br />
+            </div>
+            <div class="col-md-9 register-right">
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Customer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Freelancer</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <h3 class="register-heading">Register</h3>
+                        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="row register-form">
                                 <div class="col-md-6">
                                     <div class="form-group  mt-4">
@@ -43,26 +47,26 @@
                                     <div class="form-group  mt-4">
                                         <input type="text" asp-for="Input.LastName" class="form-control" placeholder="Last Name *" value="" />
                                         <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                                    
+
                                     </div>
                                     <div class="form-group  mt-4">
                                         <input type="password" asp-for="Input.Password" class="form-control" placeholder="Password *" value="" />
                                         <span asp-validation-for="Input.Password" class="text-danger"></span>
-                                   
+
                                     </div>
                                     <div class="form-group  mt-4">
                                         <input type="password" asp-for="Input.ConfirmPassword" class="form-control" placeholder="Confirm Password *" value="" />
                                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                                   
+
                                     </div>
                                     <div class="form-group  mt-4">
                                         <div class="maxl">
-                                            <label  class="radio inline">
-                                                <input type="radio"   asp-for="Input.Gender" value="male" checked>
+                                            <label class="radio inline">
+                                                <input type="radio" asp-for="Input.Gender" value="male" checked>
                                                 <span> Male </span>
                                             </label>
                                             <label class="radio inline">
-                                                <input type="radio"  asp-for="Input.Gender"  value="female">
+                                                <input type="radio" asp-for="Input.Gender" value="female">
                                                 <span>Female </span>
                                             </label>
                                         </div>
@@ -72,12 +76,12 @@
                                     <div class="form-group  mt-4">
                                         <input type="email" asp-for="Input.Email" class="form-control" placeholder="Your Email *" value="" />
                                         <span asp-validation-for="Input.Email" class="text-danger"></span>
-                                   
+
                                     </div>
                                     <div class="form-group  mt-4">
                                         <input type="text" asp-for="Input.PhoneNumber" minlength="11" maxlength="11" n class="form-control" placeholder="Your Phone *" value="" />
                                         <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-                                    
+
                                     </div>
                                     <div class="form-floating  mt-4">
                                         <textarea asp-for="Input.AboutMe" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
@@ -97,22 +101,23 @@
 
                                     </div>
                                     <div class="col-md-4">
-                                        <select  asp-for="Input.City" class="form-select">
-                                            @foreach (var item in Model.govern)
-                                            {
+                                        <select asp-for="Input.City" asp-items="ViewBag.CityId" id="selCity" class="form-select" id="city">
+                                            @* @foreach (var item in Model.govern)
+                                                {
                                                 <option value="@item.Governorate_name_en">@item.Governorate_name_ar</option>
-                                            }
+                                                }*@
+                                            <option>Selected City</option>
                                         </select>
                                         <span asp-validation-for="Input.City" class="text-danger"></span>
 
                                     </div>
                                     <div class="col-md-4 ">
 
-                                        <select asp-for="Input.Area" class="form-select">
-                                            @foreach (var item in Model.cities)
-                                            {
+                                        <select asp-for="Input.Area" id="SelArea" class="form-select">
+                                            @*  @foreach (var item in Model.cities)
+                                                {
                                                 <option value="@item.city_name_en">@item.city_name_ar</option>
-                                            }
+                                                }*@
                                         </select>
                                         <span asp-validation-for="Input.Area" class="text-danger"></span>
 
@@ -121,21 +126,64 @@
                                 </div>
                                 @*<input type="submit" class="btnRegister" value="Register" />*@
                             </div>
-                                <button id="registerSubmit" type="submit" class="w-100 btn  btnRegister">Register</button>
-                            </form>
-                                @*endregister*@
-                        </div>
-
+                            <button id="registerSubmit" type="submit" class="w-100 btn  btnRegister">Register</button>
+                        </form>
+                        @*endregister*@
                     </div>
+
                 </div>
             </div>
-
         </div>
-    
 
-   
+    </div>
+
+
+
 </div>
+@*@section scripts{
+    <script>
+    $(function () {
+    $("#selCity").on("change", function() {
+    var governorateId = $(this).val();
+    $.ajax()
+    $("#SelArea").empty();
+    //$("#Input.Area").append("<option value=''>Select SubCategory</option>");
+    $.getJSON(`?handler=SubCities&governorateId=${governorateId}`, (data) => {
+    $.each(data, function (i, item) {
+    $("#SelArea").append(`<option value="${item.CityId}">${item.city_name_ar}</option>`);
+    });
+    });
+    });
+    });
+    </script>
+    }*@
 
-@section Scripts {
-<partial name="_ValidationScriptsPartial" />
+@section scripts{
+<script>
+    document.getElementById('selCity').addEventListener('change', (e) => {
+        document.getElementById('SelArea').innerHTML = "<option value=''>Select SubCategory</option>";
+        fetch(`?handler=SubCities&governorateId=${e.target.value}`,
+        //fetch(`https://localhost:44303/Identity/Account/Register/SubCities&governorateId=${e.target.value}`)
+        {
+            body: JSON.stringify(data),
+            method: 'POST',
+            
+                headers: {
+               'Content-Type': 'application/json'}
+        })
+        .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                Array.prototype.forEach.call(data, function (item, i) {
+                    document.getElementById('SelArea').innerHTML += `<option value="${item.CityId}">${item.city_name_en}</option>`
+                });
+            });
+    });
+</script>
 }
+
+@*@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    }
+*@
