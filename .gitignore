@@ -361,3 +361,20 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Sho8lana/wwwroot/Images/3.jpg
+/Sho8lana/wwwroot/Images/1.jpg
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/test
+*.map
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/.gitignore
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/bower.json
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/CHANGELOG.md
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/CNAME
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/Gruntfile.js
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/index.html
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/LICENSE
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/package-lock.json
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/package.json
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/README.md
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/doc/header.png
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/doc/bootstrap4-toggle-demo.gif
+/Sho8lana/wwwroot/assets/vendor/bootstrap4-toggle/doc
