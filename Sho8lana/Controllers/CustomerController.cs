@@ -17,6 +17,15 @@ namespace Sho8lana.Controllers
             this.context = context;
             this.userManager = userManager;
         }
+        public async Task<IActionResult> account()
+        {
+            string customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(c => c.Id == customerId);
+
+            return View(customer);
+
+        }
+     
         public IActionResult Index()
         {
             return View();
@@ -103,26 +112,21 @@ namespace Sho8lana.Controllers
             }
         }
 
-        public async Task<IActionResult> DeleteRequest(int? requestId)
+        public async Task<IActionResult> DeleteRequest(int requestId)
         {
-            if(requestId!= null)
-            {
-                context.CustomerRequests.Delete((int)requestId);
+
+                context.CustomerRequests.Delete(requestId);
                 var deletedRecords = await context.complete();
                 if (deletedRecords > 0)
                 {
-                    return View();
+                    return Content($"deleted records : {deletedRecords}");
 
                 }
                 else
                 {
                     return NotFound();
                 }
-            }
-            else
-            {
-                return BadRequest();
-            }
+            
              
         }
 
@@ -138,6 +142,7 @@ namespace Sho8lana.Controllers
                                                 .GetAllBy(c => c.CustomerId == customerId || c.Service.CustomerId == customerId);
                 ContractViewModel model = new ContractViewModel()
                 {
+                    PendingContracts    = contracts.Where(c => c.IsDone == false && c.StartDate == default).ToList(),
                     ActiveContracts     = contracts.Where(c => c.IsDone == false).ToList(),
                     DoneContracts       = contracts.Where(c => c.IsDone == true).ToList()
                 };
@@ -156,34 +161,34 @@ namespace Sho8lana.Controllers
 
 
         //dump actions
-        public async Task<IActionResult> AddService()
-        {
-            string customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(c => c.Id == customerId);
-            if (customer != null)
-            {
+        //public async Task<IActionResult> AddService()
+        //{
+        //    string customerId = userManager.GetUserId(User);
+        //    var customer = await context.Customers.GetBy(c => c.Id == customerId);
+        //    if (customer != null)
+        //    {
                 
                 
-                Category category = new Category() { Description = "freelance jobs", Name = "freelance" };
-                context.Categories.Add(category);
-                Service service = new Service() {
-                    CustomerId = customer.Id
-                    ,Description="bla bla",
-                    Title="blaaa",
-                    Category=category
-                };
-                context.Services.Add(service);
-                await context.complete();
-                return Content("service added!");
-            }
-            else
-            {
-                return NotFound();
-            }
+        //        Category category = new Category() { Description = "freelance jobs", Name = "freelance" };
+        //        context.Categories.Add(category);
+        //        Service service = new Service() {
+        //            CustomerId = customer.Id
+        //            ,Description="bla bla",
+        //            Title="blaaa",
+        //            Category=category
+        //        };
+        //        context.Services.Add(service);
+        //        await context.complete();
+        //        return Content("service added!");
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
             
-        }
+        //}
 
-        public async Task<IActionResult> RequestService(int serviceId)
+        public async Task<IActionResult> RequestService(int id)
         {
             string customerId = userManager.GetUserId(User);
             var customer = await context.Customers.GetBy(c => c.Id == customerId);
@@ -191,18 +196,36 @@ namespace Sho8lana.Controllers
             {
                 
                 
-                if(customer.Services.Any(s => s.ServiceId == serviceId))
+                if(customer.Services.Any(s => s.ServiceId == id))
                 {
                     return Content("you cant request your own service !");
                 }
-                CustomerRequest customerRequest = new CustomerRequest() 
+                var RequestedService = await context.Services.GetBy(s => s.ServiceId == id);
+                if(RequestedService != null)
                 {
-                    Customer = customer,
-                    ServiceId= serviceId
-                };
-                context.CustomerRequests.Add(customerRequest);
-                await context.complete();
-                return Content("Request added!");
+                    CustomerRequest customerRequest = new CustomerRequest()
+                    {
+                        Customer = customer,
+                        Service = RequestedService
+                    };
+                    context.CustomerRequests.Add(customerRequest);
+
+                    //sending a notification to the other user
+                    RequestedService.Customer.Notifications.Add(new Notification()
+                    {
+                        Content = $"You have a new request from" +
+                        $" {customer.FirstName} {customer.LastName} about your service : {customerRequest.Service.Title} "
+                    });
+                    context.Customers.Update(customerRequest.Service.Customer);
+
+                    await context.complete();
+                    return Content("Request added!");
+                }
+                else
+                {
+                    return NotFound();
+                }
+                
             }
             else
             {

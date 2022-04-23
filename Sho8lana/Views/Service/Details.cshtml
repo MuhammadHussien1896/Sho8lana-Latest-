@@ -1,78 +1,73 @@
-﻿@model Sho8lana.Models.Service
+﻿@using System.Security.Claims
+@model Sho8lana.Models.Service
 
 @{
     ViewData["Title"] = "Details";
+
+    var now = DateTime.Now;
+    var s = @Model.PublishDate;
+    var diff  = now.Subtract(s).Days;
+    var diff1 = now.Subtract(s).Hours;
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Service</h4>
+
+<div class="row mb-3 mt-5 flex-column align-items-center">
+    <h4 class="text-center">Service</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CustomerInstructions)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CustomerInstructions)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsCash)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsCash)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsFreelancer)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsFreelancer)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PublishDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PublishDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.CategoryId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Customer.Id)
-        </dd>
-    </dl>
+    <div id="carouselExampleControls" class="carousel slide col-sm-12 col-md-6 " data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="/assets/img/services/Service.png" class="col-12" height="200px" >
+    </div>
+    @foreach (var image in Model.Medias)
+        {
+            <div class="carousel-item">
+                <img src="/assets/img/services/@image.MediaPath" class="col-12" height="200px">
+            </div>
+        
+        }
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ServiceId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
 </div>
+    
+
+<div class="card text-center col-sm-12 col-md-6">
+  <div class="card-body">
+    <h5 class="card-title">@Html.DisplayFor(model => model.Title)</h5>
+    <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(model => model.Category.Name)</h6>
+    <h6 class"card-subtitle mb-2 text-muted">Description</h6>
+    <p class="card-text">@Html.DisplayFor(model=>model.Description)</p>
+    <h6 class"card-subtitle mb-2 text-muted">Customer Instruction</h6>
+    <p class="card-text">@Html.DisplayFor(model=>model.CustomerInstructions)</p>
+    <h6 class"card-subtitle mb-2 text-muted">Customer</h6>
+    <p class="card-text">@Html.DisplayFor(model=>model.Customer.FirstName) @Html.DisplayFor(model=>model.Customer.LastName) </p>
+    <div class="card-footer text-muted">
+        From @diff Days and @diff1 Hours ago
+    </div>
+    <div class="card-footer text-danger mb-3">
+    @Html.DisplayFor(model=>model.Price)
+    </div>
+
+    @if (Model.CustomerId!= userId)
+    {
+        <a class="btn btn-primary" asp-controller="Customer" asp-action="RequestService" asp-route-id="@Model.ServiceId">Send Request</a>
+        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ServiceId">Send Message</a>
+    }
+   
+
+  </div>
+</div>
+</div>
+
+
+ 

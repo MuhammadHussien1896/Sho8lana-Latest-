@@ -5,8 +5,78 @@
     ViewData["Title"] = "Log in";
 }
 
-<h1>@ViewData["Title"]</h1>
-<div class="row">
+@*<h1>@ViewData["Title"]</h1>*@
+<section style="background-color: #508bfc;">
+    <form id="account" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+
+                            <h3 class="mb-5">Sign in</h3>
+
+                            <div class="form-outline mb-4">
+                                <input type="email"  asp-for="Input.Email" id="typeEmailX-2" class="form-control form-control-lg" placeholder="Email Or UserName" aria-required="true" />
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <input type="password" asp-for="Input.Password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="Password" aria-required="true" />
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+
+                            </div>
+
+                            <!-- Checkbox -->
+
+                            <div class="form-check d-flex justify-content-start  btn-block mb-4">
+                                <label asp-for="Input.RememberMe" class="form-label">
+                                    <input class="form-check-input" asp-for="Input.RememberMe" />
+                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                </label>
+                            </div>
+                            <div class="text-center d-grid gap-2 col-6 mx-auto">
+
+                            <button class="btn btn-primary " type="submit">Login</button>
+                            </div>
+
+                            <hr class="my-4">
+
+                            
+                                <button class="btn btn-lg btn-block btn-primary mt-4 " style="background-color: #dd4b39;"
+                                        type="submit">
+                                    <i class="fab fa-google me-2"></i> Sign in with google
+                                </button>
+                                <button class="btn btn-lg btn-block btn-primary mb-2 mt-4 " style="background-color: #3b5998;"
+                                        type="submit">
+                                    <i class="fab fa-facebook-f me-2"></i>Sign in with facebook
+                                </button>
+                          
+                            <div>
+                                <p>
+                                    <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                                </p>
+                                <p>
+                                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a>
+                                    
+                                </p>
+                               @* <p>
+                                    <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                                </p>*@
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</section>
+@*<div class="row">
     <div class="col-md-4">
         <section>
             <form id="account" method="post">
@@ -78,7 +148,7 @@
             }
         </section>
     </div>
-</div>
+</div>*@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

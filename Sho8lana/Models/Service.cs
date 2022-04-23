@@ -17,7 +17,7 @@ namespace Sho8lana.Models
         public int ServiceId { get; set; }
         [Required]
         public string Description { get; set; }
-        [Required,StringLength(25,MinimumLength =5,ErrorMessage ="Title must be between 5-25 characters")]
+        [Required,StringLength(50,MinimumLength =5,ErrorMessage ="Title must be between 5-25 characters")]
         public string Title { get; set; }
         [DataType(DataType.Currency)]
         public float Price { get; set; }
@@ -32,7 +32,7 @@ namespace Sho8lana.Models
         //navigation Properities
         public virtual ICollection<Media> Medias { get; set; }
         
-        [ForeignKey("Category")]
+        [ForeignKey("Category"),Required(ErrorMessage ="Category is Required")]
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
 

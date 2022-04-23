@@ -4,7 +4,7 @@ namespace Sho8lana.Models.Repositories
 {
     public interface IBaseRepository<T> where T : class
     {
-        public void Add(T entity);
+        public T Add(T entity);
         public void Update(T entity);
         public Task<T> GetById(int id);
         public Task<T> GetById(string id);
