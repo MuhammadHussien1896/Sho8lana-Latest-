@@ -43,7 +43,7 @@ namespace Sho8lana.Models.Repositories
 
       
 
-        public async Task<T> GetById(int id)
+        public async Task<T> GetById(int? id)
         {
             T entity = await appDbContext.Set<T>().FindAsync(id);
             return entity;
