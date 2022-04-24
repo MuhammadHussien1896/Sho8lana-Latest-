@@ -1,7 +1,89 @@
-﻿
+﻿@*using IEnumerable<Customer>*@
+
+@model Sho8lana.Models.Customer
+
 @{
     ViewData["Title"] = "GetCustomerBalance";
 }
+<!DOCTYPE html>
+<html lang="en">
 
-<h1>GetCustomerBalance</h1>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
+    <title>Sho8lana-@ViewData["Title"]</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="~/assets/img/favicon.png" rel="icon">
+    <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <!--Font Awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Vendor CSS Files -->
+    <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap4-toggle/css/bootstrap4-toggle.min.css" rel="stylesheet" />
+
+    <!-- Template Main CSS File -->
+    <link href="~/assets/css/style.css" rel="stylesheet">
+    <link href="~/assets/css/MyStyle.css" rel="stylesheet">
+    <link href="~/assets/css/BalanceSheet.css" rel="stylesheet">
+        <!-- Animation Icons -->
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+      <!-- Animations Text -->
+     <link href="https://cdn.jsdelivr.net/npm/fork-corner/dist/fork-corner.min.css" rel="stylesheet">
+
+
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+</head>
+<body>
+<h1 class="callout-title animate__lightSpeedInRight" data-animation="lightSpeedInRight">Your Data Saved In This Table </h1>
+
+<table class="table table-primary table-hover">
+  <thead>
+    <tr>
+      <th scope="row">#</th>
+      <th scope="col">IsPremium</th>
+      <th scope="col">RegisterationDate</th>
+      <th scope="col">IsVerified</th>
+      <th scope="col">Balance</th>
+      <th scope="col">Services</th>
+      <th scope="col">CustomerRequests</th>
+      <th scope="col">Contracts</th>
+      <th scope="col">ServiceMessages</th>
+      <th scope="col">Notifications</th>
+    </tr>
+  </thead>
+  <tbody>
+
+       @foreach(Customer cust in ViewBag.customer)
+        {
+          <tr>
+          <th scope="row">1</th>
+          <td>@cust.IsPremium</td>
+          <td>@cust.RegisterationDate</td>
+          <td>@cust.IsVerified</td>
+          <td>@cust.Balance</td>
+          <td>@cust.Services</td>
+          <td>@cust.CustomerRequests</td>
+          <td>@cust.Contracts</td>
+          <td>@cust.ServiceMessages</td>
+          <td>@cust.Notifications</td>
+        </tr>
+        }
+
+  </tbody>
+</table>
+</body>
+</html>

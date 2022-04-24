@@ -1,0 +1,21 @@
+﻿body {
+    background-color:Highlight;
+}
+
+h1{
+    text-align:center;
+    color:cornsilk;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-style:italic;
+}
+@media (min-width: 700px) 
+      .callout-title {
+    animation-delay: 0s;
+}
+
+.callout-title {
+    margin-bottom: 0;
+    /*animation-delay: 0.25s;
+    font-size: 4rem;*/
+    font-size: min(14vw, 4rem);
+}
