@@ -3,16 +3,16 @@
 @{
     ViewData["Title"] = "Register";
 }
-@*
-    <script>
-    //window.addEventListener("load",()=>{
-    //    var citySel=document.getElementById("city");
-    ////@foreach (var item in Model.govern)
-    ////{
-    ////   //<option value="@item.Governorate_name_en">@item.Governorate_name_ar</option>
-    ////   //citySel.options
-    ////}
-    //});
+
+    @*<script>
+    window.addEventListener("load",()=>{
+        var citySel=document.getElementById("city");
+    @foreach (var item in Model.govern)
+    {
+       <option value="@item.Governorate_name_en">@item.Governorate_name_ar</option>
+       citySel.options
+    }
+    });
     </script>*@
 <div class="row">
 
@@ -102,10 +102,10 @@
                                     </div>
                                     <div class="col-md-4">
                                         <select asp-for="Input.City" asp-items="ViewBag.CityId" id="selCity" class="form-select" id="city">
-                                            @* @foreach (var item in Model.govern)
+                                             @foreach (var item in Model.govern)
                                                 {
                                                 <option value="@item.Governorate_name_en">@item.Governorate_name_ar</option>
-                                                }*@
+                                                }
                                             <option>Selected City</option>
                                         </select>
                                         <span asp-validation-for="Input.City" class="text-danger"></span>
@@ -114,10 +114,10 @@
                                     <div class="col-md-4 ">
 
                                         <select asp-for="Input.Area" id="SelArea" class="form-select">
-                                            @*  @foreach (var item in Model.cities)
+                                              @foreach (var item in Model.cities)
                                                 {
                                                 <option value="@item.city_name_en">@item.city_name_ar</option>
-                                                }*@
+                                                }
                                         </select>
                                         <span asp-validation-for="Input.Area" class="text-danger"></span>
 
@@ -158,7 +158,7 @@
     </script>
     }*@
 
-@section scripts{
+@*@section scripts{
 <script>
     document.getElementById('selCity').addEventListener('change', (e) => {
         document.getElementById('SelArea').innerHTML = "<option value=''>Select SubCategory</option>";
@@ -181,9 +181,9 @@
             });
     });
 </script>
-}
+}*@
 
-@*@section Scripts {
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
     }
-*@
+
