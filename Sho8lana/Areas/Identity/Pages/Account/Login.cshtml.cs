@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Sho8lana.Models;
+using System.Net.Mail;
 
 namespace Sho8lana.Areas.Identity.Pages.Account
 {
@@ -108,6 +109,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+            //var userName = new EmailAddressAttribute().IsValid(Input.Email) ? new MailAddress(Input.Email).User : Input.Email;
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout

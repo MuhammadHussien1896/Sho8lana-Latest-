@@ -32,7 +32,7 @@
                             <br/>
                             <small class="text-muted">@request.RequestDate : تاريخ الطلب </small>
                         </p>
-                        <a href="#" class="btn btn-primary">قبول الطلب</a>
+                        <a asp-controller="customer" asp-action="AcceptServiceRequest" asp-route-id="@request.RequestId" class="btn btn-primary">قبول الطلب</a>
                         @*<a href="#" class="btn btn-danger">Cancel Request</a>*@
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
                           إلغاء الطلب
