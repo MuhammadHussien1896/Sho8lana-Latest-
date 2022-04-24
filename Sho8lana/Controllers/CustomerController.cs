@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sho8lana.Models;
 using Sho8lana.Models.ViewModels;
 using Sho8lana.Unit_Of_Work;
+ 
 
 namespace Sho8lana.Controllers
 {
@@ -16,6 +17,15 @@ namespace Sho8lana.Controllers
             this.context = context;
             this.userManager = userManager;
         }
+        public async Task<IActionResult> account()
+        {
+            string customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(c => c.Id == customerId);
+
+            return View(customer);
+
+        }
+     
         public IActionResult Index()
         {
             return View();
@@ -70,6 +80,14 @@ namespace Sho8lana.Controllers
             {
                 return NotFound();
             }
+        }
+
+        //customer balance
+        public  async Task< IActionResult> GetCustomerBalance()
+        {
+            string customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(c => c.Id == customerId);
+            return View(customer);
         }
 
         //incoming and outgoing requests at the same action or page

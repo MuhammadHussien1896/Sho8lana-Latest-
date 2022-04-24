@@ -35,6 +35,9 @@ namespace Sho8lana.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly IUnitOfWork _unitOfWork;
 
+        //private ICategoryService categoryService;
+        //public CascadingDropdownsModel(IUnitOfWork categoryService) => this.categoryService = categoryService;
+
         public RegisterModel(
             UserManager<Customer> userManager,
             IUserStore<Customer> userStore,
@@ -81,7 +84,9 @@ namespace Sho8lana.Areas.Identity.Pages.Account
         public List<Governorate> govern { get; set; }
         public List<City> cities { get; set; }
 
-
+        [BindProperty(SupportsGet = true)]
+        public int GovernorateId { get; set; }
+        public int SelArea { get; set; }
         public class InputModel
         {
 
@@ -143,8 +148,18 @@ namespace Sho8lana.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             cities=_unitOfWork.Cities.GetAll().Result;
             govern = _unitOfWork.Governorates.GetAll().Result;
+
+            ViewData["CityId"]=_unitOfWork.Governorates.GetAll().Result.Select(c=>new SelectListItem { Value= c.GovernorateId.ToString(),Text=c.Governorate_name_ar}).ToList();
+
+            
         }
 
+        public JsonResult OnGetSubCities()
+        {
+            var result= new JsonResult(_unitOfWork.Cities.GetAllBy(c => c.GovernorateId == GovernorateId).Result);
+            return result;
+            //return Json(result, JsonRequestBehavior.AllowGet)
+        }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
