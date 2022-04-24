@@ -186,8 +186,8 @@ namespace Sho8lana.Controllers
                                                 .GetAllBy(c => c.CustomerId == customerId || c.Service.CustomerId == customerId);
                 ContractViewModel model = new ContractViewModel()
                 {
-                    PendingContracts    = contracts.Where(c => c.StartDate == default).ToList(),
-                    ActiveContracts     = contracts.Where(c => c.IsDone == false).ToList(),
+                    PendingContracts    = contracts.Where(c => c.IsDone == false && c.StartDate == default).ToList(),
+                    ActiveContracts     = contracts.Where(c => c.IsDone == false && c.StartDate != default).ToList(),
                     DoneContracts       = contracts.Where(c => c.IsDone == true).ToList()
                 };
                 return View(model);
