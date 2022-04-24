@@ -14,6 +14,7 @@ namespace Sho8lana.Unit_Of_Work
         public IBaseRepository<Category> Categories { get; }
         public IBaseRepository<Governorate> Governorates { get; }
         public IBaseRepository<City> Cities { get; }
+        public IBaseRepository<Notification> Notifications { get; }
 
         Task<int> complete();
     }

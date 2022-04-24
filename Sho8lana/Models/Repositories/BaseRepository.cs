@@ -19,13 +19,13 @@ namespace Sho8lana.Models.Repositories
             //appDbContext.SaveChanges();
         }
 
-        public async void Delete(int id)
+        public async Task Delete(int id)
         {
             T entity = await this.GetById(id);
             appDbContext.Set<T>().Remove(entity);
             //appDbContext.SaveChanges();
         }
-        public async void Delete(string id)
+        public async Task Delete(string id)
         {
             T entity = await this.GetById(id);
             appDbContext.Set<T>().Remove(entity);
@@ -43,7 +43,7 @@ namespace Sho8lana.Models.Repositories
 
       
 
-        public async Task<T> GetById(int id)
+        public async Task<T> GetById(int? id)
         {
             T entity = await appDbContext.Set<T>().FindAsync(id);
             return entity;
@@ -55,7 +55,7 @@ namespace Sho8lana.Models.Repositories
         }
         public async Task<T> GetBy(Expression<Func<T,bool>> expression)
         {
-            T entity = await appDbContext.Set<T>().SingleAsync(expression);
+            T entity = await appDbContext.Set<T>().SingleOrDefaultAsync(expression);
             return entity;
         }
 

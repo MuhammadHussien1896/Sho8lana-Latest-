@@ -42,7 +42,7 @@ namespace Sho8lana.Controllers
             {
                 return NotFound();
             }
-            var service = await _context.Services.GetBy(s=>s.ServiceId==id);
+            var service = await _context.Services.GetById(id);
 
             if(service == null)
             {
@@ -122,22 +122,35 @@ namespace Sho8lana.Controllers
             
             return View(service);
         }
-        /*
+       // POST: Service/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (id == 0) { return NotFound(); }
+            else
+            {
+                _context.Services.Delete(id);
+                await _context.complete();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+        
         // GET: Service/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var categories = _context.Categories.GetAllSync();
             if (id == null)
             {
                 return NotFound();
             }
 
-            var service = await _context.Services.FindAsync(id);
+            var service = await _context.Services.GetById(id);
             if (service == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", service.CategoryId);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", service.CustomerId);
+            ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
             return View(service);
         }
 
@@ -146,8 +159,10 @@ namespace Sho8lana.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,Rate,CategoryId,CustomerId")] Service service)
+        public async Task<IActionResult> Edit(int id, [Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,Rate,CategoryId,CustomerId")] Service service,List<IFormFile> Medias)
         {
+            int i = 1;
+            var categories = _context.Categories.GetAllSync();
             if (id != service.ServiceId)
             {
                 return NotFound();
@@ -157,12 +172,41 @@ namespace Sho8lana.Controllers
             {
                 try
                 {
-                    _context.Update(service);
-                    await _context.SaveChangesAsync();
+                    service.IsAccepted = false;
+                    _context.Services.Update(service);
+                    await _context.complete();
+
+                    var allImages = _context.Medias.GetAllBy(m=>m.ServiceId==service.ServiceId);
+                    foreach(var image in await allImages) 
+                    {
+                        _context.Medias.Delete(image.MediaId);
+                        await _context.complete();
+                    }
+                    //loop for every image in media list 
+                    foreach (var image in Medias)
+                    {
+
+                        var path = "./wwwroot/assets/img/services/" + service.ServiceId + "-" + service.Title + "-" + i + ".jpg";
+
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            image.CopyTo(stream);
+                            Media media = new Media()
+                            {
+                                ServiceId = service.ServiceId,
+                                MediaPath = service.ServiceId + "-" + service.Title + "-" + i + ".jpg"
+                            };
+                            //add image to medias table
+                            _context.Medias.Add(media);
+                            await _context.complete();
+
+                        }
+                        i++;
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ServiceExists(service.ServiceId))
+                    if (await ServiceExists(service.ServiceId)==false)
                     {
                         return NotFound();
                     }
@@ -173,45 +217,17 @@ namespace Sho8lana.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", service.CategoryId);
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", service.CustomerId);
+            ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
             return View(service);
         }
 
-        // GET: Service/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        
+        
+        private async Task <bool> ServiceExists(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var service = await _context.Services
-                .Include(s => s.Category)
-                .Include(s => s.Customer)
-                .FirstOrDefaultAsync(m => m.ServiceId == id);
-            if (service == null)
-            {
-                return NotFound();
-            }
-
-            return View(service);
+            var service =  await _context.Services.GetBy(e => e.ServiceId == id);
+            if(service == null) { return true; }
+            else { return false; }
         }
-
-        // POST: Service/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var service = await _context.Services.FindAsync(id);
-            _context.Services.Remove(service);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ServiceExists(int id)
-        {
-            return _context.Services.Any(e => e.ServiceId == id);
-        }*/
     }
 }
