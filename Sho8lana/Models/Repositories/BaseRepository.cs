@@ -55,7 +55,7 @@ namespace Sho8lana.Models.Repositories
         }
         public async Task<T> GetBy(Expression<Func<T,bool>> expression)
         {
-            T entity = await appDbContext.Set<T>().SingleAsync(expression);
+            T entity = await appDbContext.Set<T>().SingleOrDefaultAsync(expression);
             return entity;
         }
 

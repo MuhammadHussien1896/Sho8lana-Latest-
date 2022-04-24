@@ -20,6 +20,7 @@ namespace Sho8lana.Unit_Of_Work
             Categories = new BaseRepository<Category>(dbContext);
             Governorates = new BaseRepository<Governorate>(dbContext);
             Cities = new BaseRepository<City>(dbContext);
+            Notifications = new BaseRepository<Notification>(dbContext);
         }
         public IBaseRepository<Customer> Customers { get; private set; }
         public IServiceRepository Services { get; private set; }
@@ -30,6 +31,7 @@ namespace Sho8lana.Unit_Of_Work
         public IBaseRepository<Category> Categories { get; private set; }
         public IBaseRepository<Governorate> Governorates { get; private set; }
         public IBaseRepository<City> Cities { get; private set; }
+        public IBaseRepository<Notification> Notifications { get; private set; }
 
         public async Task<int> complete()
         {

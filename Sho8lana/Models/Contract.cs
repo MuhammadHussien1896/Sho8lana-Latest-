@@ -11,6 +11,8 @@ namespace Sho8lana.Models
         public bool IsDone { get; set; }
         [DataType(DataType.Currency)]
         public float ContractPrice { get; set; }
+        public bool BuyerAccepted { get; set; }
+        public bool SellerAccepted { get; set; }
 
         //navigation properties
         [ForeignKey("Customer")]
