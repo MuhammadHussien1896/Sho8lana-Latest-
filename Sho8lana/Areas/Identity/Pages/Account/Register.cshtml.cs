@@ -125,11 +125,11 @@ namespace Sho8lana.Areas.Identity.Pages.Account
 
             public string Gender { get; set; }
             // Address
-            [Required, StringLength(50, MinimumLength = 3)]
+            [Required]
             public string Country { get; set; }
-            [Required, StringLength(20, MinimumLength = 3)]
+            [Required]
             public string City { get; set; }
-            [Required, StringLength(25, MinimumLength = 3)]
+            [Required]
             public string Area { get; set; }
 
             public string ProfileImage { get; set; }
