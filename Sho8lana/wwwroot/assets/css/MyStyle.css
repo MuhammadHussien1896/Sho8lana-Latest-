@@ -16,8 +16,9 @@ body {
     border-radius:20%;
     border:7px solid white;
 }
-
-
+.searchbar::placeholder{
+    text-align:center
+}
 /*Start Register*/
 .register {
     background: -webkit-linear-gradient(left, #3931af, #00c6ff);
@@ -141,9 +142,19 @@ body {
     margin-right: 10px
 }
 .ratings i {
-    color: #cecece;
+    color: #cecece ;
     font-size: 20px;
+}
+.ratinglow {
+    color: #cecece !important
 }
 .rating-color {
     color: #fbc634 !important
+}
+f-bold{
+    font-weight:bold;
+}
+.selectCategories::-webkit-scrollbar {
+    width:0;
+    height:0
 }
