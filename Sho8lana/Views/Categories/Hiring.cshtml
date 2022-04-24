@@ -1,5 +1,23 @@
 ﻿@{
     ViewData["Title"] = "Services";
+    pagination pager = new pagination();
+    int pageNo = 0;
+    if (ViewBag.pager != null)
+    {
+        pager = ViewBag.pager;
+        pageNo = pager.CurrentPage;
+    }
+    var trustedSeller = (TempData["Trusted"]?.ToString());
+    var CatId = (TempData["category"]?.ToString())??ViewBag.Id;
+    int rate;
+    int Price;
+    int.TryParse((TempData["Rate"]?.ToString()),out rate);
+    var res=int.TryParse((TempData["Price"]?.ToString()),out Price);
+    Price = (res == false ? int.MaxValue : Price);
+    trustedSeller = (trustedSeller == null ? "false" : "true");
+    CatId = (CatId == null ? 0 : CatId);
+    var text = ViewBag.Text;
+
 }
     <section id="services" class="services section-bg pt-3 row" style="direction:rtl">
         <div class="col-12 d-flex justify-content-around" data-aos="fade-up">
@@ -14,40 +32,87 @@
                          data-onstyle="primary" data-offstyle="success" id="checkbox">
                     </form>            
                 </div>
-            <div class="col-3" style="direction:rtl">
+            <div class="col-2" style="direction:rtl">
                  <div class="d-flex flex-column flex-shrink-0 mb-5 icon-box iconbox-blue w-100" style="width: 280px;direction:rtl">
                     <a href="/" class="d-flex align-items-center justify-content-center link-dark text-decoration-none">
                       <span class="fs-4">خدماتنا</span>
                     </a>
-                    <ul class="nav nav-pills flex-column mb-auto  mt-5 p-0">
-                    @{
-                        foreach (var item in ViewBag.Categories)
-                        {
-                            if (ViewBag.Id == @item.CategoryId)
-                            {
-                                <li class="nav-item">
-                                <form asp-controller="Categories" asp-action="Search">
-                                    <input type="hidden" value="ViewBag.Text" name="text">
-                                    <input type="hidden" value="@item.CategoryId" name="text">
-                                    <input type="submit" value="@item.Name" class="categorylinks nav-link text-dark active w-100">
-                                </form>
-                                </li>
+                    <form asp-action="search" method="get">
+                        <input type="hidden" value="true" name="type" />
+                        <input type="Text" value="@text" name="text" class="form-control my-3" placeholder="أكتب ماتريد البحث عنه">
+                   
+                    <select class="form-select text-center selectCategories" name="CatId" size="8" aria-label="size 3 select example">
+                @{
+                    foreach (var item in ViewBag.Categories)
+                    {
+                          <option value="@item.CategoryId" class="CategoryOptions">@item.Name</option>    
+                    }
 
+                    }
+                    </select>
+                    <div style="direction:rtl">
+                        <div class="my-3">
+                        الترتيب حسب التقييم
+                        </div>
+                    @{
+                        for (var i = 0; i < 5; i++)
+                        {
+                            if (i == 0)
+                            {
+                               <div class="form-check col-12">
+                                  <input class="form-check-input ms-0 float-none" type="radio" name="Rate" id="gridRadios1" value="10">
+                                  <label class="form-check-label fw-bold ratings" for="gridRadios1">
+                                      @{
+                                          for (var j = 0; j < 5; j++)
+                                          {
+                                            <i class="fa fa-star rating-color"></i>   
+                                          }
+                                      }
+                                  </label>
+                                </div>
                             }
                             else
                             {
-                                <li class="nav-item">
-                                <form asp-controller="Categories" asp-action="Search" method="get">
-                                    <input type="hidden" value="@ViewBag.Text" name="text">
-                                    <input type="hidden" value="@item.CategoryId" name="categoryId">
-                                    <input type="submit" value="@item.Name" class="categorylinks nav-link text-dark w-100">
-                                </form>
-                                </li>
-                            }   
-                        }
-                    }
-                    </ul>
-                  </div>
+                                  <div class="form-check col-12">
+                                  <input class="form-check-input ms-0 float-none" type="radio" name="Rate" id="gridRadios2" value="@(10-2*i)">
+                                  <label class="form-check-label fw-bold ratings" for="gridRadios2">
+                                    @{
+                                          for (var j = 0; j < i; j++)
+                                          {
+                                            <i class="fa fa-star ratinglow"></i>   
+                                          }
+                                            for (var j = 0; j < 5-i; j++)
+                                          {
+                                            <i class="fa fa-star rating-color"></i>   
+                                          }
+                                      }
+                                  </label>
+                                </div>  
+                           }}}
+                      </div>
+                      <div>
+                          <div class="my-3" >الترتيب حسب السعر</div>
+                          <select class="my-3 form-select PriceSelect"   name="Price" >
+                              <option value="negogation">غير محدد</option>
+                              <option value="5">5$</option>
+                              <option value="10">10$</option>
+                              <option value="15">15$</option>
+                              <option value="20">20$</option>
+                              <option value="@int.MaxValue">غير محدود</option>
+                          </select>
+                      </div>
+                      <div class=row>
+                        <div class="form-check col-12 my-3">
+                          <input class="form-check-input ms-0 float-none trustseller" type="checkbox" name="Truste" value="true" id="flexCheckDefault">
+                          <label class="form-check-label fw-bold" for="flexCheckDefault">
+                            بائع موثوق
+                          </label>
+                        </div>
+                        </div>
+                        <input class="btn btn-primary" type="submit" />
+                        </form>
+
+            </div>
             </div>
             <div class="col-9" >
             @{
@@ -83,10 +148,66 @@
 
             </div>
     </section>
+        <div class="row bg-light">
+    @if (pager.TotalPages > 0)
+    {
+        <ul class="pagination justify-content-center">
+            @if (pager.CurrentPage>1)
+            {
+              <li class="page-item">
+                  <a class="page-link" asp-controller="Categories" asp-action="index" asp-route-id="@ViewBag.Id" asp-route-pg="1">
+                    First
+                  </a>
+              </li> 
+              <li>
+                  <a class="page-link" asp-controller="Categories" asp-action="index" asp-route-id="@ViewBag.Id" asp-route-pg="@pager.CurrentPage-1">
+                    Previous
+                  </a>
+              </li>   
+            }
+            @for (var i = 1; i <= pager.EndPage; i++)
+            {
+              <li class="page-item @(i==pager.CurrentPage?"active":" ")">
+                  <a class="page-link" asp-controller="Categories" asp-action="index" asp-route-id="@ViewBag.Id" asp-route-pg="@i">
+                    @i
+                  </a>
+              </li>  
+            }
+            @if (pager.CurrentPage<pager.TotalPages)
+            {
+              <li class="page-item">
+                  <a class="page-link" asp-controller="Categories" asp-action="index" asp-route-id="@ViewBag.Id" asp-route-pg="@pager.CurrentPage+1">
+                    Next
+                  </a>
+              </li> 
+              <li>
+                  <a class="page-link" asp-controller="Categories" asp-action="index" asp-route-id="@ViewBag.Id" asp-route-pg="@pager.TotalPages">
+                    Last
+                  </a>
+              </li>   
+            }
+
+        </ul>
+    }
+
+    </div>
         <script>
            let ele= document.getElementById("checkbox");
            ele.onchange=()=>{setTimeout(()=>{
                ele.form.submit()
            },500)};
+         document.querySelector(".trustseller").checked=@trustedSeller;
+        document.querySelector(".PriceSelect").value=@Price;
+        document.querySelector(".selectCategories").value=@CatId;
+        let radios=document.querySelectorAll(`[name="Rate"]`);
+        for(let i=0;i<=radios.length;i++){
+            if(@rate==0){
+               }
+               else if(@rate==radios[i].value)
+               {
+                   radios[i].checked=true;
+                   break;
+               }
+        };
             
     </script>
