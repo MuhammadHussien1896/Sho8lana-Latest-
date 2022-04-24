@@ -267,7 +267,7 @@
 window.addEventListener("load", () => {
     let searchItem = document.querySelector(".fa-magnifying-glass");
     let clicked = false;
-    let form = document.forms[0];
+    let form = document.forms["SearchForm"];
     searchItem.onclick = function () {
         if (!clicked) {
             form.style.display = "block";
