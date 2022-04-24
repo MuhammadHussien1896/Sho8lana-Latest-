@@ -51,6 +51,13 @@
     <p class="card-text">@Html.DisplayFor(model=>model.CustomerInstructions)</p>
     <h6 class"card-subtitle mb-2 text-muted">Customer</h6>
     <p class="card-text">@Html.DisplayFor(model=>model.Customer.FirstName) @Html.DisplayFor(model=>model.Customer.LastName) </p>
+    @if (Model.IsCash)
+    {
+    <p class="card-text text-danger">Cash only</p>    
+    }
+    else{<p class="card-text text-danger">Online only</p> }
+    
+    
     <div class="card-footer text-muted">
         From @diff Days and @diff1 Hours ago
     </div>
@@ -60,14 +67,58 @@
 
     @if (Model.CustomerId!= userId)
     {
+        if(Model.IsCash==false){
         <a class="btn btn-primary" asp-controller="Customer" asp-action="RequestService" asp-route-id="@Model.ServiceId">Send Request</a>
+              
         <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ServiceId">Send Message</a>
+        
+        }
+        
+        else
+        {
+            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ServiceId">Send Message</a>
+        }
     }
-   
+    else
+            
+    {
+                <div class="card-footer">
+                    <form method="post" asp-action="Delete" asp-route-id="@Model.ServiceId">
+                        <a  asp-action="Edit"
+                            asp-route-id="@Model.ServiceId" class="btn btn-primary">Edit</a>
+
+                        <span id="confirmDeleteSpan_@Model.ServiceId" style="display:none">
+                            <span>Are you sure you want to delete?</span>
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                            <a class="btn btn-primary"
+                                onclick="confirmDelete('@Model.ServiceId', false)">No</a>
+                        </span>
+
+                        <span id="deleteSpan_@Model.ServiceId">
+                            <a  class="btn btn-danger"
+                                onclick="confirmDelete('@Model.ServiceId', true)">Delete</a>
+                        </span>
+                     </form>
+                 </div>       
+    }
+
 
   </div>
 </div>
 </div>
 
+<script>
+    function confirmDelete(uniqueId, isDeleteClicked) {
+    var deleteSpan = 'deleteSpan_' + uniqueId;
+    var confirmDeleteSpan = 'confirmDeleteSpan_' + uniqueId;
 
+    if (isDeleteClicked) {
+        $('#' + deleteSpan).hide();
+        $('#' + confirmDeleteSpan).show();
+    } else {
+        $('#' + deleteSpan).show();
+        $('#' + confirmDeleteSpan).hide();
+    }
+}
+</script>
  
