@@ -43,12 +43,12 @@
 
     <!-- ======= Header ======= -->
     <header id="header" class="sticky-top header-scrolled ">
-        <div class="container d-flex align-items-center justify-content-between">
-            <h1 class="logo" style="padding-left:2px;"><a href="/home/index">Sho8lana</a></h1>
+        <div class="row align-items-center justify-content-between">
+            <h1 class="logo col-2" style="padding-left:2px;"><a href="/home/index">Sho8lana</a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html" class="logo"><img src="~/assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
-            <nav id="navbar" class="navbar">
+            <nav id="navbar" class="navbar col-10">
                 <ul>
                     <li><a class="nav-link scrollto active" asp-controller="Home" asp-action="index" asp-fragment="hero">Home</a></li>
                     <li><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="about">About</a></li>
@@ -64,9 +64,7 @@
                 <i class="bi bi-list mobile-nav-toggle"></i>
                 
             </nav><!-- .navbar -->
-
-        </div>
-         <form asp-action="Search" asp-controller="Categories" onsubmit="return validation()" method="Get" style="display:none">
+         <form asp-action="Search" asp-controller="Categories" name="SearchForm" onsubmit="return validation()" method="Get" class="col-12" style="display:none">
              <div class="row justify-content-around">
                  <div class="col-12">
                   <input type="text" name="text" class="form-control searchbar" placeholder="أكتب ماتريد البحث عنه">
@@ -86,6 +84,8 @@
                         </div>
               </div>
          </form>
+
+        </div>
     </header><!-- End Header -->
     <!-- ======= Hero Section ======= -->
 
@@ -189,7 +189,7 @@
     <script src="~/assets/js/main.js"></script>
     <script>
         function validation(){
-              let x = document.forms[0]["text"].value;
+              let x = document.forms["SearchForm"]["text"].value;
                 if (x == "") {
                  document.querySelector(".text-validation").classList.remove("d-none");
                  return false;
