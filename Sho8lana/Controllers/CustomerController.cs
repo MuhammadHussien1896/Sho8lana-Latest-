@@ -30,57 +30,57 @@ namespace Sho8lana.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> IncomingRequests()
-        {
-            string customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(c => c.Id == customerId);
-            if (customer != null)
-            {
+        //public async Task<IActionResult> IncomingRequests()
+        //{
+        //    string customerId = userManager.GetUserId(User);
+        //    var customer = await context.Customers.GetBy(c => c.Id == customerId);
+        //    if (customer != null)
+        //    {
 
-                //first approach to get customer incoming requests
-                var incomingRequests = await context.CustomerRequests.GetAllBy(r => r.Service.CustomerId == customer.Id);
-                return View(incomingRequests);
-                //secondApproach approach to get customer incoming requests
-                //var customerServices = customer.Services.ToList();
-                //if (customerServices.Count == 0)
-                //{
-                //    return View(null);
-                //}
-                //else
-                //{
+        //        //first approach to get customer incoming requests
+        //        var incomingRequests = await context.CustomerRequests.GetAllBy(r => r.Service.CustomerId == customer.Id);
+        //        return View(incomingRequests);
+        //        //secondApproach approach to get customer incoming requests
+        //        //var customerServices = customer.Services.ToList();
+        //        //if (customerServices.Count == 0)
+        //        //{
+        //        //    return View(null);
+        //        //}
+        //        //else
+        //        //{
                     
-                //    List<CustomerRequest> IncomingRequests = new List<CustomerRequest>();
-                //    foreach (var service in customerServices)
-                //    {
-                //        foreach (var request in service.CustomerRequests)
-                //        {
-                //            IncomingRequests.Add(request);
-                //        }
-                //    }
-                //    return View(IncomingRequests);
-                //}
+        //        //    List<CustomerRequest> IncomingRequests = new List<CustomerRequest>();
+        //        //    foreach (var service in customerServices)
+        //        //    {
+        //        //        foreach (var request in service.CustomerRequests)
+        //        //        {
+        //        //            IncomingRequests.Add(request);
+        //        //        }
+        //        //    }
+        //        //    return View(IncomingRequests);
+        //        //}
                 
-            }
-            else
-            {
-                return NotFound();
-            }
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
             
-        }
-        public async Task<IActionResult> OutgoingRequests()
-        {
-            string customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(c => c.Id == customerId);
-            if (customer != null)
-            {
-                var OutgoingRequests = customer.CustomerRequests.ToList();                   
-                return View(OutgoingRequests);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
+        //}
+        //public async Task<IActionResult> OutgoingRequests()
+        //{
+        //    string customerId = userManager.GetUserId(User);
+        //    var customer = await context.Customers.GetBy(c => c.Id == customerId);
+        //    if (customer != null)
+        //    {
+        //        var OutgoingRequests = customer.CustomerRequests.ToList();                   
+        //        return View(OutgoingRequests);
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+        //}
 
         //customer balance
         public  async Task< IActionResult> GetCustomerBalance()
@@ -143,7 +143,7 @@ namespace Sho8lana.Controllers
                 $"{customer.FirstName} {customer.LastName} has accepted your request for the service {contract.Service.Title} !" +
                 $"Please check your pending contracts to begin the contract");
             //delete customer request after accepting and become a contract
-            context.CustomerRequests.Delete(id);
+            await context.CustomerRequests.Delete(id);
             //saving changes in database
             await context.complete();
             
@@ -158,7 +158,7 @@ namespace Sho8lana.Controllers
             {
                 if(customerRequest.CustomerId == customerId || customerRequest.Service.CustomerId == customerId)
                 {
-                    context.CustomerRequests.Delete(id);
+                    await context.CustomerRequests.Delete(id);
                     return context.complete().Result > 0 ? View(CustomerRequests()) : BadRequest();
                 }
                 else

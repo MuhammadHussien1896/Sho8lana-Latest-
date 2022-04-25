@@ -130,7 +130,7 @@ namespace Sho8lana.Controllers
             if (id == 0) { return NotFound(); }
             else
             {
-                _context.Services.Delete(id);
+                await _context.Services.Delete(id);
                 await _context.complete();
             }
             return RedirectToAction(nameof(Index));
@@ -179,7 +179,7 @@ namespace Sho8lana.Controllers
                     var allImages = _context.Medias.GetAllBy(m=>m.ServiceId==service.ServiceId);
                     foreach(var image in await allImages) 
                     {
-                        _context.Medias.Delete(image.MediaId);
+                        await _context.Medias.Delete(image.MediaId);
                         await _context.complete();
                     }
                     //loop for every image in media list 
