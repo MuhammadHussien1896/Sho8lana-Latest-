@@ -19,13 +19,13 @@ namespace Sho8lana.Models.Repositories
             //appDbContext.SaveChanges();
         }
 
-        public async void Delete(int id)
+        public async Task Delete(int id)
         {
             T entity = await this.GetById(id);
             appDbContext.Set<T>().Remove(entity);
             //appDbContext.SaveChanges();
         }
-        public async void Delete(string id)
+        public async Task Delete(string id)
         {
             T entity = await this.GetById(id);
             appDbContext.Set<T>().Remove(entity);
