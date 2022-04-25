@@ -18,4 +18,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\img\National_id\" />
+    <Folder Include="wwwroot\assets\img\profiles\" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,36 @@
+﻿@model Sho8lana.Models.Customer
+@{
+    ViewData["Title"] = "VerifingPage";
+}
+
+
+<div class="row mb-3 mt-5 flex-column align-items-center">
+    <h1 class="text-center">Verifing User</h1>
+
+<div class="card text-dark bg-light col-sm-12 col-md-6 ">
+   <div class="row col-12 justify-content-around">
+       <div class="col-5"><img src="/assets/img/profiles/@Model.ProfileImage"  height="200px" alt="..."></div>
+       <div class="col-5"><img src="/assets/img/National_id/@Model.NationalIdImage"  height="200px" alt="..."></div>
+       
+   </div>
+ 
+
+  <div class="card-body ms-1">
+    <h5 class="card-title">Phone Number</h5>
+    <p class="card-text-muted">@Model.PhoneNumber</p>
+  </div>
+  
+  <div class="card-body">
+     
+        
+      <form asp-controller="Admin" asp-action="VerifyUser" asp-route-id="@Model.Id">
+          <input type="submit" class="btn btn-success mb-3" value="Verify"/>
+      </form>
+      <form  asp-controller="Admin" asp-action="RejectUser" asp-route-id="@Model.Id" >
+          <input type="submit"class="btn btn-danger" value="Reject"/>
+      </form>
+      
+    
+  </div>
+</div>
+</div>
