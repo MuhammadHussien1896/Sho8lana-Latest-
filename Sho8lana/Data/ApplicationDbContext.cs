@@ -15,6 +15,7 @@ namespace Sho8lana.Data
         public virtual DbSet<ServiceMessage> ServiceMessages { get; set; }
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Governorate> Governorates { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

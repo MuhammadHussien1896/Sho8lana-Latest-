@@ -111,22 +111,66 @@ namespace Sho8lana.Controllers
                 return NotFound();
             }
         }
-
-        public async Task<IActionResult> DeleteRequest(int requestId)
+        public async Task<IActionResult> AcceptServiceRequest(int id)
         {
+            string customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(c => c.Id == customerId);
+            var customerRequest = await context.CustomerRequests.GetById(id);
+            if(customerRequest == null || customer == null)
+            {
+                return NotFound();
+            }
+            if(customerRequest.Service.CustomerId != customerId)
+            {
+                return BadRequest();
+            }
+            //converting request to a pending contract
+            Contract contract = new Contract()
+            {
+                Customer = customerRequest.Customer,
+                Service = customerRequest.Service
+            };
+            //add contract to database
+            context.Contracts.Add(contract);
+            //contract.Customer.Notifications.Add(new Notification() 
+            //{
+            //    Content = $"{customer.FirstName} {customer.LastName} has accepted your request for the service {contract.Service.Title} !" +
+            //    $"Please check your pending contracts to begin the contract"
+            //});
 
-                context.CustomerRequests.Delete(requestId);
-                var deletedRecords = await context.complete();
-                if (deletedRecords > 0)
+            //add notification to the customer who sent the request to the service
+            AddNotification(contract.Customer,
+                $"{customer.FirstName} {customer.LastName} has accepted your request for the service {contract.Service.Title} !" +
+                $"Please check your pending contracts to begin the contract");
+            //delete customer request after accepting and become a contract
+            context.CustomerRequests.Delete(id);
+            //saving changes in database
+            await context.complete();
+            
+            return RedirectToAction(nameof(CustomerContracts));
+        }
+
+        public async Task<IActionResult> DeleteRequest(int id)
+        {
+            string customerId = userManager.GetUserId(User);
+            var customerRequest = await context.CustomerRequests.GetById(id);
+            if(customerRequest != null)
+            {
+                if(customerRequest.CustomerId == customerId || customerRequest.Service.CustomerId == customerId)
                 {
-                    return Content($"deleted records : {deletedRecords}");
-
+                    context.CustomerRequests.Delete(id);
+                    return context.complete().Result > 0 ? View(CustomerRequests()) : BadRequest();
                 }
                 else
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
-            
+                
+            }
+            else
+            {
+                return BadRequest();
+            }
              
         }
 
@@ -143,7 +187,7 @@ namespace Sho8lana.Controllers
                 ContractViewModel model = new ContractViewModel()
                 {
                     PendingContracts    = contracts.Where(c => c.IsDone == false && c.StartDate == default).ToList(),
-                    ActiveContracts     = contracts.Where(c => c.IsDone == false).ToList(),
+                    ActiveContracts     = contracts.Where(c => c.IsDone == false && c.StartDate != default).ToList(),
                     DoneContracts       = contracts.Where(c => c.IsDone == true).ToList()
                 };
                 return View(model);
@@ -155,82 +199,72 @@ namespace Sho8lana.Controllers
         }
 
 
-
-
-
-
-
-        //dump actions
-        //public async Task<IActionResult> AddService()
-        //{
-        //    string customerId = userManager.GetUserId(User);
-        //    var customer = await context.Customers.GetBy(c => c.Id == customerId);
-        //    if (customer != null)
-        //    {
-                
-                
-        //        Category category = new Category() { Description = "freelance jobs", Name = "freelance" };
-        //        context.Categories.Add(category);
-        //        Service service = new Service() {
-        //            CustomerId = customer.Id
-        //            ,Description="bla bla",
-        //            Title="blaaa",
-        //            Category=category
-        //        };
-        //        context.Services.Add(service);
-        //        await context.complete();
-        //        return Content("service added!");
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-            
-        //}
-
         public async Task<IActionResult> RequestService(int id)
         {
             string customerId = userManager.GetUserId(User);
             var customer = await context.Customers.GetBy(c => c.Id == customerId);
             if (customer != null)
             {
-                
-                
-                if(customer.Services.Any(s => s.ServiceId == id))
+                if (customer.CustomerRequests.FirstOrDefault(r => r.ServiceId == id) != null)
                 {
-                    return Content("you cant request your own service !");
+                    return Content("You cant request the service more than one time!");
                 }
+
                 var RequestedService = await context.Services.GetBy(s => s.ServiceId == id);
                 if(RequestedService != null)
                 {
-                    CustomerRequest customerRequest = new CustomerRequest()
+                    if (RequestedService.CustomerId == customerId)
                     {
-                        Customer = customer,
-                        Service = RequestedService
-                    };
-                    context.CustomerRequests.Add(customerRequest);
+                        return Content("you cant request your own service !");
+                    }
 
-                    //sending a notification to the other user
-                    RequestedService.Customer.Notifications.Add(new Notification()
+                    if (!RequestedService.IsCash)
                     {
-                        Content = $"You have a new request from" +
-                        $" {customer.FirstName} {customer.LastName} about your service : {customerRequest.Service.Title} "
-                    });
-                    context.Customers.Update(customerRequest.Service.Customer);
+                        CustomerRequest customerRequest = new CustomerRequest()
+                        {
+                            Customer = customer,
+                            Service = RequestedService
+                        };
+                        context.CustomerRequests.Add(customerRequest);
 
-                    await context.complete();
-                    return Content("Request added!");
+                        //sending a notification to the Service owner
+                        //RequestedService.Customer.Notifications.Add(new Notification()
+                        //{
+                        //    Content = $"You have a new request from" +
+                        //    $" {customer.FirstName} {customer.LastName} about your service : {RequestedService.Title} "
+                        //});
+                        AddNotification(RequestedService.Customer,
+                            $"You have a new request from" +
+                            $" {customer.FirstName} {customer.LastName} about your service : {RequestedService.Title} ");
+
+                        await context.complete();
+                        return Content("Request added!");
+                    }
+                    else
+                    {
+                        return Content("You cant request a cash service!");
+                    }
                 }
                 else
                 {
                     return NotFound();
                 }
-                
+                    
             }
             else
             {
                 return NotFound();
             }
+        }
+
+        private void AddNotification(Customer customer,string content)
+        {
+            Notification notification = new Notification()
+            {
+                Customer = customer,
+                Content = content
+            };
+            context.Notifications.Add(notification);
         }
 
     }

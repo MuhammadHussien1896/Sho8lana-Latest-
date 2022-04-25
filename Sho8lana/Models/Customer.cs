@@ -20,6 +20,7 @@ namespace Sho8lana.Models
             ServiceMessages     = new List<ServiceMessage>();
             Notifications       = new List<Notification>();
         }
+
         [Required,StringLength(15,MinimumLength =3,ErrorMessage ="Firstname must be between 3-15 characters")]
         [RegularExpression("[a-zA-z]+")]
         public string FirstName { get; set; }
