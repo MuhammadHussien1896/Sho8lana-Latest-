@@ -1427,3 +1427,16 @@ section {
 .inputplaceholder::placeholder {
     text-align: center,
 }
+
+
+.profile-picture {
+    height: 180px;
+    width: 230px;
+    object-fit: cover;
+}
+
+.avatar {
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+}

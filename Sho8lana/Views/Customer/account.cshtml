@@ -1,4 +1,5 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+
 
 @model Sho8lana.Models.Customer
 
@@ -21,8 +22,11 @@
                     <!-- <div class="card-header">Profile Picture</div> -->
                     <div class="card-body text-center">
                         <!-- Profile picture image-->
-                        <img class="img-account-profile rounded-circle mb-2"
-                            src="@Model.ProfileImage" alt="">
+
+                        @*<img src="data:image/*;base64,@Convert.ToBase64String(@Model.ProfilePicture)" />*@
+
+                       @* <img class="img-account-profile rounded-circle mb-2"
+                            src="data:image/*;base64,@(Convert.ToBase64String(@Model.ProfilePicture))"/>*@
                         <!-- Profile picture help block-->
                         <h4>@Model.FirstName @Model.LastName </h4>
                         <!-- Profile picture upload button-->
