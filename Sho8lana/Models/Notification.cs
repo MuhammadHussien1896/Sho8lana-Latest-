@@ -11,6 +11,7 @@ namespace Sho8lana.Models
         public int Id { get; set; }
         public string Content { get; set; }
         public DateTime Date { get; set; }
+        public bool IsRead { get; set; }
 
         //navigation properties
         [ForeignKey("Customer")]

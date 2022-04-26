@@ -8,27 +8,56 @@
 {
     
 
-       <li> <a  class="nav-link scrollto"  asp-controller="customer" asp-action=""><i class="bi bi-bell-fill" style="color:white;" title="Notifications"></i></a> </li>
-       <li><a class="nav-link scrollto" asp-controller="customer" asp-action="" > <i class="bi bi-envelope-fill" style="color: white;" title="Email"></i></a></li>
-       <li> <a  class="nav-link scrollto" asp-controller="customer" asp-action="CustomerContracts"><i class="bi bi-briefcase" style="color: white;" title="Contract"></i></a></li>
+       <li class="p-0 mx-2">
+           <a class="nav-link scrollto fa-layers position-relative"  asp-controller="customer" asp-action="CustomerNotifcations">
+               <i class="bi bi-bell-fill fa-2x fas fs-3 p-0" style="color:white" title="Notifications"></i>
+                   <span class="counter-lg counter rounded-circle d-none position-absolute top-0 end-0 bg-danger text-center" style="width:.8rem"></span>
 
-    <li class="nav-link scrollto">
-        <a  class="nav-link " href="/customer/account" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-
-    <li class="nav-link scrollto">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link ">Logout</button>
-        </form>
-    </li>
+           </a> 
+       </li>
+       <li class="p-0 mx-2">
+           <a class="nav-link scrollto" asp-controller="customer" asp-action="" >
+               <i class="bi bi-envelope-fill fs-3" style="color: white;" title="Email"></i>
+           </a>
+      </li>
+       <li class="p-0 mx-2">
+           <a class="nav-link scrollto" asp-controller="customer" asp-action="CustomerContracts">
+               <i class="bi bi-briefcase fs-3" style="color: white;" title="Contract"></i>
+           </a>
+       </li>
+       <li class="p-0 mx-2">
+           <a class="nav-link scrollto" href="/customer/account" title="Manage">Hello @User.Identity?.Name!</a>
+       </li>
+       <li class="p-0 mx-2">
+           <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+               <button  type="submit" class="scrollto nav-link logoutbutton btn ">Logout</button>
+           </form>
+       </li>
 }
 else
 {
 
-    <li class="nav-link scrollto">
-        <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    <li class="p-0 mx-2">
+        <a class="nav-link scrollto" asp-area="Identity" asp-page="/Account/Register">Register</a>
     </li>
-    <li class="nav-link scrollto">
-        <a class="nav-link " asp-area="Identity" asp-page="/Account/Login">Login</a>
+    <li class="p-0 mx-2">
+        <a class="nav-link scrollto" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </li>
 }
+<script>
+    $(document).ready(()=> {    
+        $.ajax({  
+            type: 'Get',  
+            url: '@Url.Action("UnReadNotifcation","JsonApi")',  
+            dataType: "json",  
+            success: (data)=> {
+                if(data>0){
+                    $(".counter").html(data).removeClass("d-none")   
+                }
+            },  
+            error: function (ex) {  
+                console.log(ex)
+            }
+    });  
+ })
+    </script> 

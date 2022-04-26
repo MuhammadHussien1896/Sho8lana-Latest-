@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ServicesCategoriesViewModel
+@{
     ViewData["Title"] = "Services";
     pagination pager = new pagination();
     int pageNo = 0;
@@ -17,7 +18,6 @@
     trustedSeller = (trustedSeller == null ? "false" : "true");
     CatId = (CatId == null ? 0 : CatId);
     var text = ViewBag.Text;
-
 }
     <section id="services" class="services section-bg pt-3 row" style="direction:rtl">
         <div class="col-12 d-flex justify-content-around" data-aos="fade-up">
@@ -27,7 +27,7 @@
             </div>
         </div>
                 <div class="col-12 my-5 d-flex justify-content-center">
-                    <form asp-action="index" asp-controller="Categories"  asp-route-id="@ViewBag.Id">
+                    <form asp-action="index" asp-controller="Categories"  asp-route-id="@CatId">
                         <input type="checkbox" checked data-toggle="toggle" data-off="خدمات" data-on="طلبات"
                          data-onstyle="primary" data-offstyle="success" id="checkbox">
                     </form>            
@@ -38,58 +38,18 @@
                       <span class="fs-4">خدماتنا</span>
                     </a>
                     <form asp-action="search" method="get">
-                        <input type="hidden" value="true" name="type" />
+                        <input type="hidden" value="false" name="type" />
                         <input type="Text" value="@text" name="text" class="form-control my-3" placeholder="أكتب ماتريد البحث عنه">
                    
                     <select class="form-select text-center selectCategories" name="CatId" size="8" aria-label="size 3 select example">
                 @{
-                    foreach (var item in ViewBag.Categories)
+                    foreach (var item in Model.categories)
                     {
                           <option value="@item.CategoryId" class="CategoryOptions">@item.Name</option>    
                     }
 
-                    }
+                }
                     </select>
-                    <div style="direction:rtl">
-                        <div class="my-3">
-                        الترتيب حسب التقييم
-                        </div>
-                    @{
-                        for (var i = 0; i < 5; i++)
-                        {
-                            if (i == 0)
-                            {
-                               <div class="form-check col-12">
-                                  <input class="form-check-input ms-0 float-none" type="radio" name="Rate" id="gridRadios1" value="10">
-                                  <label class="form-check-label fw-bold ratings" for="gridRadios1">
-                                      @{
-                                          for (var j = 0; j < 5; j++)
-                                          {
-                                            <i class="fa fa-star rating-color"></i>   
-                                          }
-                                      }
-                                  </label>
-                                </div>
-                            }
-                            else
-                            {
-                                  <div class="form-check col-12">
-                                  <input class="form-check-input ms-0 float-none" type="radio" name="Rate" id="gridRadios2" value="@(10-2*i)">
-                                  <label class="form-check-label fw-bold ratings" for="gridRadios2">
-                                    @{
-                                          for (var j = 0; j < i; j++)
-                                          {
-                                            <i class="fa fa-star ratinglow"></i>   
-                                          }
-                                            for (var j = 0; j < 5-i; j++)
-                                          {
-                                            <i class="fa fa-star rating-color"></i>   
-                                          }
-                                      }
-                                  </label>
-                                </div>  
-                           }}}
-                      </div>
                       <div>
                           <div class="my-3" >الترتيب حسب السعر</div>
                           <select class="my-3 form-select PriceSelect"   name="Price" >
@@ -116,14 +76,24 @@
             </div>
             <div class="col-9" >
             @{
-                foreach (var service in Model)
+                foreach (var service in Model.services)
                 {
                     
                         <div class="card-deck">
                       <div class="card col-lg-3 col-md-4 col-sm-6 border-0">
                                 <div class="position-relative">
-                                <a>
-                                    <img class="card-img-top" src="~/Images/CategoriesImage/@service.Medias[0].MediaPath">
+                                <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">
+                                   @{
+                                        if (@service.Medias.FirstOrDefault()!=null)
+                                        {
+                                        <img class="card-img-top" src="~/Images/CategoriesImage/@service.Medias.FirstOrDefault().MediaPath">
+                                    }
+                                    else
+                                    {
+                                        <img class="card-img-top" src="~/Images/Defaultimage/defaultHiring.jpg">
+                                    }
+                                }
+                                   
                                 </a>
                                 <img src="~/Images/@service.Customer.ProfileImage" class="position-absolute bottom-0 start-0 img-thumbnail rounded-circle w-25" />
                                 </div>
