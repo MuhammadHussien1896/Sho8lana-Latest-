@@ -14,6 +14,9 @@ namespace Sho8lana.Models.Repositories
         public IEnumerable<T> GetAllSync();
         public Task Delete(int id);
         public Task Delete(string id);
-        
+        public Task<IList<T>> GetAllEagerLodingAsync(Expression<Func<T, bool>> expression, string[] includes = null);
+
+        public Task<T> GetEagerLodingAsync(Expression<Func<T, bool>> expression, string[] includes = null);
+        public void UpdateList(List<T> entity);
     }
 }
