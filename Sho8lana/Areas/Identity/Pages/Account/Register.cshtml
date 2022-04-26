@@ -104,7 +104,7 @@
                                         <select asp-for="Input.City" asp-items="ViewBag.CityId" id="selCity" class="form-select" id="city">
                                              @foreach (var item in Model.govern)
                                                 {
-                                                <option value="@item.Governorate_name_en">@item.Governorate_name_ar</option>
+                                                <option value="@item.GovernorateId">@item.Governorate_name_ar</option>
                                                 }
                                             <option>Selected City</option>
                                         </select>
@@ -156,9 +156,9 @@
     });
     });
     </script>
-    }*@
+    }
 
-@*@section scripts{
+@section scripts{
 <script>
     document.getElementById('selCity').addEventListener('change', (e) => {
         document.getElementById('SelArea').innerHTML = "<option value=''>Select SubCategory</option>";
@@ -182,6 +182,33 @@
     });
 </script>
 }*@
+
+    <script>
+    $("#selCity").on("change", function() {
+    var governorateId = $(this).val();
+        $("#SelArea").empty();
+    $.ajax({  
+            type: 'Get',  
+            url: '@Url.Action("OnGetSubCities","JsonApi")',
+            data:{GovernorateId:governorateId},
+            dataType: "json",  
+            success: (data)=> {
+                console.log(governorateId);
+                console.log(data);
+                    for(var i = 0; i < data.length; i++){
+                        $("#SelArea").append(`<option value="${data[i].cityId}">${data[i].city_name_ar}</option>`)
+                    }
+            },
+            error: function (ex) {  
+                console.log(ex)
+            }
+    })
+    })
+    </script>
+
+
+
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
