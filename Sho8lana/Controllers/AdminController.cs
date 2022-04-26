@@ -18,6 +18,47 @@ namespace Sho8lana.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> ReviewServices()
+        {
+            var services = _context.Services.GetAllBy(a=>a.IsAccepted==false).Result;
+
+            return View(services);
+        }
+
+        public async Task<IActionResult> ShowDetails(int id)
+        {
+            string[] nameOfIncludes =new string[6] {"Category", "Customer", "Contracts", "CustomerRequests", "ServiceMessages", "Medias" };
+            var serviceDetails = _context.Services.GetEagerLodingAsync(a => a.ServiceId == id,nameOfIncludes).Result;
+            if (serviceDetails == null) return NotFound();
+            return View(serviceDetails);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ShowDetails(Service service)
+        {
+            try {
+                _context.Services.Update(service);
+               await _context.complete();
+                return RedirectToAction(nameof(ReviewServices));
+            } catch {
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateListToActive(List<Service> services)
+        {
+            try {
+                _context.Services.UpdateList(services);
+                await _context.complete();
+                return RedirectToAction(nameof(ReviewServices));
+
+            } catch
+            {
+                return NotFound();
+            }
+        }
+       
+
         [HttpPost]
         public async Task<IActionResult> VerifyUser(string id)
         {
@@ -69,5 +110,6 @@ namespace Sho8lana.Controllers
             if(user == null) { return NotFound(); }
             else { return View(user); }
         }
+
     }
 }
