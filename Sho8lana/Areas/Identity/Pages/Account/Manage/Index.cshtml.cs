@@ -3,6 +3,7 @@
 #nullable disable
 
 using System;
+using System.IO;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -56,9 +57,21 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+
+            [Required]
+            [Display(Name = "FirstName")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "LastName")]
+            public string LastName { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "ProfilePicture")]
+            public byte[] ProfilePicture { get; set; }
         }
 
         private async Task LoadAsync(Customer user)
@@ -70,7 +83,10 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                FirstName=user.FirstName,
+                LastName=user.LastName,
+                PhoneNumber = phoneNumber,
+                ProfilePicture=user.ProfilePicture
             };
         }
 
@@ -101,6 +117,21 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var FisrtName=user.FirstName;
+            var LastName=user.LastName;
+
+            if (Input.FirstName != FisrtName)
+            {
+                user.FirstName = Input.FirstName;
+                await _userManager.UpdateAsync(user);
+            }
+
+            if (Input.LastName != LastName)
+            {
+                user.LastName = Input.LastName;
+                await _userManager.UpdateAsync(user);
+            }
+
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
@@ -109,6 +140,20 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
                 }
+            }
+
+            if (Request.Form.Files.Count > 0)
+            {
+                var file=Request.Form.Files.FirstOrDefault();
+
+                using(var dataStream=new MemoryStream())
+                {
+                    await file.CopyToAsync(dataStream);
+                    user.ProfilePicture=dataStream.ToArray();
+                }
+                await _userManager.UpdateAsync(user);
+
+
             }
 
             await _signInManager.RefreshSignInAsync(user);

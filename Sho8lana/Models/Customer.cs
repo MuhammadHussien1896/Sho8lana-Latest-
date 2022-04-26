@@ -43,6 +43,7 @@ namespace Sho8lana.Models
         public string AboutMe { get; set; }
         
         public string ProfileImage { get; set; }
+        public byte[] ProfilePicture { get; set; }
         //image
         public string NationalIdImage { get; set; }
         public bool IsVerified { get; set; }

@@ -6,9 +6,9 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    
 
-       <li class="p-0 mx-2">
+
+    <li class="p-0 mx-2">
            <a class="nav-link scrollto fa-layers position-relative"  asp-controller="customer" asp-action="CustomerNotifcations">
                <i class="bi bi-bell-fill fa-2x fas fs-3 p-0" style="color:white" title="Notifications"></i>
                    <span class="counter-lg counter rounded-circle d-none position-absolute top-0 end-0 bg-danger text-center" style="width:.8rem"></span>
@@ -25,6 +25,15 @@
                <i class="bi bi-briefcase fs-3" style="color: white;" title="Contract"></i>
            </a>
        </li>
+
+           @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+             {
+                <li class="p-0 mx-2">
+                     <img class="avatar rounded-circle" alt="Profile" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" />
+         
+                </li>
+            }
+
        <li class="p-0 mx-2">
            <a class="nav-link scrollto" href="/customer/account" title="Manage">Hello @User.Identity?.Name!</a>
        </li>
