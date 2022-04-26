@@ -26,16 +26,21 @@
            </a>
        </li>
 
-           @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+@*           @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
              {
                 <li class="p-0 mx-2">
                      <img class="avatar rounded-circle" alt="Profile" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" />
          
                 </li>
-            }
+            }*@
 
        <li class="p-0 mx-2">
-           <a class="nav-link scrollto" href="/customer/account" title="Manage">Hello @User.Identity?.Name!</a>
+
+          <a class="nav-link scrollto" href="/customer/account" title="Manage">
+         @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+             {<img class="avatar rounded-circle" alt="Profile" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" />}
+               Hello @User.Identity?.Name!
+          </a>
        </li>
        <li class="p-0 mx-2">
            <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
