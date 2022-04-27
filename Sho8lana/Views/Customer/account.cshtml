@@ -22,11 +22,16 @@
                     <!-- <div class="card-header">Profile Picture</div> -->
                     <div class="card-body text-center">
                         <!-- Profile picture image-->
-
-                        @*<img src="data:image/*;base64,@Convert.ToBase64String(@Model.ProfilePicture)" />*@
-
-                       @* <img class="img-account-profile rounded-circle mb-2"
-                            src="data:image/*;base64,@(Convert.ToBase64String(@Model.ProfilePicture))"/>*@
+                    @if (@Model.ProfilePicture !=null)
+                    {
+                        <img class="profile-picture rounded-circle" src="data:image/*;base64,@Convert.ToBase64String(@Model.ProfilePicture)" />
+                    }
+                    else
+                    {
+                        
+                        <img class="profile-picture rounded-circle" src="~/Images/202022.jpg" />
+                      
+                    }
                         <!-- Profile picture help block-->
                         <h4>@Model.FirstName @Model.LastName </h4>
                         <!-- Profile picture upload button-->
