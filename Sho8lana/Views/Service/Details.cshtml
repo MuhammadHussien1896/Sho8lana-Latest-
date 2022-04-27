@@ -99,6 +99,8 @@
                                 onclick="confirmDelete('@Model.ServiceId', true)">Delete</a>
                         </span>
                      </form>
+                    @* @if(User.IsInRole("Admin"))
+                     <form method="post" asp-action=""></form>*@
                  </div>       
     }
 
