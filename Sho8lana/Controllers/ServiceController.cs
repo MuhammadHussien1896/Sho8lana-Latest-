@@ -9,6 +9,8 @@ using Sho8lana.Data;
 using Sho8lana.Models;
 using Sho8lana.Unit_Of_Work;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Sho8lana.Models.ViewModels;
 
 namespace Sho8lana.Controllers
 {
@@ -18,11 +20,12 @@ namespace Sho8lana.Controllers
         
 
         private readonly IUnitOfWork _context ;
+        private readonly UserManager<Customer> userManager;
 
-        public ServiceController(IUnitOfWork context)
+        public ServiceController(IUnitOfWork context,UserManager<Customer> userManager)
         {
             _context = context;
-            
+            this.userManager = userManager;
         }
 
         /*
@@ -228,6 +231,62 @@ namespace Sho8lana.Controllers
             var service =  await _context.Services.GetBy(e => e.ServiceId == id);
             if(service == null) { return true; }
             else { return false; }
+        }
+
+
+        public async Task<IActionResult> SendMessage(int id)
+        {
+            var service = await _context.Services.GetBy(e => e.ServiceId == id);
+            if (service == null)
+            {
+                return NotFound();
+            }
+            return View(service);
+        }
+        public IActionResult DisplayMessages()
+        {
+            var id = userManager.GetUserId(User);
+            if(id == null)
+            {
+                return NotFound();
+            }
+            var allMessages = _context.ServiceMessages
+                                .GetAllBy(m => m.CustomerId == id || m.ReceiverId == id).Result.OrderByDescending(m => m.MessageDate)
+                                .GroupBy(m => new { m.ServiceId, m.CustomerId });
+            var latestMessages = new List<ServiceMessage>();
+            foreach (var item in allMessages)
+            {
+                item.OrderByDescending(i => i.MessageDate);
+                latestMessages.Add(item.FirstOrDefault());
+            }
+            
+            return View(latestMessages);
+        }
+        public async Task<IActionResult> Chat(int id,string receiverId)
+        {
+            var userId = userManager.GetUserId(User);
+            var receiver = await _context.Customers.GetBy(c => c.Id == receiverId);
+            var service = await _context.Services.GetBy(s => s.ServiceId == id);
+            if (userId == null || receiver == null || service == null)
+            {
+                return NotFound();
+            }
+            var chatMessages = _context.ServiceMessages
+                .GetAllBy(m => ((m.CustomerId == userId && m.ReceiverId == receiverId) 
+                || (m.CustomerId == receiverId && m.ReceiverId == userId))
+                && m.ServiceId == id).Result.OrderByDescending(m => m.MessageDate);
+            var receiverName = $"{receiver.FirstName} {receiver.LastName}";
+            ChatViewModel model = new ChatViewModel()
+            {
+                SenderId = userId,
+                ReceiverName = receiverName,
+                ReceiverId = receiverId,
+                Messages = chatMessages,
+                ServiceTitle = service.Title,
+                ServiceId = id
+            };
+            return View(model);
+            
         }
     }
 }

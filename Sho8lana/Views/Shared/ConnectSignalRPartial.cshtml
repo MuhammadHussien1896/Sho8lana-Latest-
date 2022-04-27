@@ -1,0 +1,11 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<Customer> SignInManager
+@inject UserManager<Customer> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/SignalRConnection.js"></script>
+}
