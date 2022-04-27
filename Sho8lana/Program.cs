@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sho8lana.Data;
+using Sho8lana.Hubs;
 using Sho8lana.Models;
 using Sho8lana.Unit_Of_Work;
 
@@ -23,6 +24,7 @@ builder.Services.AddIdentity<Customer,IdentityRole>()
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSignalR();
 
 
 var app = builder.Build();
@@ -51,5 +53,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

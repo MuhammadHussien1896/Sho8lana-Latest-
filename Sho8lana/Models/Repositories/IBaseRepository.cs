@@ -14,6 +14,8 @@ namespace Sho8lana.Models.Repositories
         public IEnumerable<T> GetAllSync();
         public Task Delete(int id);
         public Task Delete(string id);
-        
+        public void Delete(T entity);
+
+
     }
 }

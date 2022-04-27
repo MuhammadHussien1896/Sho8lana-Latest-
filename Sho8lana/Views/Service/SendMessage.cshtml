@@ -1,0 +1,64 @@
+﻿@model Service
+@{
+    ViewData["Title"] = "SendMessage";
+    var serviceId = Model.ServiceId.ToString();
+}
+
+<div class="container">
+    <h3>Send Message To @Model.Customer.FirstName @Model.Customer.LastName</h3>
+    
+    <div class="mb-3">
+      <textarea class="form-control" id="txtMsg" rows="3"></textarea>
+    </div>
+    
+    @*<a id="sendBtn" class="btn btn-primary" asp-controller="Service" asp-action="Chat" asp-route-id="@Model.ServiceId">Send</a>*@
+    <button id="sendBtn" class="btn btn-primary" onclick="send('@Model.CustomerId', '@Model.ServiceId')">Send</button>
+</div>
+
+<script>
+    
+    //document.getElementById("sendBtn").addEventListener("click", function (event) {
+    //    var message = document.getElementById("txtMsg").value;
+    //    connection.invoke("SendMessage", message,"hfhgf" , 4).then(() => {
+    //        console.log("message sent");
+    //    });
+    //});
+    //var sendBtn = document.getElementById("sendBtn");
+    //sendBtn.disabled = true;
+    var message = document.getElementById("txtMsg");
+    //message.addEventListener("keydown", () => {
+    //    if(message.value){
+    //        sendBtn.disabled = false;
+    //    }else{
+    //        sendBtn.disabled = true;
+    //    }
+    //});
+    function send(receiverId,serviceId){
+        if(message.value){
+            connection.invoke("SendMessage",message.value,receiverId,parseInt(serviceId)).then(()=>{
+               window.location.href = "@Url.Action("chat","service",new {id = serviceId,receiverId = Model.CustomerId })";
+            });
+        }else{
+            alert("Message is Empty !");
+        }
+    }
+    
+</script>
+@*<script src="~/js/sendmessage.js"></script>*@
+@*<script>
+    //let txtArea = document.getElementById("txtMsg");
+    //$(function(){
+    //    $("#sendBtn").addEventListener("click", () => {
+    //        console.log("message sent");
+    //        connection.invoke("sendMessage",$("#txtMsg").val() ,);
+    //    });
+    //});
+    
+    //document.getElementById("sendBtn").addEventListener("click", () => {
+    //        console.log("message sent");
+    //        connection.invoke("SendMessage",txtArea.innerText ,);
+    //    });
+    
+    
+    
+</script>*@

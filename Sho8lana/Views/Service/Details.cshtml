@@ -70,13 +70,13 @@
         if(Model.IsCash==false){
         <a class="btn btn-primary" asp-controller="Customer" asp-action="RequestService" asp-route-id="@Model.ServiceId">Send Request</a>
               
-        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ServiceId">Send Message</a>
+        <a class="btn btn-primary" asp-controller="Service" asp-action="SendMessage" asp-route-id="@Model.ServiceId">Send Message</a>
         
         }
         
         else
         {
-            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ServiceId">Send Message</a>
+            <a class="btn btn-primary" asp-controller="Service" asp-action="SendMessage" asp-route-id="@Model.ServiceId">Send Message</a>
         }
     }
     else

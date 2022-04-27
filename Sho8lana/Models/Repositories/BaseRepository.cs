@@ -31,6 +31,11 @@ namespace Sho8lana.Models.Repositories
             appDbContext.Set<T>().Remove(entity);
             //appDbContext.SaveChanges();
         }
+        public void Delete(T entity)
+        {
+            appDbContext.Set<T>().Remove(entity);
+            //appDbContext.SaveChanges();
+        }
 
         public async Task<List<T>> GetAll()
         {

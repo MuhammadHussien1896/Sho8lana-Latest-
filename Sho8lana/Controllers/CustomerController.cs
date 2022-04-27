@@ -87,6 +87,11 @@ namespace Sho8lana.Controllers
         {
             string customerId = userManager.GetUserId(User);
             var customer = await context.Customers.GetBy(c => c.Id == customerId);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+                
             return View(customer);
         }
 
