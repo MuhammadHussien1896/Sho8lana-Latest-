@@ -67,7 +67,7 @@ namespace Sho8lana.Models.Repositories
         public void Update(T entity)
         {
             appDbContext.Set<T>().Update(entity);
-            //appDbContext.SaveChanges();
+           
         }
 
         public async Task<IEnumerable<T>> GetAllBy(Expression<Func<T, bool>> expression)
@@ -75,5 +75,35 @@ namespace Sho8lana.Models.Repositories
             IEnumerable<T> entity = await appDbContext.Set<T>().Where(expression).ToListAsync();
             return entity;
         }
+
+        public async Task<IList<T>> GetAllEagerLodingAsync(Expression<Func<T,bool>> expression, string[] includes=null)
+        {
+            IQueryable<T> query = appDbContext.Set<T>();
+            if (includes != null)
+            {
+                foreach(var item in includes)
+                    query = query.Include(item);
+            }
+            return await query.Where(expression).ToListAsync();
+
+        }
+        public async Task<T> GetEagerLodingAsync(Expression<Func<T, bool>> expression, string[] includes = null)
+        {
+            IQueryable<T> query = appDbContext.Set<T>();
+            if (includes != null)
+            {
+                foreach (var item in includes)
+                    query = query.Include(item);
+            }
+            return await query.SingleOrDefaultAsync(expression);
+
+        }
+        public void  UpdateList(List<T> entity)
+        {
+            appDbContext.Set<T>().UpdateRange(entity);
+
+        }
+
+
     }
 }

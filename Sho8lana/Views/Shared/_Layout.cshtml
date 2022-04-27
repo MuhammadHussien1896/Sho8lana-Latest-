@@ -44,22 +44,22 @@
 
     <!-- ======= Header ======= -->
     <header id="header" class="sticky-top header-scrolled ">
-        <div class="row align-items-center justify-content-between">
-            <h1 class="logo col-2" style="padding-left:2px;"><a href="/home/index">Sho8lana</a></h1>
+        <div class="row align-items-center justify-content-between g-0">
+            <h1 class="logo col-3 ps-5"><a href="/home/index">Sho8lana</a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html" class="logo"><img src="~/assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
-            <nav id="navbar" class="navbar col-10">
+            <nav id="navbar" class="navbar col-8 justify-content-end my-2">
                 <ul>
-                    <li><a class="nav-link scrollto active" asp-controller="Home" asp-action="index" asp-fragment="hero">Home</a></li>
-                    <li><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="about">About</a></li>
-                    <li><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="services">Services</a></li>
-                    <li><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="features">Features</a></li>
-                    <li><a class="nav-link scrollto"  asp-controller="Home" asp-action="index" asp-fragment="contact">Contact</a></li>
+                    <li class="p-0 mx-2"><a class="nav-link scrollto active" asp-controller="Home" asp-action="index" asp-fragment="hero">Home</a></li>
+                    <li class="p-0 mx-2"><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="about">About</a></li>
+                    <li class="p-0 mx-2"><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="services">Services</a></li>
+                    <li class="p-0 mx-2"><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="features">Features</a></li>
+                    <li class="p-0 mx-2"><a class="nav-link scrollto"  asp-controller="Home" asp-action="index" asp-fragment="contact">Contact</a></li>
                     <partial name="_LoginPartial"/>
                     
-                   <li class="dropdown w-100"><i class="fa-solid fa-magnifying-glass nav-link text-light"></i></li>
-                    <li><a class="getstarted scrollto" href="#about">Get Started</a></li>
+                   <li class="dropdown p-0 mx-2"><i class="fa-solid fa-magnifying-glass nav-link text-light"></i></li>
+@*                    <li><a class="getstarted scrollto" href="#about">Get Started</a></li>*@
   
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>

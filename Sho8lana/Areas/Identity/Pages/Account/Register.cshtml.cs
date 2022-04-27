@@ -154,12 +154,6 @@ namespace Sho8lana.Areas.Identity.Pages.Account
             
         }
 
-        public JsonResult OnGetSubCities()
-        {
-            var result= new JsonResult(_unitOfWork.Cities.GetAllBy(c => c.GovernorateId == GovernorateId).Result);
-            return result;
-            //return Json(result, JsonRequestBehavior.AllowGet)
-        }
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sho8lana.Data;
 
@@ -11,9 +12,10 @@ using Sho8lana.Data;
 namespace Sho8lana.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220425174311_IsReadNotify")]
+    partial class IsReadNotify
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -331,9 +333,6 @@ namespace Sho8lana.Migrations
                     b.Property<string>("ProfileImage")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<DateTime>("RegisterationDate")
                         .HasColumnType("datetime2");
 
@@ -455,19 +454,6 @@ namespace Sho8lana.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("Sho8lana.Models.OnlineUser", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConnectionId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId", "ConnectionId");
-
-                    b.ToTable("OnlineUsers");
-                });
-
             modelBuilder.Entity("Sho8lana.Models.Service", b =>
                 {
                     b.Property<int>("ServiceId")
@@ -532,18 +518,12 @@ namespace Sho8lana.Migrations
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
                     b.Property<string>("MessageContent")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("MessageDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ReceiverId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");

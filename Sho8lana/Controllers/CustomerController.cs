@@ -271,6 +271,16 @@ namespace Sho8lana.Controllers
             };
             context.Notifications.Add(notification);
         }
+        public async Task<IActionResult> CustomerNotifcations()
+        {
+            var customerId = userManager.GetUserId(User);
+            var notification = await context.Notifications.GetAllBy(c => c.CustomerId == customerId);
+            if (customerId == null)
+            {
+                return NotFound();
+            };
+            return View(notification);
+        }
 
     }
 }
