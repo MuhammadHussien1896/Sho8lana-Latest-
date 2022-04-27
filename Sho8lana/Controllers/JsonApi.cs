@@ -52,5 +52,23 @@ namespace Sho8lana.Controllers
             var result = context.Cities.GetAllBy(c => c.GovernorateId == GovernorateId).Result;
             return Json(result);
         }
+        [HttpGet]
+        public async Task<IActionResult> UnverifiedUsers()
+        {
+            var customers = await context.Customers.GetAllBy(c => c.IsVerified == false
+                                                             && c.NationalIdImage!=null
+                                                             &&c.PhoneNumber!=null
+                                                             &&c.ProfileImage!=null);
+            return Json(customers);
+        }
+        [HttpGet]
+        public async Task<IActionResult> RestOfCustomers()
+        {
+            var customers = await context.Customers.GetAllBy(c => c.IsVerified == false
+                                                             &&(c.NationalIdImage == null
+                                                             || c.PhoneNumber == null
+                                                             || c.ProfileImage == null));
+            return Json(customers);
+        }
     }
 }

@@ -14,9 +14,10 @@ namespace Sho8lana.Controllers
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult>Index()
         {
-            return View();
+            var customers=await _context.Customers.GetAllBy(c=>c.IsVerified==true);
+            return View(customers);
         }
 
         public async Task<IActionResult> ReviewServices()
