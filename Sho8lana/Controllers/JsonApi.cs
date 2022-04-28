@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Sho8lana.Models;
+using Sho8lana.Paging;
 using Sho8lana.Unit_Of_Work;
 
 namespace Sho8lana.Controllers
@@ -47,9 +48,9 @@ namespace Sho8lana.Controllers
 
         }
         [HttpGet]
-        public IActionResult OnGetSubCities(int GovernorateId)
+        public IActionResult OnGetSubCities(string GovernorateName)
         {
-            var result = context.Cities.GetAllBy(c => c.GovernorateId == GovernorateId).Result;
+            var result = context.Cities.GetAllBy(c => c.Governorate.Governorate_name_en == GovernorateName).Result;
             return Json(result);
         }
     }

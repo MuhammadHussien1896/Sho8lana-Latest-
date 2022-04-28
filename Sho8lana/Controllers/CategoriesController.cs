@@ -60,7 +60,7 @@ namespace Sho8lana.Controllers
                                  .GetAllBy(s => s.IsAccepted
                                   && s.IsFreelancer == Convert.ToBoolean(type)
                                   && s.Rate <= (Rate ?? 10) && s.Price <= (Price ?? int.MaxValue)
-                                  && s.Description.Contains(text));
+                                  && (s.Description.Contains(text)||s.Title.Contains(text)));
 
             }
             if (!(CatId is null)) services = services.Where(s => s.CategoryId == CatId);

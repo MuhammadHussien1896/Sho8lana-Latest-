@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sho8lana.Models;
+using Sho8lana.Paging;
 using Sho8lana.Unit_Of_Work;
 
 namespace Sho8lana.Controllers
@@ -14,9 +15,51 @@ namespace Sho8lana.Controllers
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult>Index()
         {
+
             return View();
+        }
+        public async Task<IActionResult> ReviewUsers(string type,int pg=1)
+        {
+            IEnumerable<Customer> customers = new List<Customer>();
+            if (type == null)
+            {
+                customers = await _context.Customers.GetAllBy(c => c.IsVerified == true);
+                type = "Verfied";
+            }
+            if (type == "Verfied")
+            {
+                customers = await _context.Customers.GetAllBy(c => c.IsVerified == true);
+            }
+
+            else if (type == "Unverfied")
+            {
+                customers = await _context.Customers.GetAllBy(c => c.IsVerified == false
+                                                && c.NationalIdImage != null
+                                                && c.PhoneNumber != null
+                                                && c.ProfileImage != null);
+            }
+            else if (type == "Rest")
+            {
+                 customers = await _context.Customers.GetAllBy(c => c.IsVerified == false
+                                                 && (c.NationalIdImage == null
+                                                 || c.PhoneNumber == null
+                                                 || c.ProfileImage == null));
+            }
+
+            //////paging section
+            const int PageSize = 2;
+            int RecsCount = customers.Count();
+            var pager = new pagination(RecsCount, pg, PageSize);
+            int rescPage = (pg - 1) * PageSize;
+            var data = customers.Skip(rescPage).Take(pager.PageSize).ToList();
+            ViewBag.pager = pager;
+            //////
+            
+            ViewBag.Type = type;
+            
+            return View(data);
         }
 
         public async Task<IActionResult> ReviewServices()
