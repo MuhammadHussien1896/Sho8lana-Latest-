@@ -7,12 +7,6 @@
 @if (SignInManager.IsSignedIn(User))
 {
 
-
-       <li> <a  class="nav-link scrollto"  asp-controller="customer" asp-action=""><i class="bi bi-bell-fill" style="color:white;" title="Notifications"></i></a> </li>
-       <li><a class="nav-link scrollto" asp-controller="service" asp-action="displayMessages" > <i class="bi bi-envelope-fill" style="color: white;" title="Email"></i></a></li>
-       <li> <a  class="nav-link scrollto" asp-controller="customer" asp-action="CustomerContracts"><i class="bi bi-briefcase" style="color: white;" title="Contract"></i></a></li>
-
-
     <li class="p-0 mx-2">
            <a class="nav-link scrollto fa-layers position-relative"  asp-controller="customer" asp-action="CustomerNotifcations">
                <i class="bi bi-bell-fill fa-2x fas fs-3 p-0" style="color:white" title="Notifications"></i>
@@ -21,7 +15,7 @@
            </a> 
        </li>
        <li class="p-0 mx-2">
-           <a class="nav-link scrollto" asp-controller="customer" asp-action="" >
+           <a class="nav-link scrollto" asp-controller="customer" asp-action="displayMessages" >
                <i class="bi bi-envelope-fill fs-3" style="color: white;" title="Email"></i>
            </a>
       </li>
