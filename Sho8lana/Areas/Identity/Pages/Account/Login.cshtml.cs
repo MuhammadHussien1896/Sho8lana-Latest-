@@ -67,7 +67,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [EmailAddress]
+            
             public string Email { get; set; }
 
             /// <summary>
@@ -109,7 +109,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            //var userName = new EmailAddressAttribute().IsValid(Input.Email) ? new MailAddress(Input.Email).User : Input.Email;
+            var userName = new EmailAddressAttribute().IsValid(Input.Email) ? new MailAddress(Input.Email).User : Input.Email;
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout

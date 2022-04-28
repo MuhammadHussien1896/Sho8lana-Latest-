@@ -28,6 +28,7 @@ namespace Sho8lana.Models
         public bool IsAccepted { get; set; }
 
         public float Rate { get; set; }
+        public bool IsRejected { get; set; }
 
         //navigation Properities
         public virtual ICollection<Media> Medias { get; set; }

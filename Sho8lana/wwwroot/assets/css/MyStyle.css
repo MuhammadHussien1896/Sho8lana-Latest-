@@ -31,18 +31,18 @@ body {
     color: #fff;
     margin-top: 4%;
 }
-.register-left input {
-    border: none;
-    border-radius: 1.5rem;
-    padding: 2%;
-    width: 60%;
-    background: #f8f9fa;
-    font-weight: bold;
-    color: #383d41;
-    margin-top: 30%;
-    margin-bottom: 3%;
-    cursor: pointer;
-}
+    .register-left a {
+        border: none;
+        border-radius: 1.5rem;
+        padding: 2% 20% 2% 20%;
+        width: 100%;
+        background: #f8f9fa;
+        font-weight: bold;
+        color: #383d41;
+        margin-top: 30%;
+        margin-bottom: 3%;
+        cursor: pointer;
+    }
 
 .register-right {
     background: #f8f9fa;
@@ -91,15 +91,17 @@ body {
 
 .btnRegister {
     float: right;
-    margin-top: 10%;
+    margin-top: 0%;
+    margin-bottom: 10%;
     border: none;
     border-radius: 1.5rem;
-    padding: 2%;
+    padding: 1%;
     background: #0062cc;
     color: #fff;
     font-weight: 600;
-    width: 50%;
-    cursor: pointer;
+    width: 30%;
+   
+  
 }
 .register .nav-tabs {
     margin-top: 3%;
