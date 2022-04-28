@@ -1,0 +1,49 @@
+﻿@model ChatViewModel
+
+@{
+    ViewData["Title"] = "Chat";
+}
+
+<h5>Chat with @Model.ReceiverName about service : @Model.ServiceTitle</h5>
+<input id="txtInput" type="text" class="form-control" />
+<button id="sendBtn" class="btn btn-primary" onclick="send('@Model.ReceiverId', '@Model.ServiceId')">Send</button>
+<ul id="mylist">
+    @foreach(var message in Model.Messages)
+    {  
+        <li>
+            @message.Customer.FirstName @message.Customer.LastName : @message.MessageContent
+            <br/>
+            <small>@message.MessageDate</small>
+        </li>   
+    }
+</ul>
+
+
+
+<script>
+    $(function(){
+        //alert("script works!");
+        connection.on("receiveMessage",(message,name,date)=>{
+            //alert("new message");
+            //$("ul").appendTo($`<li>${name} : ${message}<br/><small>${date}</small></li>`);
+            $('#mylist').prepend('<li>'+ name +' : '+ message + '<br/><small>'+ date +'</small></li>');
+        });
+        
+        //$("#sendBtn").click(()=>{
+        //    connection.invoke("sendMessage",$("#txtInput").val(),"","").then(()=>{
+        //        alert("sent!");
+        //    })
+        //})
+    });
+    var message = document.getElementById("txtInput");
+    function send(receiverId,serviceId){
+        if(message.value){
+            connection.invoke("SendMessage",message.value,receiverId,parseInt(serviceId)).then(()=>{
+                message.value = "";
+            });
+        }else{
+            alert("Message is Empty !");
+        }
+    }
+</script>
+

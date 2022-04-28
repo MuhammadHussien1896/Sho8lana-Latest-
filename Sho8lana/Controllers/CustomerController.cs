@@ -87,6 +87,11 @@ namespace Sho8lana.Controllers
         {
             string customerId = userManager.GetUserId(User);
             var customer = await context.Customers.GetBy(c => c.Id == customerId);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+                
             return View(customer);
         }
 
@@ -159,7 +164,7 @@ namespace Sho8lana.Controllers
                 if(customerRequest.CustomerId == customerId || customerRequest.Service.CustomerId == customerId)
                 {
                     await context.CustomerRequests.Delete(id);
-                    return context.complete().Result > 0 ? View(CustomerRequests()) : BadRequest();
+                    return context.complete().Result > 0 ? RedirectToAction(nameof(CustomerRequests)) : BadRequest();
                 }
                 else
                 {
@@ -186,9 +191,10 @@ namespace Sho8lana.Controllers
                                                 .GetAllBy(c => c.CustomerId == customerId || c.Service.CustomerId == customerId);
                 ContractViewModel model = new ContractViewModel()
                 {
-                    PendingContracts    = contracts.Where(c => c.IsDone == false && c.StartDate == default).ToList(),
-                    ActiveContracts     = contracts.Where(c => c.IsDone == false && c.StartDate != default).ToList(),
-                    DoneContracts       = contracts.Where(c => c.IsDone == true).ToList()
+                    PendingContracts            = contracts.Where(c => c.IsDone == false && c.StartDate == default && !(c.BuyerAccepted && c.SellerAccepted)).ToList(),
+                    PendingPaymentContracts     = contracts.Where(c => c.IsDone == false && c.StartDate == default && (c.BuyerAccepted && c.SellerAccepted)).ToList(),
+                    ActiveContracts             = contracts.Where(c => c.IsDone == false && c.StartDate != default).ToList(),
+                    DoneContracts               = contracts.Where(c => c.IsDone == true).ToList()
                 };
                 return View(model);
             }
@@ -197,7 +203,91 @@ namespace Sho8lana.Controllers
                 return NotFound();
             }
         }
+        public async Task<IActionResult> AcceptContract(int id)
+        {
+            string customerId = userManager.GetUserId(User);
+            var contract = await context.Contracts.GetById(id);
+            if(contract != null)
+            {
+                if(contract.CustomerId == customerId)
+                {
+                    contract.BuyerAccepted = true;
+                }
+                else
+                {
+                    contract.SellerAccepted = true;
+                }
+                context.Contracts.Update(contract);
+                await context.complete();
+                return RedirectToAction(nameof(CustomerContracts));
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+        public async Task<IActionResult> EditContractPrice(int id)
+        {
+            string customerId = userManager.GetUserId(User);
+            var contract = await context.Contracts.GetById(id);
+            if (contract == null || customerId == null)
+            {
+                return NotFound();
+            }
+            if(contract.CustomerId == customerId)//not the service owner
+            {
+                return NotFound();
+            }
+            EditContractPriceViewModel model = new EditContractPriceViewModel() { Id = id };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditContractPrice(EditContractPriceViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var contract = await context.Contracts.GetById(model.Id);
+                contract.ContractPrice = model.Price;
+                context.Contracts.Update(contract);
+                await context.complete();
+                return RedirectToAction(nameof(CustomerContracts));
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+            public async Task<IActionResult> DeleteContract(int id)
+        {
+            string customerId = userManager.GetUserId(User);
+            var contract = await context.Contracts.GetById(id);
+            if (contract != null)
+            {
+                if (contract.CustomerId == customerId || contract.Service.CustomerId == customerId)
+                {
+                    if(contract.IsDone == false && contract.StartDate == default && !(contract.BuyerAccepted && contract.SellerAccepted))
+                    {
+                        await context.Contracts.Delete(id);
+                        return context.complete().Result > 0 ? RedirectToAction(nameof(CustomerContracts)) : BadRequest();
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
+                    
+                }
+                else
+                {
+                    return BadRequest();
+                }
 
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
 
         public async Task<IActionResult> RequestService(int id)
         {
@@ -238,7 +328,7 @@ namespace Sho8lana.Controllers
                             $" {customer.FirstName} {customer.LastName} about your service : {RequestedService.Title} ");
 
                         await context.complete();
-                        return Content("Request added!");
+                        return RedirectToAction(nameof(CustomerRequests));
                     }
                     else
                     {

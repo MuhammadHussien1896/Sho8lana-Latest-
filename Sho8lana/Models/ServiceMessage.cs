@@ -15,6 +15,8 @@ namespace Sho8lana.Models
         [StringLength(200, MinimumLength = 1, ErrorMessage = "Message must be maximum 200 characters")]
         public string MessageContent { get; set; }
         public DateTime MessageDate { get; set; }
+        public bool IsRead { get; set; }
+        public string ReceiverId { get; set; }
 
         //navigation properties
         [ForeignKey("Customer")]

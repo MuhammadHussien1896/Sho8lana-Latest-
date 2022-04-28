@@ -106,7 +106,7 @@
                                         <select asp-for="Input.City" asp-items="ViewBag.CityId" id="selCity" class="form-select" id="city">
                                              @foreach (var item in Model.govern)
                                                 {
-                                                <option value="@item.GovernorateId">@item.Governorate_name_ar</option>
+                                                <option value="@item.Governorate_name_en">@item.Governorate_name_ar</option>
                                                 }
                                             <option>Selected City</option>
                                         </select>
@@ -192,13 +192,13 @@
     $.ajax({  
             type: 'Get',  
             url: '@Url.Action("OnGetSubCities","JsonApi")',
-            data:{GovernorateId:governorateId},
+            data:{GovernorateName:governorateId},
             dataType: "json",  
             success: (data)=> {
                 console.log(governorateId);
                 console.log(data);
                     for(var i = 0; i < data.length; i++){
-                        $("#SelArea").append(`<option value="${data[i].cityId}">${data[i].city_name_ar}</option>`)
+                        $("#SelArea").append(`<option value="${data[i].city_name_en}">${data[i].city_name_ar}</option>`)
                     }
             },
             error: function (ex) {  
