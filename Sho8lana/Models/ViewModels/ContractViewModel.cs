@@ -4,11 +4,13 @@
     {
         public ContractViewModel()
         {
-            PendingContracts = new List<Contract>();
-            ActiveContracts = new List<Contract>();
-            DoneContracts = new List<Contract>();
+            PendingContracts        = new List<Contract>();
+            PendingPaymentContracts = new List<Contract>();
+            ActiveContracts         = new List<Contract>();
+            DoneContracts           = new List<Contract>();
         }
         public ICollection<Contract> PendingContracts { get; set; }
+        public ICollection<Contract> PendingPaymentContracts { get; set; }
         public ICollection<Contract> ActiveContracts { get; set; }
         public ICollection<Contract> DoneContracts { get; set; }
     }
