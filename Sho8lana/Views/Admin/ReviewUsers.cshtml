@@ -1,0 +1,186 @@
+﻿@model IEnumerable<Customer>
+@{
+    ViewData["Title"] = "Admin Control Panel";
+    pagination pager = new pagination();
+    int pageNo = 0;
+    if (ViewBag.pager != null)
+    {
+        pager = ViewBag.pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<div class="row my-5 h-100">
+    <ul class="nav nav-tabs justify-content-center m-auto col-12" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active Verfied customerPanel " id="home-tab" asp-action="ReviewUsers">Verfied Customers</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link customerPanel Unverfied" id="profile-tab" asp-action="ReviewUsers" asp-route-type="Unverfied">Unverfied Customers</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link customerPanel Rest" id="contact-tab" asp-action="ReviewUsers" asp-route-type="Rest">Customers</a>
+      </li>
+    </ul>
+    <div class="tab-content col-12 m-auto mt-4" id="myTabContent">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+         <table class="table table-striped table-responsive align-middle table-hover mt-4 w-100 table-bordered text-center">
+            <thead class="table-primary">
+                <tr>
+            
+                    <th>
+                        @Html.DisplayNameFor(model => model.UserName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+           
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </th>
+                    <th>
+                         @Html.DisplayNameFor(model => model.IsPremium)
+                    </th>
+                    <th>
+                         @Html.DisplayNameFor(model => model.Gender)
+                    </th>
+                    <th>
+                         @Html.DisplayNameFor(model => model.City)
+                    </th>
+                    <th>
+                         @Html.DisplayNameFor(model => model.Area)
+                    </th>
+                    <th>
+                         @Html.DisplayNameFor(model => model.Balance)
+                    </th>
+                    <th>
+                         @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </th>
+                    <th scope="col" class="col-auto">
+                         @Html.DisplayNameFor(model => model.ProfileImage)
+                    </th>
+                    <th>
+                         @Html.DisplayNameFor(model => model.NationalIdImage)
+                    </th>
+                    <th>
+                         Details
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+        @foreach (var item in Model) {
+                <tr>
+           
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+           
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                         @Html.DisplayTextFor(modelItem => item.IsPremium)
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.Gender)
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.City)
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.Area)
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.Balance)
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        <div class="w-100" style="background-image:url(/Images/@item.ProfileImage);
+                                                  background-position:center;
+                                                  background-size:contain;
+                                                  background-repeat:no-repeat;
+                                                  height:10vh">
+
+                        </div
+                    </td>
+                    <td>
+                         @Html.DisplayFor(modelItem => item.NationalIdImage)
+                    </td>
+                    <td>
+                        @if(ViewBag.Type=="Unverfied"){
+                            <a asp-action="VerifingPage" asp-route-id="@item.Id" class="btn btn-danger w-75" > Verify</a> 
+                        }
+                        else{
+                            <a  class="btn btn-primary w-75" > Show Details</a> 
+                        }
+
+                    </td>
+                </tr>
+        }
+            </tbody>
+       </table>
+      </div>
+    </div>
+</div>
+            <div class="row bg-light">
+            @if (pager.TotalPages > 0)
+            {
+                <ul class="pagination justify-content-center">
+                    @if (pager.CurrentPage>1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="Admin" asp-action="ReviewUsers" asp-route-type="@ViewBag.Type" asp-route-pg="1">
+                                First
+                            </a>
+                        </li> 
+                        <li>
+                            <a class="page-link" asp-controller="Admin" asp-action="ReviewUsers" asp-route-type="@ViewBag.Type" asp-route-pg="@pager.CurrentPage-1">
+                                Previous
+                            </a>
+                        </li>   
+                    }
+                    @for (var i = 1; i <= pager.EndPage; i++)
+                    {
+                        <li class="page-item @(i==pager.CurrentPage?"active":" ")">
+                             <a class="page-link" asp-controller="Admin" asp-action="ReviewUsers" asp-route-type="@ViewBag.Type" asp-route-pg="@i">
+                                @i
+                             </a>
+                        </li>  
+                    }
+                    @if (pager.CurrentPage<pager.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="Admin" asp-action="ReviewUsers" asp-route-type="@ViewBag.Type" asp-route-pg="@pager.CurrentPage+1">
+                                Next
+                            </a>
+                        </li> 
+                        <li>
+                              <a class="page-link" asp-controller="Admin" asp-action="ReviewUsers" asp-route-type="@ViewBag.Type"  asp-route-pg="@pager.TotalPages">
+                                Last
+                              </a>
+                        </li>   
+                    }
+
+                </ul>
+            }
+            </div>
+
+<script>
+    $(".customerPanel").each(function (i,item){
+        item.classList.remove("active");
+        if(item.classList.contains("@ViewBag.Type")){
+            item.classList.add("active");
+        }
+    });
+</script>
