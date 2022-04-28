@@ -1,0 +1,46 @@
+﻿@model Sho8lana.Models.Category
+
+@{
+    ViewData["Title"] = "Create Category";
+}
+
+<h1>Create Category</h1>
+<hr />
+<div class="row container">
+    <div class="col-md-4">
+        <form asp-action="CreateCategory" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="4" ></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CategoryImg" class="control-label"></label>
+                <input asp-for="CategoryImg" type="file" value="Upload" class="form-control" accept="images/*" />
+                <span asp-validation-for="CategoryImg" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3" >
+            <button type="submit" class="btn btn-primary mt-4">Add Category</button>
+            <a  asp-action="ShowCategories" class="btn btn-danger mt-4">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
