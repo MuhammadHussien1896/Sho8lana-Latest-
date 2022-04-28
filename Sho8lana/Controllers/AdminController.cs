@@ -219,5 +219,93 @@ namespace Sho8lana.Controllers
             else { return View(user); }
         }
 
+
+
+        public async Task<IActionResult> ShowCategories()
+        {
+            var categories = await _context.Categories.GetAll();
+ 
+            return View(categories);
+
+        }
+
+        public async Task<IActionResult> CreateCategory()
+        {
+            var categories = await _context.Categories.GetAll();
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCategory([Bind("Name,Description")] Category category, IFormFile CategoryImg)
+        {
+            if (ModelState.IsValid)
+            {
+                using (FileStream fs = new FileStream("./wwwroot/Images/CategoriesImage/"+ CategoryImg.FileName, FileMode.Create))
+                {
+                    CategoryImg.CopyTo(fs);
+                    Category category1 = new Category()
+                    {
+                        Name = category.Name,
+                        Description = category.Description,
+                        CategoryImg = CategoryImg.FileName
+                    };
+
+                    _context.Categories.Add(category1);
+                    await _context.complete();
+
+                }
+                return RedirectToAction(nameof(ShowCategories));
+            }
+            return View(category);
+        }
+
+
+
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+//                var path = "./wwwroot/assets/img/services/" + s.ServiceId + "-" + s.Title + "-" + i + ".jpg";
+
+//                using (var stream = new FileStream(path, FileMode.Create))
+//                {
+//                    image.CopyTo(stream);
+//                    Media media = new Media()
+//                    {
+//                        ServiceId = s.ServiceId,
+//                        MediaPath = s.ServiceId + "-" + s.Title + "-" + i + ".jpg"
+//                    };
+//                    //add image to medias table
+//                    _context.Medias.Add(media);
+//                    await _context.complete();
+
+//                }
+//                i++;
+//            }
+//        }
+//        ////////////////////////////////////////////////////////////
+//        return RedirectToAction(nameof(Index));
+//    }
+//    var categories = _context.Categories.GetAllSync();
+//    ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
+
+//    return View(service);
+//}
+
+
+
+
+
+
+

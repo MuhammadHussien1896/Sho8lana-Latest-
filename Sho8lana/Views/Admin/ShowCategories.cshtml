@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Sho8lana.Models.Category>
+
+@{
+    ViewData["Title"] = "Show Categories";
+}
+<div class="container">
+<h2>Show Categories</h2>
+<hr />
+
+<a class="btn btn-primary mb-4 ml-8" asp-action="CreateCategory">
+    <i class="bi bi-plus"></i>
+    Add Category
+</a>
+
+
+<div class=" mt-8">
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-triangle"></i>
+            No Category found!
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+              <div class="col-12">
+                  <div class="card mb-3" style="max-width: 540px;">
+                      <div class="row g-0">
+                        <div class="col-md-4">
+                          <img src="~/Images/CategoriesImage/@item.CategoryImg" class="img-fluid rounded-start" alt="CategoryImg">
+                        </div>
+                        <div class="col-md-8">
+                          <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">@item.Description</p>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+              </div>
+            }
+        </div>
+    }
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
