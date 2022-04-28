@@ -6,7 +6,7 @@
 
     var now = DateTime.Now;
     var s = @Model.PublishDate;
-    var diff  = now.Subtract(s).Days;
+    var diff = now.Subtract(s).Days;
     var diff1 = now.Subtract(s).Hours;
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -18,109 +18,146 @@
     <h4 class="text-center">Service</h4>
     <hr />
     <div id="carouselExampleControls" class="carousel slide col-sm-12 col-md-6 " data-bs-ride="carousel">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="/assets/img/services/Service.png" class="col-12" height="200px" >
-    </div>
-    @foreach (var image in Model.Medias)
-        {
-            <div class="carousel-item">
-                <img src="/assets/img/services/@image.MediaPath" class="col-12" height="200px">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="/assets/img/services/Service.png" class="col-12" height="200px">
             </div>
-        
-        }
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-</div>
-    
+            @foreach (var image in Model.Medias)
+            {
+                <div class="carousel-item">
+                    <img src="/assets/img/services/@image.MediaPath" class="col-12" height="200px">
+                </div>
 
-<div class="card text-center col-sm-12 col-md-6">
-  <div class="card-body">
-    <h5 class="card-title">@Html.DisplayFor(model => model.Title)</h5>
-    <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(model => model.Category.Name)</h6>
-    <h6 class"card-subtitle mb-2 text-muted">Description</h6>
-    <p class="card-text">@Html.DisplayFor(model=>model.Description)</p>
-    <h6 class"card-subtitle mb-2 text-muted">Customer Instruction</h6>
-    <p class="card-text">@Html.DisplayFor(model=>model.CustomerInstructions)</p>
-    <h6 class"card-subtitle mb-2 text-muted">Customer</h6>
-    <p class="card-text">@Html.DisplayFor(model=>model.Customer.FirstName) @Html.DisplayFor(model=>model.Customer.LastName) </p>
-    @if (Model.IsCash)
-    {
-    <p class="card-text text-danger">Cash only</p>    
-    }
-    else{<p class="card-text text-danger">Online only</p> }
-    
-    
-    <div class="card-footer text-muted">
-        From @diff Days and @diff1 Hours ago
-    </div>
-    <div class="card-footer text-danger mb-3">
-    @Html.DisplayFor(model=>model.Price)
+            }
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
     </div>
 
-    @if (Model.CustomerId!= userId)
-    {
-        if(Model.IsCash==false){
-        <a class="btn btn-primary" asp-controller="Customer" asp-action="RequestService" asp-route-id="@Model.ServiceId">Send Request</a>
-              
-        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ServiceId">Send Message</a>
-        
-        }
-        
-        else
-        {
-            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ServiceId">Send Message</a>
-        }
-    }
-    else
-            
-    {
-                <div class="card-footer">
-                    <form method="post" asp-action="Delete" asp-route-id="@Model.ServiceId">
-                        <a  asp-action="Edit"
-                            asp-route-id="@Model.ServiceId" class="btn btn-primary">Edit</a>
 
-                        <span id="confirmDeleteSpan_@Model.ServiceId" style="display:none">
-                            <span>Are you sure you want to delete?</span>
+    <div class="card text-center col-sm-12 col-md-6">
+        <div class="card-body">
+            <h5 class="card-title">@Html.DisplayFor(model => model.Title)</h5>
+            <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(model => model.Category.Name)</h6>
+            <h6 class"card-subtitle mb-2 text-muted">Description</h6>
+            <p class="card-text">@Html.DisplayFor(model=>model.Description)</p>
+            <h6 class"card-subtitle mb-2 text-muted">Customer Instruction</h6>
+            <p class="card-text">@Html.DisplayFor(model=>model.CustomerInstructions)</p>
+            <h6 class"card-subtitle mb-2 text-muted">Customer</h6>
+            <p class="card-text">@Html.DisplayFor(model=>model.Customer.FirstName) @Html.DisplayFor(model=>model.Customer.LastName) </p>
+            @if (Model.IsCash)
+            {
+                <p class="card-text text-danger">Cash only</p>
+            }
+            else
+            {
+                <p class="card-text text-danger">Online only</p>
+            }
+
+
+            <div class="card-footer text-muted">
+                From @diff Days and @diff1 Hours ago
+            </div>
+            <div class="card-footer text-danger mb-3">
+                @Html.DisplayFor(model=>model.Price)
+            </div>
+
+
+
+            @if (User.IsInRole("Admin"))
+            {
+                <form asp-controller="Admin" asp-action="SendAcceptToUser" method="post">
+
+                    <div class="form-floating mb-3">
+                        <input type="text" name="UserId" value="@Model.CustomerId" hidden>
+                        <input type="text" name="ServiceId" value="@Model.ServiceId" hidden>
+                        <input type="submit" value="Accept" class="btn btn-outline-success btn-lg" />
+                    </div>
+                </form>
+                <form asp-controller="Admin" asp-action="SendRejectToUser" method="post">
+                    <div class="form-floating  mt-4">
+                        <textarea name="messagenotfi" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                        <label for="floatingTextarea2">Reason For Rejected</label>
+                        <input type="text" name="UserId" value="@Model.CustomerId" hidden>
+                        <input type="text" name="ServiceId" value="@Model.ServiceId" hidden>
+
+
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="submit" value="Reject" class="btn btn-outline-danger btn-lg" />
+                        @*<input type="submit" value="Accept"  formaction="SendAcceptToUser" class="btn btn-outline-success btn-lg" />*@
+                    </div>
+                </form>
+
+
+            }
+            else
+            {
+                @if (Model.CustomerId != userId)
+                {
+                    if (Model.IsCash == false)
+                    {
+                        <a class="btn btn-primary" asp-controller="Customer" asp-action="RequestService" asp-route-id="@Model.ServiceId">Send Request</a>
+
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ServiceId">Send Message</a>
+
+                    }
+
+                    else
+                    {
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ServiceId">Send Message</a>
+                    }
+                }
+                else
+
+                {
+                    <div class="card-footer">
+                        <form method="post" asp-action="Delete" asp-route-id="@Model.ServiceId">
+                            <a asp-action="Edit"
+                       asp-route-id="@Model.ServiceId" class="btn btn-primary">Edit</a>
+
+                            <span id="confirmDeleteSpan_@Model.ServiceId" style="display:none">
+                                <span>Are you sure you want to delete?</span>
+                                <button type="submit" class="btn btn-danger">Yes</button>
+                                <a class="btn btn-primary"
+                           onclick="confirmDelete('@Model.ServiceId', false)">No</a>
+                            </span>
+
+                            <span id="deleteSpan_@Model.ServiceId">
+                                <a class="btn btn-danger"
+                           onclick="confirmDelete('@Model.ServiceId', true)">Delete</a>
+                            </span>
+                        </form>
+
+                        <form method="post" asp-action="">
                             <button type="submit" class="btn btn-danger">Yes</button>
-                            <a class="btn btn-primary"
-                                onclick="confirmDelete('@Model.ServiceId', false)">No</a>
-                        </span>
+                        </form>
 
-                        <span id="deleteSpan_@Model.ServiceId">
-                            <a  class="btn btn-danger"
-                                onclick="confirmDelete('@Model.ServiceId', true)">Delete</a>
-                        </span>
-                     </form>
-                    @* @if(User.IsInRole("Admin"))
-                     <form method="post" asp-action=""></form>*@
-                 </div>       
-    }
+                    </div>
+                }
+            }
 
-
-  </div>
-</div>
+        </div>
+    </div>
 </div>
 
 <script>
-    function confirmDelete(uniqueId, isDeleteClicked) {
-    var deleteSpan = 'deleteSpan_' + uniqueId;
-    var confirmDeleteSpan = 'confirmDeleteSpan_' + uniqueId;
+        function confirmDelete(uniqueId, isDeleteClicked) {
+        var deleteSpan = 'deleteSpan_' + uniqueId;
+        var confirmDeleteSpan = 'confirmDeleteSpan_' + uniqueId;
 
-    if (isDeleteClicked) {
-        $('#' + deleteSpan).hide();
-        $('#' + confirmDeleteSpan).show();
-    } else {
-        $('#' + deleteSpan).show();
-        $('#' + confirmDeleteSpan).hide();
+        if (isDeleteClicked) {
+            $('#' + deleteSpan).hide();
+            $('#' + confirmDeleteSpan).show();
+        } else {
+            $('#' + deleteSpan).show();
+            $('#' + confirmDeleteSpan).hide();
+        }
     }
-}
 </script>
- 
