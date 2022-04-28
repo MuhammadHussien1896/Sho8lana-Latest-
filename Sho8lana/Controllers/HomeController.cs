@@ -2,6 +2,8 @@
 using Sho8lana.Models;
 using Sho8lana.Unit_Of_Work;
 using System.Diagnostics;
+using System.Net.Mail;
+using System.Text;
 
 namespace Sho8lana.Controllers
 {
@@ -11,7 +13,7 @@ namespace Sho8lana.Controllers
 
         private readonly IUnitOfWork _context;
 
-        public HomeController(ILogger<HomeController> logger,IUnitOfWork context)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork context)
         {
             _logger = logger;
             _context = context;
@@ -34,6 +36,47 @@ namespace Sho8lana.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        //about
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        //contact_us
+        [HttpGet]
+        public IActionResult Contact_Us(contactClass _objModelMail)
+        {
+            if (ModelState.IsValid)
+            {
+                MailMessage mail = new MailMessage();
+                mail.To.Add(_objModelMail.To);
+                mail.From = new MailAddress(_objModelMail.From);
+                mail.Subject = _objModelMail.Subject;
+
+                StringBuilder Body = new StringBuilder();
+                Body.Append("Name :   " + _objModelMail.Name);
+                Body.Append("Email :   " + _objModelMail.Email);
+
+
+                mail.Body = Body.ToString();
+                mail.IsBodyHtml = true;
+                System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient();
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new System.Net.NetworkCredential
+                ("username", "password");// Enter seders User name and password
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+                return View("Index", _objModelMail);
+            }
+
+            else
+            {
+                return View();
+            }
         }
     }
 }
