@@ -22,9 +22,9 @@
 
 <script>
     $(function(){
-        alert("script works!");
+        //alert("script works!");
         connection.on("receiveMessage",(message,name,date)=>{
-            alert("new message");
+            //alert("new message");
             //$("ul").appendTo($`<li>${name} : ${message}<br/><small>${date}</small></li>`);
             $('#mylist').prepend('<li>'+ name +' : '+ message + '<br/><small>'+ date +'</small></li>');
         });

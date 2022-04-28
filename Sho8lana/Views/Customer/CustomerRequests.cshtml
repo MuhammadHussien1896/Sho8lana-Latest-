@@ -34,7 +34,7 @@
                         </p>
                         <a asp-controller="customer" asp-action="AcceptServiceRequest" asp-route-id="@request.RequestId" class="btn btn-primary">قبول الطلب</a>
                         @*<a href="#" class="btn btn-danger">Cancel Request</a>*@
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" onclick="request('@request.RequestId')">
                           إلغاء الطلب
                         </button>
                         </div>
@@ -58,11 +58,20 @@
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">العودة</button>
-                                <button type="button" class="btn btn-danger" asp-controller="Customer" asp-action="DeleteRequest">مسح الطلب</button>
+                                <button id="deleteBtn" type="button" class="btn btn-danger">مسح الطلب</button>
                               </div>
                             </div>
                           </div>
                         </div>
+                        <script>
+                            function request(requestId){
+                                document.getElementById("deleteBtn").addEventListener("click",()=>{
+                                    var link = '@Url.Action("DeleteRequest","customer",new {id= "-1"})';
+                                    link = link.replace("-1",requestId);
+                                    window.location.href = link;
+                                });
+                            }
+                        </script>
 
             }
           
@@ -107,7 +116,7 @@
                             <small class="text-muted">@request.RequestDate : تاريخ الطلب</small>
                         </p>
                         @*<a href="#" class="btn btn-danger">إلغاء الطلب</a>*@
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="requestI('@request.RequestId')">
                           إلغاء الطلب
                         </button>
                         </div>
@@ -125,11 +134,20 @@
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">العودة</button>
-                                <button type="button" class="btn btn-danger" asp-controller="Customer" asp-action="DeleteRequest">مسح الطلب</button>
+                                <button id="deleteBtn2" type="button" class="btn btn-danger">مسح الطلب</button>
                               </div>
                             </div>
                           </div>
                         </div>
+                        <script>
+                            function requestI(requestId){
+                                document.getElementById("deleteBtn2").addEventListener("click",()=>{
+                                    var link = '@Url.Action("DeleteRequest","customer",new {id= "-1"})';
+                                    link = link.replace("-1",requestId);
+                                    window.location.href = link;
+                                });
+                            }
+                        </script>
             } 
           
           </div>
