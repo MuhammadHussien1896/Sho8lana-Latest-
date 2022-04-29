@@ -1,52 +1,8 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-//using Stripe;
-
-//namespace Sho8lana.Controllers
-//{
-
-//    public class PaymentController : Controller
-//    {
-//        public IActionResult Index()
-//        {
-//            return View("Checkout");
-//        }
-
-//        public IActionResult CustomerPayment(string stripeEmail, string stripeToken)
-//        {
-//            var customers = new CustomerService();
-//            var charges = new ChargeService();
-//            var customer = customers.Create(new CustomerCreateOptions
-//            {
-//                Email = stripeEmail,
-//                Source = stripeToken
-//            });
-//            var charge = charges.Create(new ChargeCreateOptions
-//            {
-//                Amount = 500,
-//                Description="Test Payment",
-//                Currency="Usd",
-//                Customer=customer.Id,
-//                ReceiptEmail=stripeEmail,
-//                Metadata=new Dictionary<string, string>
-//                {
-//                    {"orderId","1111" },
-//                    {"postCode","1111fffff" }
-//                }
-
-//            });
-//            if (charge.Status == "Succeeded")
-//            {
-//                string BalanceTransactionId = charge.BalanceTransactionId;
-//                return View("Checkout");
-//            }
-
-//            return View("Checkout");
-//        }
-//    }
-//}
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Sho8lana.Models;
+using Sho8lana.Unit_Of_Work;
 using Stripe;
 using Stripe.Checkout;
 
@@ -54,9 +10,13 @@ namespace server.Controllers
 {
     public class PaymentController : Controller
     {
-        public PaymentController()
+        private readonly IUnitOfWork _context;
+        string _sessionId;
+        public PaymentController(IUnitOfWork context)
         {
             StripeConfiguration.ApiKey = "sk_test_51KtYXkEZF7e3vou0wl1X7ldWcbh4MUH7TdxiJfz3Ce4b4KYuqC2S7rSPHeZ8z8YMjdWjIARMCV2K2XvrrQn2GDzW00nB9Lf7gf";
+            
+            _context = context;
         }
         public IActionResult index()
         {
@@ -64,37 +24,73 @@ namespace server.Controllers
         }
 
         [HttpPost("create-checkout-session")]
-        public ActionResult CreateCheckoutSession()
+        public ActionResult CreateCheckoutSession(int ContractId, string customerId)
         {
+            var Target=_context.Contracts.GetById(ContractId).Result;
+            var TargetCustomer=_context.Customers.GetById(customerId).Result;
             var options = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>
-        {
-          new SessionLineItemOptions
-          {
-            PriceData = new SessionLineItemPriceDataOptions
-            {
-              UnitAmount = 2000,
-              Currency = "usd",
-              ProductData = new SessionLineItemPriceDataProductDataOptions
-              {
-                Name = "T-shirt",
-              },
-
-            },
-            Quantity = 1,
-          },
-        },
+            { 
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount =(long)Target.ContractPrice*100,
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = Target.Service.Title,
+                                Description=TargetCustomer.FirstName,
+                            },
+                        },
+                        Quantity = 1,
+                    },
+                },
                 Mode = "payment",
-                SuccessUrl = "https://example.com/success",
+                SuccessUrl = "https://localhost:7009/payment/success?session_id={CHECKOUT_SESSION_ID}"+ $"&&ContractId={ContractId}"+ $"&&customerId={customerId}",
                 CancelUrl = "https://example.com/cancel",
             };
-
             var service = new SessionService();
             Session session = service.Create(options);
-
+            _sessionId = session.Id;
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
         }
+        [HttpGet("/payment/success")]
+        public  async Task<IActionResult> OrderSuccess([FromQuery] string session_id,int ContractId, string customerId)
+        {
+            var Target = _context.Contracts.GetById(ContractId).Result;
+            var TargetCustomer = _context.Customers.GetById(customerId).Result;
+
+            var options = new SessionGetOptions();
+            options.AddExpand("payment_intent");
+
+            var sessionService = new SessionService();
+            Session session = sessionService.Get(session_id,options);
+
+            var customerService = new CustomerService();
+            var customer = customerService.Get(session.CustomerId);
+
+            PaymentIntent paymentIntent = session.PaymentIntent;
+
+            Payments payment = new Payments()
+            {
+                PaymentId=paymentIntent.Id,
+                CustomerId = customerId,
+                ContractId = ContractId,
+                StripCustId = customer.Id,
+                CreatedDate = DateTime.Now,
+                PaymentType = paymentIntent.PaymentMethodTypes.First(),
+                TotalAmount = (int)paymentIntent.Amount,
+            };
+            _context.Payments.Add(payment);
+            Target.StartDate = DateTime.Now;
+            _context.Contracts.Update(Target);
+            await _context.complete();
+            
+            return Content($"<html><body><h1>Thanks for your order,{ContractId} {customer.Name}!</h1></body></html>");
+        }
+
     }
 }
