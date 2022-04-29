@@ -134,11 +134,15 @@
                         @if(contract.Service.IsFreelancer && UserManager.GetUserId(User) == contract.CustomerId)
                         {
                             
-                            <a class="btn btn-primary" asp-controller="Customer" asp-action="BuyService" asp-route-id="@contract.ContractId">الانتقال للدفع</a>
+                                <form asp-action="CreateCheckoutSession" asp-controller="payment" asp-route-CustomerId="@contract.CustomerId" asp-route-ContractId="@contract.ContractId" method="POST">
+                                    <button type="submit" class="btn-primary btn">الانتقال للدفع</button>
+                                </form>
                         }//service owner is buyer
                         else if(!contract.Service.IsFreelancer && UserManager.GetUserId(User) == contract.Service.CustomerId)
                         {
-                            <a class="btn btn-primary" asp-controller="Customer" asp-action="BuyService" asp-route-id="@contract.ContractId">الانتقال للدفع</a>
+                                <form asp-action="CreateCheckoutSession" asp-controller="payment" asp-route-CustomerId="@contract.Service.CustomerId" asp-route-ContractId="@contract.ContractId" method="POST">
+                                    <button type="submit" class="btn-primary btn">الانتقال للدفع</button>
+                                </form>
                         }
                         else
                         {
