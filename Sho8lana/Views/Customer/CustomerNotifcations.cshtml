@@ -96,7 +96,7 @@
     }
 </div>
 <script>
-    $(window).on("unload",function(e){
+    $(window).on("load",function(e){
                $.ajax({  
             type: 'Get',  
             url: '@Url.Action("UnReadNotifcationChange","JsonApi")',  
