@@ -144,7 +144,7 @@ namespace Sho8lana.Controllers
             //});
 
             //add notification to the customer who sent the request to the service
-            AddNotification(contract.Customer,
+            AddNotification(contract.CustomerId,
                 $"{customer.FirstName} {customer.LastName} has accepted your request for the service {contract.Service.Title} !" +
                 $"Please check your pending contracts to begin the contract");
             //delete customer request after accepting and become a contract
@@ -164,7 +164,12 @@ namespace Sho8lana.Controllers
                 if(customerRequest.CustomerId == customerId || customerRequest.Service.CustomerId == customerId)
                 {
                     await context.CustomerRequests.Delete(id);
-                    return context.complete().Result > 0 ? RedirectToAction(nameof(CustomerRequests)) : BadRequest();
+                    string content = $"لقد تم الغاء الطلب على الخدمة {customerRequest.Service.Title}";
+                    AddNotification(customerRequest.Service.CustomerId,content);
+                    AddNotification(customerRequest.CustomerId,content);
+                    await context.complete();
+                    return RedirectToAction(nameof(CustomerRequests));
+                    
                 }
                 else
                 {
@@ -268,7 +273,11 @@ namespace Sho8lana.Controllers
                     if(contract.IsDone == false && contract.StartDate == default && !(contract.BuyerAccepted && contract.SellerAccepted))
                     {
                         await context.Contracts.Delete(id);
-                        return context.complete().Result > 0 ? RedirectToAction(nameof(CustomerContracts)) : BadRequest();
+                        string content = $"لقد تم فسخ العقد لخدمة {contract.Service.Title}";
+                        AddNotification(contract.CustomerId, content);
+                        AddNotification(contract.Service.CustomerId, content);
+                        await context.complete();
+                        return RedirectToAction(nameof(CustomerContracts));
                     }
                     else
                     {
@@ -297,7 +306,7 @@ namespace Sho8lana.Controllers
             {
                 if (customer.CustomerRequests.FirstOrDefault(r => r.ServiceId == id) != null)
                 {
-                    return Content("You cant request the service more than one time!");
+                    return RedirectToAction(nameof(CustomerRequests));
                 }
 
                 var RequestedService = await context.Services.GetBy(s => s.ServiceId == id);
@@ -305,7 +314,7 @@ namespace Sho8lana.Controllers
                 {
                     if (RequestedService.CustomerId == customerId)
                     {
-                        return Content("you cant request your own service !");
+                        return BadRequest();
                     }
 
                     if (!RequestedService.IsCash)
@@ -323,7 +332,7 @@ namespace Sho8lana.Controllers
                         //    Content = $"You have a new request from" +
                         //    $" {customer.FirstName} {customer.LastName} about your service : {RequestedService.Title} "
                         //});
-                        AddNotification(RequestedService.Customer,
+                        AddNotification(RequestedService.CustomerId,
                             $"You have a new request from" +
                             $" {customer.FirstName} {customer.LastName} about your service : {RequestedService.Title} ");
 
@@ -332,7 +341,7 @@ namespace Sho8lana.Controllers
                     }
                     else
                     {
-                        return Content("You cant request a cash service!");
+                        return BadRequest();
                     }
                 }
                 else
@@ -347,11 +356,11 @@ namespace Sho8lana.Controllers
             }
         }
 
-        private void AddNotification(Customer customer,string content)
+        private void AddNotification(string customerId,string content)
         {
             Notification notification = new Notification()
             {
-                Customer = customer,
+                CustomerId = customerId,
                 Content = content
             };
             context.Notifications.Add(notification);
