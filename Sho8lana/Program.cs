@@ -31,9 +31,6 @@ builder.Services.AddSignalR();
 
 builder.Services.AddMvc().AddJsonOptions(options =>
 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
