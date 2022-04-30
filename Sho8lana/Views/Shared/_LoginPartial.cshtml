@@ -45,7 +45,7 @@
              {<img class="avatar rounded-circle" alt="Profile" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" />}
          else
              {<img class="avatar rounded-circle" alt="Profile" src="~/Images/202022.jpg" />}
-               Hello @User.Identity?.Name!
+               @User.Identity?.Name
           </a>
        </li>
        <li class="p-0 mx-2">

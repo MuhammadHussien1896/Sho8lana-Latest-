@@ -9,7 +9,7 @@
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        <form id="email-form" method="post">
+        <form id="email-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
             @if (Model.IsEmailConfirmed)
             {
@@ -34,7 +34,29 @@
                 <label asp-for="Input.NewEmail" class="form-label"></label>
                 <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
             </div>
-            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">Change email</button>
+                         <div class="form-group">
+                     <label asp-for="Input.NationalIdPicture" class="w-100"></label>
+                @if (Model.Input.NationalIdPicture != null)
+                {
+                    <img id="NationalIdPicture" alt="NationalIdPicture"  src="data:image/*;base64,@(Convert.ToBase64String(Model.Input.NationalIdPicture))" />
+                }
+                else
+                {
+                    <img id="NationalIdPicture" alt="NationalIdPicture"  src="~/Images/20225.jpg" />
+                    
+                }
+                <div class="custom-file mt-2 mb-2">
+                    <input type="file" accept="image/*"
+                    asp-for="Input.NationalIdPicture"
+                    class="custom-file-input"
+                    onchange="document.getElementById(`NationalIdPicture`).src=window.URL.createObjectURL(this.files[0])"
+                    />
+                    @*<label class="custom-file-label" asp-for="Input.ProfilePicture"></label>*@
+                   <span asp-validation-for="Input.NationalIdPicture" class="text-danger"></span>
+
+                </div>
+            </div>
+            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">Save</button>
         </form>
     </div>
 </div>
@@ -42,3 +64,10 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+
+
+
+
+
+
