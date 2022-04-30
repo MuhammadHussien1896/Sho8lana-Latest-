@@ -9,6 +9,7 @@
             ActiveContracts         = new List<Contract>();
             DoneContracts           = new List<Contract>();
         }
+        public string UserId { get; set; }
         public ICollection<Contract> PendingContracts { get; set; }
         public ICollection<Contract> PendingPaymentContracts { get; set; }
         public ICollection<Contract> ActiveContracts { get; set; }

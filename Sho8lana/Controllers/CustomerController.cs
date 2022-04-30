@@ -132,9 +132,20 @@ namespace Sho8lana.Controllers
             //converting request to a pending contract
             Contract contract = new Contract()
             {
-                Customer = customerRequest.Customer,
-                Service = customerRequest.Service
+                CustomerId = customerRequest.CustomerId,
+                ServiceId = customerRequest.ServiceId,
+                SericeOwnerId = customerRequest.Service.CustomerId
             };
+            if (customerRequest.Service.IsFreelancer)
+            {
+                contract.BuyerId = contract.CustomerId;
+                contract.SellerId = contract.SericeOwnerId;
+            }
+            else
+            {
+                contract.BuyerId = contract.SericeOwnerId;
+                contract.SellerId = contract.CustomerId;
+            }
             //add contract to database
             context.Contracts.Add(contract);
             //contract.Customer.Notifications.Add(new Notification() 
@@ -187,19 +198,20 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> CustomerContracts()
         {
             string customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(c => c.Id == customerId);
-            if (customer != null)
+            //var customer = await context.Customers.GetBy(c => c.Id == customerId);
+            if (customerId != null)
             {
 
-                //return the active contracts
+                
                 var contracts = await context.Contracts
-                                                .GetAllBy(c => c.CustomerId == customerId || c.Service.CustomerId == customerId);
+                                                .GetAllBy(c => c.CustomerId == customerId || c.SericeOwnerId == customerId);
                 ContractViewModel model = new ContractViewModel()
                 {
                     PendingContracts            = contracts.Where(c => c.IsDone == false && c.StartDate == default && !(c.BuyerAccepted && c.SellerAccepted)).ToList(),
                     PendingPaymentContracts     = contracts.Where(c => c.IsDone == false && c.StartDate == default && (c.BuyerAccepted && c.SellerAccepted)).ToList(),
                     ActiveContracts             = contracts.Where(c => c.IsDone == false && c.StartDate != default).ToList(),
-                    DoneContracts               = contracts.Where(c => c.IsDone == true).ToList()
+                    DoneContracts               = contracts.Where(c => c.IsDone == true).ToList(),
+                    UserId                      = customerId
                 };
                 return View(model);
             }
@@ -214,7 +226,7 @@ namespace Sho8lana.Controllers
             var contract = await context.Contracts.GetById(id);
             if(contract != null)
             {
-                if(contract.CustomerId == customerId)
+                if(contract.BuyerId == customerId)
                 {
                     contract.BuyerAccepted = true;
                 }
