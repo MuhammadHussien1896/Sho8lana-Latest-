@@ -103,12 +103,11 @@
 
                                     </div>
                                     <div class="col-md-4">
-                                        <select asp-for="Input.City" asp-items="ViewBag.CityId" id="selCity" class="form-select" id="city">
+                                        <select asp-for="Input.City" id="selCity" class="form-select" id="city">
                                              @foreach (var item in Model.govern)
                                                 {
                                                 <option value="@item.Governorate_name_en">@item.Governorate_name_ar</option>
                                                 }
-                                            <option>Selected City</option>
                                         </select>
                                         <span asp-validation-for="Input.City" class="text-danger"></span>
 
