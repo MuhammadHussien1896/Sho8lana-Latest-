@@ -26,6 +26,7 @@
     <Folder Include="Filter\" />
     <Folder Include="wwwroot\assets\img\National_id\" />
     <Folder Include="wwwroot\assets\img\profiles\" />
+    <Folder Include="wwwroot\Images\services\" />
   </ItemGroup>
 
 </Project>

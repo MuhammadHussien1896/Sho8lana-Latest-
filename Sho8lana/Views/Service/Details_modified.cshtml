@@ -1,0 +1,277 @@
+﻿@inject UserManager<Customer> userManger;
+@model Sho8lana.Models.Service
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="row my-5 justify-content-around" dir="rtl">
+    <div class="col-7">
+        <!-- =======  Carsouel section  ======= -->
+        <div class="row justify-content-center">
+            <div id="carouselExampleIndicators" class="carousel slide my-1" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" style="height:70vh">
+                        <img class="d-block w-100" src="~/Images/CategoriesImage/design.jpg" alt="First slide">
+                    </div>
+                    <div class="carousel-item" style="height:70vh">
+                        <img class="d-block w-100" src="~/Images/CategoriesImage/Header.jpg" alt="Second slide">
+                    </div>
+                    <div class="carousel-item" style="height:70vh">
+                        <img class="d-block w-100" src="~/Images/CategoriesImage/programing.jpg" alt="Third slide">
+                    </div>
+                </div>
+                <a class="carousel-control-prev" data-bs-target="#carouselExampleIndicators" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" data-bs-target="#carouselExampleIndicators" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <!-- End Carsouel section  -->
+        <!-- =======  Details section  ======= -->
+        <div class="row my-1 justify-content-center border border-Secondery">
+                  <!-- =======  Details section  ======= -->
+            <div class="mx-auto d-flex flex-wrap justify-content-around border-bottom mb-2 border-secondary" style="width:95%">
+                <p class="h4 my-3 text-secondary col-12 fw-bold"> التفاصيل</p>
+                <div class="col-6">
+                    <div class="row my-2 justify-content-between">
+                        <span class="col-6 text-secondary">
+                            القسم
+                        </span>
+                        <span class="col-6">
+                            @Model.Category.Name
+                        </span>
+                    </div>
+                    <div class="row my-2 justify-content-between">
+                        <span class="col-6 text-secondary">
+                            نوع الخدمة
+                        </span>
+                    @if (Model.IsFreelancer == true)
+                    {
+                        <span class="col-6">
+                            للبيع
+                        </span>
+                    } 
+                    else
+                    {
+                        <span class="col-6">
+                            للشراء
+                        </span>
+                    }
+
+                    </div>
+                    <div class="row my-2 justify-content-between">
+                        <span class="col-6 text-secondary">
+                            خيارات الدفع
+                        </span>
+                    @if (Model.IsCash == true)
+                    {
+                        <span class="col-6">
+                            كاش
+                        </span>
+                    } 
+                    else
+                    {
+                        <span class="col-6">
+                            فيزا
+                        </span>
+                    }
+                    </div>
+                    <div class="row my-2 justify-content-between">
+                        <span class="col-6 text-secondary">
+                            تاريخ النشر
+                        </span>
+                        <span class="col-6">
+                            @Model.PublishDate.ToShortDateString()
+                        </span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row my-2 justify-content-between">
+                        <span class="col-6 text-secondary">
+                            عدد المشترين 
+                        </span>
+                        <span class="col-6">
+                            @Model.Contracts.Where(s=>s.IsDone==true).ToList().Count
+                        </span>
+                    </div>
+                    @if (Model.Rate > 0)
+                    {
+                        <div class="row my-2 justify-content-between">
+                            <span class="col-6 text-secondary">
+                                التقييم
+                            </span>
+                            <span class="col-6">
+                        @{
+                            for (var j = 0; j < (int)5-Model.Rate/2; j++)
+                                {
+                                   <i class="fa fa-star ratinglow"></i>   
+                                }
+                        }
+                        @{
+                             for (var j = 0; j < (int)Model.Rate/2; j++)
+                                {
+                                   <i class="fa fa-star rating-color"></i>   
+                                }
+                        }   
+                            
+                        </span>
+                    </div>
+                    }
+                    <div class="row my-2 justify-content-between">
+                        <span class="col-6 text-secondary">
+                            البائع
+                        </span>
+                        @if (Model.Customer.IsVerified == true)
+                        {
+                            <span class="col-6">
+                                موثق
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="col-6">
+                                 غير موثق
+                            </span>
+                        }
+                    </div>
+                    <div class="row my-2 justify-content-between">
+                        <span class="col-6 text-secondary">
+                            السعر
+                        </span>
+                        <span class="col-6">
+                            @Model.Price $
+                        </span>
+                    </div>
+                </div>
+            </div>
+                <!-- End Details section  -->
+            <div class="mx-auto d-flex flex-wrap justify-content-around border-bottom my-2 border-secondary" style="width:95%">
+                <p class="h5 my-3 text-secondary col-12 fw-bold">العنوان</p>
+                <p class="text-secondary col-12">@Model.Title</p>
+           </div>
+           <div class="mx-auto d-flex flex-wrap justify-content-around border-bottom my-2 border-secondary" style="width:95%">
+                <p class="h5 my-3 text-secondary col-12 fw-bold">تفاصيل الخدمة</p>
+                <pre class="text-secondary col-12 fs-5" style="direction:rtl;overflow:unset;font-family:'Noto Kufi arabic'">@Model.Description</pre>
+           </div>
+           <div class="mx-auto d-flex flex-wrap justify-content-around my-2 border-secondary" style="width:95%">
+                <p class="h5 my-3 text-secondary col-12 fw-bold">توصيات صاحب الخدمة</p>
+                <pre class="text-secondary col-12 fs-5" style="direction:rtl;overflow:unset;font-family:'Noto Kufi arabic'">@Model.CustomerInstructions</pre>
+           </div>
+        </div>
+    <!-- End Details section  -->
+    </div>
+    <div class="col-4">
+      <!-- =======  Price section  ======= -->
+        <div class="row my-1 justify-content-center border border-Secondery">
+            <p class="fs-1"><strong>@Model.Price $</strong></p>
+            <p>@Model.Title</p>
+            <div class="row justify-content-around">
+                <p class="col-6">@Model.Customer.City/@Model.Customer.Area</p>
+                <p class="col-6 text-start">منذ @((DateTime.Now-Model.PublishDate.Date).Days) ايام</p>
+            </div>
+            @{
+                if (userManger.GetUserId(User) == Model.CustomerId)
+                {
+                    <div class="row justify-content-around my-3">
+                        <a class="btn btn-info col-5" asp-action="Edit" asp-route-id="@Model.ServiceId">تعديل هذة الخدمة</a>
+                    <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-danger col-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                          حذف هذة الخدمة
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">حذف خدمة</h5>
+                                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                هل انت متأكد من حذف هذة الخدمة
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+                                <form asp-action="Delete" asp-route-id="@Model.ServiceId">
+                                    <button type="submit" class="btn btn-danger">حذف</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                    </div>
+                }
+                else
+                {
+                    if (Model.IsFreelancer == true)
+                    {
+                        if (Model.IsCash == true)
+                        {
+                         <div class="row justify-content-around my-3">
+                            <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
+                            </div>
+
+                        }
+                        else
+                        {
+                         <div class="row justify-content-around my-3">
+                            <a asp-action="RequestService" asp-controller="Customer" asp-route-id=@Model.ServiceId class="btn btn-success col-5">ارسال طلب الي البائع</a>
+                            <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
+                        </div>   
+                        } 
+                    }
+                }
+             }
+        </div>
+        <!-- End Of Price section  -->
+        <!-- =======  Seller section  ======= -->
+         <div class="row my-5 justify-content-center border border-Secondery ">
+            <p class="h4 my-3 fw-bold">البائع</p>
+            <div class="row my-2 justify-content-center align-items-center align-content-center">
+                <img src="~/Images/@Model.Customer.ProfileImage" class="rounded-circle col-3"/>
+                <div class="col-8 d-flex flex-column pe-5">
+                    <span>@Model.Customer.FirstName @Model.Customer.LastName</span>
+                    <span>عضو منذ عام @Model.Customer.RegisterationDate.Year</span>
+                    <span>@Model.Customer.City / @Model.Customer.Area</span>
+                    <spna>الحالة / @(@Model.Customer.IsVerified?"موثق":"غير موثق")</spna>
+                </div>
+               @{
+                    if(userManger.GetUserId(User)==@Model.CustomerId)
+                    {
+                       <a asp-controller="Customer" asp-action="account" class="col-1 fs-3 btn" style="font-weight:bolder">
+                            &gt;
+                       </a>
+                    }
+                    else
+                    {
+                       <a class="col-1 fs-3 btn" style="font-weight:bolder">
+                            &gt;
+                       </a>  
+                    }
+                }
+            </div>
+            @{
+                if(userManger.GetUserId(User)!=@Model.CustomerId)
+                {
+                    <a class="btn btn-dark col-8 my-3" asp-route-id="@Model.ServiceId" asp-action="SendMessage">التواصل مع البائع</a>   
+                }
+            }
+        </div>
+                <!-- End Of Seller section  -->
+                <!-- =======  Safety section  ======= -->
+         <div class="row my-5 justify-content-center border border-Secondery ">
+           <p class="h4 my-3 fw-bold">نصائح</p>
+           <ul class="col-11">
+               <li class="my-2">يفضل التعامل من خلال الموقع لضمان حقوقك</li>
+               <li class="my-2">لاتقم بعمل الخدمة الا بعد التأكد من تحويل المبلغ المطلوب</li>
+               <li class="my-2">قم بتفعيل الاكونت الخاص بك لتحصل على فرص اكبر</li>
+               <li class="my-2">بواقي زيت الطعام بواقي زيت السمك بواقي زيت الفراخ بنشتري الكيلو ب 15 جنيه</li>
+           </ul>
+        </div>
+                <!-- End Of Safety section  -->
+    </div>
+</div>
