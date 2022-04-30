@@ -70,8 +70,14 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
+
+            [Required]
+            [Display(Name = "AboutMe")]
+            public string AboutMe { get; set; }
+
             [Display(Name = "ProfilePicture")]
             public byte[] ProfilePicture { get; set; }
+
         }
 
         private async Task LoadAsync(Customer user)
@@ -86,7 +92,9 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
                 FirstName=user.FirstName,
                 LastName=user.LastName,
                 PhoneNumber = phoneNumber,
-                ProfilePicture=user.ProfilePicture
+                ProfilePicture=user.ProfilePicture,
+                AboutMe=user.AboutMe
+             
             };
         }
 
@@ -119,6 +127,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var FisrtName=user.FirstName;
             var LastName=user.LastName;
+            var AboutMe=user.AboutMe;
 
             if (Input.FirstName != FisrtName)
             {
@@ -129,6 +138,11 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             if (Input.LastName != LastName)
             {
                 user.LastName = Input.LastName;
+                await _userManager.UpdateAsync(user);
+            }
+            if (Input.AboutMe != AboutMe)
+            {
+                user.AboutMe = Input.AboutMe;
                 await _userManager.UpdateAsync(user);
             }
 
@@ -144,6 +158,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
 
             if (Request.Form.Files.Count > 0)
             {
+               
                 var file=Request.Form.Files.FirstOrDefault();
 
                 using(var dataStream=new MemoryStream())
@@ -155,6 +170,10 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
 
 
             }
+
+
+
+
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

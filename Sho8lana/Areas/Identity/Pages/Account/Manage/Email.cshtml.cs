@@ -72,6 +72,8 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             [EmailAddress]
             [Display(Name = "New email")]
             public string NewEmail { get; set; }
+            [Display(Name = "NationalIdPicture")]
+            public byte[] NationalIdPicture { get; set; }
         }
 
         private async Task LoadAsync(Customer user)
@@ -82,6 +84,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 NewEmail = email,
+                NationalIdPicture = user.NationalIdPicture
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
@@ -131,6 +134,19 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
 
                 StatusMessage = "Confirmation link to change email sent. Please check your email.";
                 return RedirectToPage();
+            }
+            if (Request.Form.Files.Count > 0)
+            {
+                var file1 = Request.Form.Files.LastOrDefault();
+
+                using (var dataStream1 = new MemoryStream())
+                {
+                    await file1.CopyToAsync(dataStream1);
+                    user.NationalIdPicture = dataStream1.ToArray();
+                }
+                await _userManager.UpdateAsync(user);
+
+
             }
 
             StatusMessage = "Your email is unchanged.";
