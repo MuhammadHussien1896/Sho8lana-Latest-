@@ -31,7 +31,7 @@ namespace server.Controllers
             var options = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>
-            { 
+            {
                     new SessionLineItemOptions
                     {
                         PriceData = new SessionLineItemPriceDataOptions
