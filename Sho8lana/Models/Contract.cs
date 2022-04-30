@@ -13,6 +13,11 @@ namespace Sho8lana.Models
         public float ContractPrice { get; set; }
         public bool BuyerAccepted { get; set; }
         public bool SellerAccepted { get; set; }
+        public bool BuyerIsDone { get; set; }
+        public bool SellerIsDone { get; set; }
+        public string BuyerId { get; set; }
+        public string SellerId { get; set; }
+        public string SericeOwnerId { get; set; }
 
         //navigation properties
         [ForeignKey("Customer")]

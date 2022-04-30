@@ -116,9 +116,10 @@ namespace Sho8lana.Controllers
                         }
                         i++;
                     }
+                    return RedirectToAction("account","customer");
                 }
                 ////////////////////////////////////////////////////////////
-                return RedirectToAction("Index", "Categories");
+                return RedirectToAction(nameof(Index));
             }
             var categories = _context.Categories.GetAllSync();
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
@@ -252,14 +253,12 @@ namespace Sho8lana.Controllers
             }
             var allMessages = _context.ServiceMessages
                                 .GetAllBy(m => m.CustomerId == id || m.ReceiverId == id).Result.OrderByDescending(m => m.MessageDate)
-                                .GroupBy(m => new { m.ServiceId, m.CustomerId });
+                                .GroupBy(m => m.ServiceId);
             var latestMessages = new List<ServiceMessage>();
             foreach (var item in allMessages)
             {
-                item.OrderByDescending(i => i.MessageDate);
                 latestMessages.Add(item.FirstOrDefault());
             }
-            
             return View(latestMessages);
         }
         public async Task<IActionResult> Chat(int id,string receiverId)

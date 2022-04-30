@@ -46,7 +46,7 @@ namespace Sho8lana.Models.Repositories
             return appDbContext.Set<T>().ToList();
         }
 
-      
+
 
         public async Task<T> GetById(int? id)
         {
@@ -58,7 +58,7 @@ namespace Sho8lana.Models.Repositories
             T entity = await appDbContext.Set<T>().FindAsync(id);
             return entity;
         }
-        public async Task<T> GetBy(Expression<Func<T,bool>> expression)
+        public async Task<T> GetBy(Expression<Func<T, bool>> expression)
         {
             T entity = await appDbContext.Set<T>().SingleOrDefaultAsync(expression);
             return entity;
@@ -67,7 +67,7 @@ namespace Sho8lana.Models.Repositories
         public void Update(T entity)
         {
             appDbContext.Set<T>().Update(entity);
-           
+
         }
 
         public async Task<IEnumerable<T>> GetAllBy(Expression<Func<T, bool>> expression)
@@ -76,12 +76,12 @@ namespace Sho8lana.Models.Repositories
             return entity;
         }
 
-        public async Task<IList<T>> GetAllEagerLodingAsync(Expression<Func<T,bool>> expression, string[] includes=null)
+        public async Task<IList<T>> GetAllEagerLodingAsync(Expression<Func<T, bool>> expression, string[] includes = null)
         {
             IQueryable<T> query = appDbContext.Set<T>();
             if (includes != null)
             {
-                foreach(var item in includes)
+                foreach (var item in includes)
                     query = query.Include(item);
             }
             return await query.Where(expression).ToListAsync();
@@ -98,9 +98,21 @@ namespace Sho8lana.Models.Repositories
             return await query.SingleOrDefaultAsync(expression);
 
         }
-        public void  UpdateList(List<T> entity)
+        public void UpdateList(List<T> entities)
         {
-            appDbContext.Set<T>().UpdateRange(entity);
+            //try
+            //{
+            //    foreach (var entityItem in entities)
+            //    {
+            //        appDbContext.Set<T>().Update(entityItem);
+            //    }
+            //}
+            //catch
+            //{
+            //    throw new Exception();
+            //}
+                 appDbContext.Set<T>().UpdateRange(entities);
+            appDbContext.SaveChanges();
 
         }
 

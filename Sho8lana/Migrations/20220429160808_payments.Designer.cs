@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sho8lana.Data;
 
@@ -11,9 +12,10 @@ using Sho8lana.Data;
 namespace Sho8lana.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220429160808_payments")]
+    partial class payments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,12 +216,6 @@ namespace Sho8lana.Migrations
                     b.Property<bool>("BuyerAccepted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("BuyerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("BuyerIsDone")
-                        .HasColumnType("bit");
-
                     b.Property<float>("ContractPrice")
                         .HasColumnType("real");
 
@@ -234,15 +230,6 @@ namespace Sho8lana.Migrations
 
                     b.Property<bool>("SellerAccepted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("SellerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("SellerIsDone")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SericeOwnerId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");

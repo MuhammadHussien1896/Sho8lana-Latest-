@@ -22,6 +22,8 @@ namespace Sho8lana.Unit_Of_Work
             Cities = new BaseRepository<City>(dbContext);
             Notifications = new BaseRepository<Notification>(dbContext);
             OnlineUsers = new BaseRepository<OnlineUser>(dbContext);
+            Payments = new BaseRepository<Payments>(dbContext);
+            
         }
         public IBaseRepository<Customer> Customers { get; private set; }
         public IServiceRepository Services { get; private set; }
@@ -34,10 +36,12 @@ namespace Sho8lana.Unit_Of_Work
         public IBaseRepository<City> Cities { get; private set; }
         public IBaseRepository<Notification> Notifications { get; private set; }
         public IBaseRepository<OnlineUser> OnlineUsers { get; private set; }
+        public IBaseRepository<Payments> Payments { get; private set; }
 
         public async Task<int> complete()
         {
             return await dbContext.SaveChangesAsync();
         }
+       
     }
 }

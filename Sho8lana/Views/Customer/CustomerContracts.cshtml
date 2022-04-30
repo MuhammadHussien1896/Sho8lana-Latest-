@@ -32,13 +32,20 @@
                         </div>
                         <div class="card-body">
                         @*<h5 class="card-title">@contract.Service.Title عن خدمة</h5>*@
-                        
-                        
-                        @if(contract.ContractPrice == default && UserManager.GetUserId(User) == contract.CustomerId)
+                        @if (Model.UserId == contract.CustomerId)
+                        {
+                            <h5 class="card-title">عقد مع العميل @contract.Service.Customer.FirstName @contract.Service.Customer.LastName</h5>    
+                        }
+                        else
+                        {
+                            <h5 class="card-title">عقد مع العميل @contract.Customer.FirstName @contract.Customer.LastName</h5> 
+                        }
+                        //you are customer
+                        @if(contract.ContractPrice == default && Model.UserId == contract.CustomerId)
                         {
                            <p>السعر غير محدد حتى الآن ، من فضلك انتظر تحديد السعر من قبل ناشر الخدمة</p>
-                        }
-                        else if(contract.ContractPrice == default && UserManager.GetUserId(User) != contract.CustomerId)
+                        }//you are service owner
+                        else if(contract.ContractPrice == default && Model.UserId == contract.SericeOwnerId)
                         {
                             <a class="btn btn-primary" asp-controller="Customer" asp-action="EditContractPrice" asp-route-id="@contract.ContractId">تحديد السعر</a>
                         }
@@ -46,7 +53,7 @@
                         else
                         {
                             //im the buyer and buyer accepted the service
-                            @if((UserManager.GetUserId(User) == contract.CustomerId && contract.BuyerAccepted)||(UserManager.GetUserId(User) != contract.CustomerId && contract.SellerAccepted))
+                            @if((Model.UserId == contract.BuyerId && contract.BuyerAccepted)||(Model.UserId == contract.SellerId && contract.SellerAccepted))
                             {
                                 <p>سعر الخدمة المتفق عليه : @contract.ContractPrice</p>
                                 <p>لقد قبلت طلب العقد .. فى انتظار قبول الطرف الاخر</p>
@@ -124,21 +131,25 @@
                 {
                     <div class="card mt-3">
                         <div class="card-header">
-                                @contract.Customer.FirstName @contract.Customer.LastName لديك عقد في انتظار الدفع مع  
+                               عقد في إنتظار الدفع لخدمة : @contract.Service.Title  
                         </div>
                         <div class="card-body">
-                        <h5 class="card-title">@contract.Service.Title عن خدمة</h5>
-                        <p class="card-text"> يريد بدأ التعاقد معك @contract.Customer.FirstName @contract.Customer.LastName
-                        </p>
-                        @*customer is buyer*@
-                        @if(contract.Service.IsFreelancer && UserManager.GetUserId(User) == contract.CustomerId)
+                        @if (Model.UserId == contract.CustomerId)
+                        {
+                            <h5 class="card-title">عقد مع العميل @contract.Service.Customer.FirstName @contract.Service.Customer.LastName</h5>    
+                        }
+                        else
+                        {
+                            <h5 class="card-title">عقد مع العميل @contract.Customer.FirstName @contract.Customer.LastName</h5> 
+                        }
+                        <p>سعر الخدمة المتفق عليه : @contract.ContractPrice</p>
+                        
+                        @if(Model.UserId == contract.BuyerId)
                         {
                             
-                            <a class="btn btn-primary" asp-controller="Customer" asp-action="BuyService" asp-route-id="@contract.ContractId">الانتقال للدفع</a>
-                        }//service owner is buyer
-                        else if(!contract.Service.IsFreelancer && UserManager.GetUserId(User) == contract.Service.CustomerId)
-                        {
-                            <a class="btn btn-primary" asp-controller="Customer" asp-action="BuyService" asp-route-id="@contract.ContractId">الانتقال للدفع</a>
+                                <form asp-action="CreateCheckoutSession" asp-controller="payment" asp-route-CustomerId="@contract.CustomerId" asp-route-ContractId="@contract.ContractId" method="POST">
+                                    <button type="submit" class="btn-primary btn">الانتقال للدفع</button>
+                                </form>
                         }
                         else
                         {
@@ -149,6 +160,7 @@
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" onclick="request('@contract.ContractId')">
                           إلغاء الطلب
                         </button>
+                        <a class="btn btn-outline-info" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تفاصيل الخدمة</a>
                         </div>
                     </div>
                 }
@@ -209,27 +221,27 @@
                 foreach(var contract in Model.ActiveContracts)
                 {
                     <div class="card mt-3">
-                        @if (contract.Service.IsFreelancer)
+                        <div class="card-header">
+                               عقد قيد التنفيذ لخدمة : @contract.Service.Title  
+                        </div>
+                        <div class="card-body">
+                        @if (Model.UserId == contract.CustomerId)
                         {
-                            <div class="card-header">
-                               @contract.Service.Customer.FirstName @contract.Service.Customer.LastName لقد طلبت خدمة من العميل 
-                            </div>
+                            <h5 class="card-title">عقد مع العميل @contract.Service.Customer.FirstName @contract.Service.Customer.LastName</h5>    
                         }
                         else
                         {
-                            <div class="card-header">
-                                @contract.Service.Customer.FirstName @contract.Service.Customer.LastName لقد ارسلت طلب عمل للعميل  
-                            </div>
+                            <h5 class="card-title">عقد مع العميل @contract.Customer.FirstName @contract.Customer.LastName</h5> 
                         }
-                        <div class="card-body">
-                        <h5 class="card-title"> @contract.Service.Title عن خدمة</h5>
-                        <p class="card-text">تذكر يمكنك إلغاء الطلب في أي وقت قبل قبوله من الطرف الاخر   
+                        <p>سعر الخدمة المتفق عليه : @contract.ContractPrice</p>
+                        <p class="card-text">عندما يكون العقد قيد التنفيذ لا يتم الإلغاء الا بموافقة الطرفين   
                             
                         </p>
                         @*<a href="#" class="btn btn-danger">إلغاء الطلب</a>*@
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                           إلغاء الطلب
                         </button>
+                        <a class="btn btn-outline-info" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تفاصيل الخدمة</a>
                         </div>
                     </div>
                 }
@@ -258,55 +270,34 @@
             
               @if(Model.DoneContracts.Count() == 0)
             {
-                <h1 class="text-center mt-5">لا توجد عقود منتهية</h1>
+                <h1 class="text-center mt-5">لا توجد عقود قد تم الانتهاء منها</h1>
             }
             else
             {
                 foreach(var contract in Model.DoneContracts)
                 {
                     <div class="card mt-3">
-                        @if (contract.Service.IsFreelancer)
+                        <div class="card-header">
+                               عقد قيد التنفيذ لخدمة : @contract.Service.Title  
+                        </div>
+                        <div class="card-body">
+                        @if (Model.UserId == contract.CustomerId)
                         {
-                            <div class="card-header">
-                               @contract.Service.Customer.FirstName @contract.Service.Customer.LastName لقد طلبت خدمة من العميل 
-                            </div>
+                            <h5 class="card-title">عقد مع العميل @contract.Service.Customer.FirstName @contract.Service.Customer.LastName</h5>    
                         }
                         else
                         {
-                            <div class="card-header">
-                                @contract.Service.Customer.FirstName @contract.Service.Customer.LastName لقد ارسلت طلب عمل للعميل  
-                            </div>
+                            <h5 class="card-title">عقد مع العميل @contract.Customer.FirstName @contract.Customer.LastName</h5> 
                         }
-                        <div class="card-body">
-                        <h5 class="card-title"> @contract.Service.Title عن خدمة</h5>
-                        <p class="card-text">تذكر يمكنك إلغاء الطلب في أي وقت قبل قبوله من الطرف الاخر   
-                            
-                        </p>
-                        @*<a href="#" class="btn btn-danger">إلغاء الطلب</a>*@
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                          إلغاء الطلب
-                        </button>
+                        <p>سعر الخدمة المتفق عليه : @contract.ContractPrice</p>
+                        <small>تاريخ انتهاء الخدمة : @contract.EndDate</small>
+                        @*<a class="btn btn-outline-info" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تقييم الخدمة</a>*@
+                        <a class="btn btn-outline-info" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تفاصيل الخدمة</a>
                         </div>
                     </div>
                 }
-                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">أنت على وشك إلغاء الطلب هل أنت متأكد ؟</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">
-                                بالضغط على زر المسح سيتم مسح الطلب نهائياً !
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">العودة</button>
-                                <button type="button" class="btn btn-danger" asp-controller="Customer" asp-action="DeleteRequest">مسح الطلب</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                }
+               
+            }
 
 
 
