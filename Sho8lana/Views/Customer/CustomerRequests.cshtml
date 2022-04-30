@@ -2,9 +2,11 @@
 @{
     ViewData["Title"] = "الطلبات";
 }
+<link href="~/assets/css/customerContracts.css" rel="stylesheet" />
 
+<div class="container" style="direction:rtl">
     <div class="row">
-      <div class="col-4">
+      <div class="col-4 mt-3">
         <div class="list-group" id="list-tab" role="tablist">
           <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">الطلبات الواردة</a>
           <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list" href="#list-profile" role="tab" aria-controls="list-profile">الطلبات الصادرة</a>
@@ -16,27 +18,27 @@
 
             @if(Model.IncomingRequests.Count() == 0)
             {
-                <h1 class="text-center">لا يوجد طلبات واردة حالياَ</h1>
+                <p class="text-center mt-5">لا يوجد طلبات واردة حالياَ</p>
             }
             else
             {
                 foreach(var request in Model.IncomingRequests)
                 {
-                    <div class="card mt-3">
+                    <div class="card mt-3 mb-3">
                         <div class="card-header">
-                                @request.Customer.FirstName @request.Customer.LastName لديك طلب قادم من طرف  
+                                  طلب لخدمة "@request.Service.Title"
                         </div>
                         <div class="card-body">
-                        <h5 class="card-title">@request.Service.Title عن خدمة</h5>
-                        <p class="card-text"> يريد بدأ التعاقد معك @request.Customer.FirstName @request.Customer.LastName
+                        <h5 class="card-title"> لديك طلب قادم من طرف @request.Customer.FirstName @request.Customer.LastName</h5>
+                        <p class="card-text text-end">
                             <br/>
-                            <small class="text-muted">@request.RequestDate : تاريخ الطلب </small>
                         </p>
                         <a asp-controller="customer" asp-action="AcceptServiceRequest" asp-route-id="@request.RequestId" class="btn btn-primary">قبول الطلب</a>
                         @*<a href="#" class="btn btn-danger">Cancel Request</a>*@
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" onclick="request('@request.RequestId')">
                           إلغاء الطلب
                         </button>
+                        <p class="text-muted text-start"> تاريخ الطلب  @request.RequestDate  </p>
                         </div>
                     </div>
                 }
@@ -90,35 +92,38 @@
 
             @if(Model.OutgoingRequests.Count() == 0)
             {
-                <h1 class="text-center mt-5">لا يوجد طلبات صادرة حالياً</h1>
+                <p class="text-center mt-5">لا يوجد طلبات صادرة حالياً</p>
             }
             else
             {
                 foreach(var request in Model.OutgoingRequests)
                 {
-                    <div class="card mt-3">
-                        @if (request.Service.IsFreelancer)
-                        {
-                            <div class="card-header">
-                               @request.Service.Customer.FirstName @request.Service.Customer.LastName لقد طلبت خدمة من العميل 
+                    <div class="card mt-3 mb-3">
+                        <div class="card-header">
+                                  لقد طلبت خدمة  "@request.Service.Title"
                             </div>
+                        
+                        <div class="card-body">
+                            @if (request.Service.IsFreelancer)
+                        {
+                            
+                            <p class="card-title"> لقد طلبت خدمة من العميل @request.Service.Customer.FirstName @request.Service.Customer.LastName </p>
                         }
                         else
                         {
-                            <div class="card-header">
-                                @request.Service.Customer.FirstName @request.Service.Customer.LastName لقد ارسلت طلب عمل للعميل  
-                            </div>
+                            
+                            <p class="card-title"> لقد ارسلت طلب عمل للعميل @request.Service.Customer.FirstName @request.Service.Customer.LastName </p>
                         }
-                        <div class="card-body">
-                        <h5 class="card-title"> @request.Service.Title عن خدمة</h5>
+                 
                         <p class="card-text">تذكر يمكنك إلغاء الطلب في أي وقت قبل قبوله من الطرف الاخر   
                             <br/>
-                            <small class="text-muted">@request.RequestDate : تاريخ الطلب</small>
                         </p>
                         @*<a href="#" class="btn btn-danger">إلغاء الطلب</a>*@
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="requestI('@request.RequestId')">
                           إلغاء الطلب
                         </button>
+                        <p class="text-muted text-start"> تاريخ الطلب  @request.RequestDate  </p>
+
                         </div>
                     </div>
                 }
@@ -155,5 +160,5 @@
         </div>
       </div>
     </div>
-
+</div>
 

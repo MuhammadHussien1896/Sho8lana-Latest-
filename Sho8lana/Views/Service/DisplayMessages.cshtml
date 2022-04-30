@@ -29,14 +29,14 @@
     }
 }*@
 
-<div class="container mt-5">
+<div class="container mt-5" style="direction:rtl">
     <div class="row d-flex justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="headings d-flex justify-content-between align-items-center mb-3">
-                <h5>Latest Messages :</h5>
+                <p class="fs-4">اخر الرسائل :</p>
             </div>
                 @if(Model == null){
-                    <h5>No Received Messages !</h5>
+                    <p class="fs-4">لا توجد رسائل</p>
                 }else{
                     @foreach(var item in Model)
                     {
@@ -44,19 +44,19 @@
                         @if (UserManager.GetUserId(User) == item.CustomerId)
                         {
                             @*<h4>You : @item.MessageContent</h4>*@
-                            @item.Service.Title
+                            <p class="fs-5">عنوان الخدمة : @item.Service.Title</p>
                             <p class="d-none">@(receiver = item.ReceiverId)</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="user d-flex flex-row align-items-center"> <img src="https://i.imgur.com/hczKIze.jpg" width="30" class="user-img rounded-circle mr-2"> <span><small class="font-weight-bold text-primary">You</small> <small class="font-weight-bold">@item.MessageContent</small></span> </div> <small>@item.MessageDate</small>
+                                <div class="user d-flex flex-row align-items-center"> <img src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" class="avatar rounded-circle ms-3"> <span><small class="fs-5 text-primary">أنت :</small> <small class="fs-5">@item.MessageContent</small></span> </div> <small>@item.MessageDate</small>
                             </div>
                         }
                         else
                         {
                            @* <h4>@item.Customer.FirstName @item.Customer.LastName : @item.MessageContent</h4>*@
-                           @item.Service.Title
+                           <p class="fs-5">عنوان الخدمة : @item.Service.Title</p>
                             <p class="d-none">@(receiver = item.CustomerId)</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="user d-flex flex-row align-items-center"> <img src="https://i.imgur.com/hczKIze.jpg" width="30" class="user-img rounded-circle mr-2"> <span><small class="font-weight-bold text-primary">@item.Customer.FirstName @item.Customer.LastName</small> <small class="font-weight-bold">@item.MessageContent</small></span> </div> <small>@item.MessageDate</small>
+                                <div class="user d-flex flex-row align-items-center"> <img src="data:image/*;base64,@item.Customer.ProfilePicture" class="avatar rounded-circle ms-3"> <span><small class="fs-5 text-primary">@item.Customer.FirstName @item.Customer.LastName :</small> <small class="fs-5">@item.MessageContent</small></span> </div> <small>@item.MessageDate</small>
                             </div>
                         }
                         @*<small>@item.MessageDate</small>*@
@@ -65,7 +65,7 @@
                     
                         
                             <div class="action d-flex justify-content-between mt-2 align-items-center">
-                                <div class="reply px-4"> <a asp-controller="service" asp-action="chat" asp-route-id="@item.ServiceId" asp-route-receiverId="@receiver">Send Message</a> </div>
+                                <div class="reply px-4"> <a asp-controller="service" asp-action="chat" asp-route-id="@item.ServiceId" asp-route-receiverId="@receiver">فتح المحادثة</a> </div>
                                 @*<div class="icons align-items-center"> <i class="fa fa-star text-warning"></i> <i class="fa fa-check-circle-o check-icon"></i> </div>*@
                             </div>
                       </div>
