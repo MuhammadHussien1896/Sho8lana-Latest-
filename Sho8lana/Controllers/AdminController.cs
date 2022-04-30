@@ -16,8 +16,8 @@ namespace Sho8lana.Controllers
             _context = context;
         }
 
-
-        public async Task<IActionResult>Index()
+        [AllowAnonymous]
+        public async Task<IActionResult>AdminPanel()
         {
 
             return View();

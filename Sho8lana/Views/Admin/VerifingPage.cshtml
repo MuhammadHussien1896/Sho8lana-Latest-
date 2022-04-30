@@ -9,8 +9,8 @@
 
 <div class="card text-dark bg-light col-sm-12 col-md-6 ">
    <div class="row col-12 justify-content-around">
-       <div class="col-5"><img src="/assets/img/profiles/@Model.ProfileImage"  height="200px" alt="..."></div>
-       <div class="col-5"><img src="/assets/img/National_id/@Model.NationalIdImage"  height="200px" alt="..."></div>
+       <div class="col-5"><img class="profile-picture " src="data:image/*;base64,@Convert.ToBase64String(@Model.ProfilePicture)" height="200px" /></div>
+       <div class="col-5"><img class="profile-picture " src="data:image/*;base64,@Convert.ToBase64String(@Model.ProfilePicture)" height="200px" /></div>
        
    </div>
  
