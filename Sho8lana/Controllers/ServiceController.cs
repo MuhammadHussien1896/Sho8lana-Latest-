@@ -99,7 +99,7 @@ namespace Sho8lana.Controllers
                     foreach (var image in Medias)
                     {
                         
-                        var path = "./wwwroot/assets/img/services/" + s.ServiceId + "-" + s.Title + "-" + i + ".jpg";
+                        var path = "./wwwroot/Images/services/" + s.ServiceId + "-" + s.Title + "-" + i + ".jpg";
 
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
