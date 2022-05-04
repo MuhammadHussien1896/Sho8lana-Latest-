@@ -47,6 +47,9 @@ namespace Sho8lana.Models
         public byte[] ProfilePicture { get; set; }
         //image
         public string NationalIdImage { get; set; }
+
+        public byte[] NationalIdPicture { get; set; }
+
         public bool IsVerified { get; set; }
         [DataType(DataType.Currency)]
         public float Balance { get; set; }

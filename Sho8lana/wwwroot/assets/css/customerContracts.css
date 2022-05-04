@@ -1,0 +1,12 @@
+﻿
+/*.active {
+    background-color: #7151A7;
+}*/
+
+.list-group .active {
+    background-color: #8227DA !important;
+}
+.card-header {
+    background-color: #8227DA;
+    color: white
+}

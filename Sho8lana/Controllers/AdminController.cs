@@ -53,17 +53,15 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> ReviewRolesToUser()
         {
             //var roles =await _userManager.GetRolesAsync();
-            var users = await _userManager.Users.Select(user => new UserViewModel
+            var users = _userManager.Users.Select(user => new UserViewModel
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 UserName = user.UserName,
                 Email = user.Email,
-
                 Roles = _userManager.GetRolesAsync(user).Result
-
-            }).ToListAsync();
+            }).ToList();
             return View(users);
         }
         public async Task<IActionResult> ManageRoles(string userId)

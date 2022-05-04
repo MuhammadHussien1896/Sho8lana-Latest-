@@ -52,7 +52,7 @@ namespace Sho8lana.Controllers
                 return NotFound();
             }
 
-            return View(service);
+            return View("Details_modified",service);
 
 
         }
@@ -99,7 +99,7 @@ namespace Sho8lana.Controllers
                     foreach (var image in Medias)
                     {
                         
-                        var path = "./wwwroot/assets/img/services/" + s.ServiceId + "-" + s.Title + "-" + i + ".jpg";
+                        var path = "./wwwroot/Images/services/" + s.ServiceId + "-" + s.Title + "-" + i + ".jpg";
 
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
@@ -190,7 +190,7 @@ namespace Sho8lana.Controllers
                     foreach (var image in Medias)
                     {
 
-                        var path = "./wwwroot/assets/img/services/" + service.ServiceId + "-" + service.Title + "-" + i + ".jpg";
+                        var path = "./wwwroot/assets/Images/services/" + service.ServiceId + "-" + service.Title + "-" + i + ".jpg";
 
                         using (var stream = new FileStream(path, FileMode.Create))
                         {

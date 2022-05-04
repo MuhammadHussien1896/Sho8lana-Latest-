@@ -4,9 +4,10 @@
 @{
     ViewData["Title"] = "العقود";
 }
-
+<link href="~/assets/css/customerContracts.css" rel="stylesheet" />
+<div class="container" style="direction:rtl">
 <div class="row">
-      <div class="col-4">
+      <div class="col-4 mt-3">
         <div class="list-group" id="list-tab" role="tablist">
           <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">العقود المنتظرة</a>
           <a class="list-group-item list-group-item-action" id="list-home2-list" data-bs-toggle="list" href="#list-home2" role="tab" aria-controls="list-home2">العقود في انتظار الدفع</a>
@@ -26,7 +27,7 @@
             {
                 foreach(var contract in Model.PendingContracts)
                 {
-                    <div class="card mt-3">
+                    <div class="card mt-3 mb-3">
                         <div class="card-header">
                                عقد في إنتظار البدء لخدمة : @contract.Service.Title  
                         </div>
@@ -129,7 +130,7 @@
             {
                 foreach(var contract in Model.PendingPaymentContracts)
                 {
-                    <div class="card mt-3">
+                    <div class="card mt-3 mb-3">
                         <div class="card-header">
                                عقد في إنتظار الدفع لخدمة : @contract.Service.Title  
                         </div>
@@ -220,7 +221,7 @@
             {
                 foreach(var contract in Model.ActiveContracts)
                 {
-                    <div class="card mt-3">
+                    <div class="card mt-3 mb-3">
                         <div class="card-header">
                                عقد قيد التنفيذ لخدمة : @contract.Service.Title  
                         </div>
@@ -276,7 +277,7 @@
             {
                 foreach(var contract in Model.DoneContracts)
                 {
-                    <div class="card mt-3">
+                    <div class="card mt-3 mb-3">
                         <div class="card-header">
                                عقد قيد التنفيذ لخدمة : @contract.Service.Title  
                         </div>
@@ -305,5 +306,6 @@
           
         </div>
       </div>
-    </div>
+</div>
+</div>
 
