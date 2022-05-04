@@ -2,10 +2,10 @@
 
 @{
     ViewData["Title"] = "Create Category";
+    Layout = "_AdminLayout";
 }
 
-<h1>Create Category</h1>
-<hr />
+<div class="row col-sm-12 col-lg-9 mt-2">
 <div class="row container">
     <div class="col-md-4">
         <form asp-action="CreateCategory" method="post" enctype="multipart/form-data">
@@ -39,8 +39,8 @@
 <div>
     
 </div>
+</div>
 
-
-@section Scripts {
+@*@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+}*@

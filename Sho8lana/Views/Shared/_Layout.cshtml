@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿
+@inject SignInManager<Customer> SignInManager
+@inject UserManager<Customer> UserManager
+
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -35,6 +40,24 @@
 
 
      <link rel="stylesheet" href="font-awesome-animation.min.css">
+     <style>
+         .dropdown-menu li {
+            position: relative;
+            }
+            .dropdown-menu .dropdown-submenu {
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: -7px;
+            }
+            .dropdown-menu .dropdown-submenu-left {
+            right: 100%;
+            left: auto;
+            }
+            .dropdown-menu > li:hover > .dropdown-submenu {
+            display: block;
+            }
+     </style>
 
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <partial name="ConnectSignalRPartial"/>
@@ -55,8 +78,14 @@
                     <li class="p-0 mx-2"><a class="nav-link scrollto active" asp-controller="Home" asp-action="index" asp-fragment="hero">Home</a></li>
                     <li class="p-0 mx-2"><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="about">About</a></li>
                     <li class="p-0 mx-2"><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="services">Services</a></li>
-                    <li class="p-0 mx-2"><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="features">Features</a></li>
                     <li class="p-0 mx-2"><a class="nav-link scrollto"  asp-controller="Home" asp-action="index" asp-fragment="contact">Contact</a></li>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        if (User.IsInRole("Admin"))
+                        {
+                             <li class="p-0 mx-2"><a class="nav-link scrollto"  asp-controller="Admin" asp-action="AdminPanel">Dashboard</a></li>
+                        }
+                    } 
                     <partial name="_LoginPartial"/>
                     
                    <li class="dropdown p-0 mx-2"><i class="fa-solid fa-magnifying-glass nav-link text-light"></i></li>
@@ -204,7 +233,10 @@
 
 @await RenderSectionAsync("Scripts", required: false)
 
+
+
 </body>
+
 
 </html>
 

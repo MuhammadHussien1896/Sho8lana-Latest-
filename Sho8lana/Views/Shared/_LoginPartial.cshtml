@@ -40,7 +40,7 @@
 
        <li class="p-0 mx-2">
 
-          <a class="nav-link scrollto" href="/customer/account" title="Manage">
+          <a class="nav-link scrollto" asp-controller="customer" asp-action="account" asp-route-id="@UserManager.GetUserId(User)" title="Manage">
          @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
              {<img class="avatar rounded-circle" alt="Profile" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" />}
          else

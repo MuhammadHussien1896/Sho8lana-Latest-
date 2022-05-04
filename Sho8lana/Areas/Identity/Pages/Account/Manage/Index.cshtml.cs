@@ -87,7 +87,9 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
                 LastName=user.LastName,
                 PhoneNumber = phoneNumber,
                 ProfilePicture=user.ProfilePicture
-            };
+                
+
+        };
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -150,6 +152,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
                 {
                     await file.CopyToAsync(dataStream);
                     user.ProfilePicture=dataStream.ToArray();
+                    //user.ProfilePicture = Array.ConvertAll(dataStream.ToArray(), i => (byte?)i); 
                 }
                 await _userManager.UpdateAsync(user);
 
