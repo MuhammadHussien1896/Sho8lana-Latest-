@@ -86,10 +86,16 @@ namespace server.Controllers
             };
             _context.Payments.Add(payment);
             Target.StartDate = DateTime.Now;
+            Target.EndDate = Target.StartDate.AddDays(Target.DeliveryTime);
             _context.Contracts.Update(Target);
+            _context.Notifications.Add(new Notification
+            {
+                CustomerId = customerId,
+                Content = "تهانينا تم دفع سعر الخدمة بنجاح !"
+            });
             await _context.complete();
             
-            return Content($"<html><body><h1>Thanks for your order,{ContractId} {customer.Name}!</h1></body></html>");
+            return RedirectToAction("customercontracts","customer");
         }
 
     }
