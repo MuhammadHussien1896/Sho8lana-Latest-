@@ -1,106 +1,217 @@
-﻿@using Microsoft.AspNetCore.Identity
-
-
+﻿@inject UserManager<Customer> userManger;
+@using Microsoft.AspNetCore.Identity
 @model Sho8lana.Models.Customer
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
+    ViewData["Title"] = "Account";
 
 }
 
-    <div class="container-xl px-4 mt-4">
-        <!-- <h1 class="text-primary">Edit Profile</h1> -->
-
-
-
-        <div class="row">
-            <div class="col-xl-4">
-                <!-- Profile picture card-->
-                <div class="card mb-4 mb-xl-0">
-                    <!-- <div class="card-header">Profile Picture</div> -->
-                    <div class="card-body text-center">
-                        <!-- Profile picture image-->
-                    @if (@Model.ProfilePicture !=null)
-                    {
-                        <img class="profile-picture rounded-circle" src="data:image/*;base64,@Convert.ToBase64String(@Model.ProfilePicture)" />
-                    }
-                    else
-                    {
-                        
-                        <img class="profile-picture rounded-circle" src="~/Images/202022.jpg" />
-                      
-                    }
-                        <!-- Profile picture help block-->
-                        <h4>@Model.FirstName @Model.LastName </h4>
-                        <!-- Profile picture upload button-->
-                        <h5>About</h5>
-                        <p>@Model.AboutMe</p>
-                            <a href="/identity/Account/manage" class="btn btn-primary">Edit your profile</a>
-
-                    </div>
-                </div>
-            </div>
-  
-
-
-
-            <div class="col-xl-8">
-                <!-- Account details card-->
-                <div class="card mb-4">
-                    <!-- <div class="card-header">Services</div> -->
-                    <div class="card-body">
-                    <!-- ======= Services Section ======= -->
-    <section id="services" class="services section-bg">
-        <div class="container" data-aos="fade-up">
-
-            <div class="section-title">
-                <h2>Services</h2>
-                
-                @*<p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>*@
-            </div>
-             <a href="/service/create" class="btn btn-primary">Add New Service</a>
-            
-            <div class="row gy-4">
-
-
-                @foreach (var item in Model.Services)
+<div class="row my-5 container" dir="rtl">
+    <div class="col-12">
+        <div class="text-center">
+           @if (@Model.ProfilePicture ==null)
+                {
+                    <img class="rounded-circle mx-auto d-block" style="width:148px; height:148px;" src="~/Images/202022.jpg" />
+                }
+            else
                 {
                     
-                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
-                        
-                        <div class="icon-box iconbox-blue" style="width: 100% !important;">
-                           <a href="/service/details/@item.ServiceId">
-                            <div class="icon">
-                                <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174"></path>
-                                </svg>
-                                <i class="bx bxl-dribbble"></i>
-                            </div>
-                            <h4>@item.Title</h4>
-                            <p>@item.Description</p>
-                            </a>
-                        </div>
-                        
-                    </div>
-                    
-
+                    <img class="rounded-circle mx-auto d-block" style="width:148px; height:148px;" src="data:image/*;base64,@Convert.ToBase64String(@Model.ProfilePicture)" />
+                  
                 }
 
+            @if (@Model.IsVerified==true)
+                 {
+                     <img class="verification-badge" src="https://khamsat.hsoubcdn.com/assets/images/verification-badge-f5965383075555aa8eee4d3e33aff856645f43585e7ac1fa56eed14203f46e00.svg" title="هوية موثقة" />
+                     @*<i class="bi bi-check-square-fill " style="color:green" title="هوية موثقة"></i>*@
+                 } 
+            <h1>@Model.FirstName @Model.LastName</h1>
+        </div>   
+        @if (userManger.GetUserId(User) == @Model.Id)
+        {
+           <a href="/identity/Account/manage" class="btn btn-success float-left">تعديل الملف الشخصي</a>
+        }
+    </div>
 
-            </div>
+</div>
 
+<div class="row my-5 justify-content-around" dir="rtl">
+    <div class="col-7">
+           <div class="row my-5 justify-content-center border border-Secondery ">
+           <h3 class="h4 my-3 fw-bold">نبذة عني</h3>
+           <hr />
+           <h4>@Model.AboutMe</h4>
+         </div>
+
+
+        <div class="row my-5 justify-content-center border border-Secondery ">
+           <h3 class="h4 my-3 fw-bold">خدماتي</h3>
+           <hr />
+           <div class="row gy-4">
+<div class="card-deck row justify-content-around">
+    @{
+    foreach (var service in Model.Services)
+    {
+    <div class="card col-lg-3 col-md-4 col-sm-6 border-0 my-5 px-2 bg-light">
+        <div class="position-relative">
+            <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">
+                @{
+                if (@service.Medias.FirstOrDefault()!=null)
+                {
+                <img class="card-img-top" src="~/Images/CategoriesImage/@service.Medias.FirstOrDefault().MediaPath">
+                }
+                else
+                {
+                <img class="card-img-top" src="~/Images/Defaultimage/defaultService.jpg">
+                }
+                }
+            </a>
+           
         </div>
-    </section><!-- End Services Section -->
-
-
-
-
-
+        <div class="card-body">
+            <p class="card-title mb-3 fw-bold">@service.Title</p>
+            <div style="text-align:start;direction:rtl">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="ratings me-0">
+                        @{
+                        for (var i = 0; i < (int)5-@service.Rate/2; i++) { <i class="fa fa-star"></i>
+                            }
+                            for (var i = 0; i < (int)@service.Rate/2; i++) { <i class="fa fa-star rating-color"></i>
+                                }
+                                }
                     </div>
                 </div>
+                <div class="fw-normal">تبدأ من : <span class="fw-bold">@service.Price $</span></div>
+                @{
+                if (@service.IsCash)
+                {
+                <div class="fw-bold">متاح التعامل بالكاش او الفيزا</div>
+                }
+                else
+                {
+                <div class="fw-bold">متاح التعامل بالفيزا فقط </div>
+                }
+                }
+                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Count</span></div>
+                <div class="fw-normal">تاريخ النشر :<span
+                        class="fw-bold">@service.PublishDate.ToString("MM/dd/yyyy")</span></div>
             </div>
         </div>
     </div>
+    }
+    }
+</div>
+        </div>
+        </div>
+
+
+     </div>
+
+     <div class="col-4">
+         <div class="row my-5 justify-content-center border border-Secondery ">
+           <h3 class="h4 my-3 fw-bold">إحصائيات</h3>
+           <hr />
+         <div class="row my-2 justify-content-between">
+          <span class="col-6 text-secondary">
+              العنوان
+          </span>
+     
+        <span class="col-6">
+            @Model.Country/@Model.City/@Model.Area
+        </span>
+          
+    
+      </div>
+         <div class="row my-2 justify-content-between">
+          <span class="col-6 text-secondary">
+              تاريخ التسجيل
+          </span>
+     
+        <span class="col-6">
+            @Model.RegisterationDate
+        </span>
+      </div>
+               <div class="row my-2 justify-content-between">
+          <span class="col-6 text-secondary">
+              عدد الخدمات المنشورة
+          </span>
+     
+        <span class="col-6">
+            @Model.Services.Count
+        </span>
+          
+    
+      </div>
+         </div>
+
+
+
+
+         <div class="row my-5 justify-content-center border border-Secondery ">
+           <h3 class="h4 my-3 fw-bold">توثيقات</h3>
+           <hr />
+         <div class="row my-2 justify-content-between">
+       <span class="col-6 text-secondary">
+                   @if (Model.EmailConfirmed == true)
+                    {
+                        
+                        <span >
+                            <i class="bi bi-check-square-fill" style="color:green;"></i>
+                        </span>
+                    } 
+                    else
+                    {
+                        <span >
+                            
+                            <i class="bi bi-x-square-fill" style="color:red"></i>
+                        </span>
+                    }
+              البريد الإلكتروني
+          </span>
+
+         <span class="col-6 text-secondary">
+           @if (Model.PhoneNumber != null)
+            {
+                <span >
+                    <i class="bi bi-check-square-fill " style="color:green"></i>
+                </span>
+            } 
+            else
+            {
+                <span >
+                    <i class="bi bi-x-square-fill" style="color:red"></i>
+                </span>
+            }
+          رقم الجوال
+          </span>
+    
+      </div>
+               <div class="row my-2 justify-content-between">
+                 <span class="col-6 text-secondary">
+           @if (Model.NationalIdPicture!=null)
+            {
+                <span >
+                    <i class="bi bi-check-square-fill " style="color:green"></i>
+                </span>
+            } 
+            else
+            {
+                <span >
+                    <i class="bi bi-x-square-fill" style="color:red"></i>
+                </span>
+            }
+          الهوية الشخصية
+          </span>
+      </div>
+ 
+
+
+      </div>
+
+
+
+ </div>
+
+
 
