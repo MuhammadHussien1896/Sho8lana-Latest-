@@ -116,7 +116,7 @@ namespace Sho8lana.Controllers
                         }
                         i++;
                     }
-                    return RedirectToAction("account","customer");
+                    return RedirectToAction("Details",new {id = s.ServiceId});
                 }
                 ////////////////////////////////////////////////////////////
                 
@@ -132,11 +132,15 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (id == 0) { return NotFound(); }
-            else
+            
+            var service = await _context.Services.GetById(id);
+            if(service.CustomerRequests.Count > 0 || service.Contracts.Count > 0)
             {
-                await _context.Services.Delete(id);
-                await _context.complete();
+                return RedirectToAction(nameof(Details),id);
             }
+
+            _context.Services.Delete(service);
+            await _context.complete();
             return RedirectToAction(nameof(Index));
         }
         
@@ -275,6 +279,7 @@ namespace Sho8lana.Controllers
                 || (m.CustomerId == receiverId && m.ReceiverId == userId))
                 && m.ServiceId == id).Result.OrderByDescending(m => m.MessageDate);
             var receiverName = $"{receiver.FirstName} {receiver.LastName}";
+            var onlineReceiver = await _context.OnlineUsers.GetBy(u => u.UserId == receiverId);
             ChatViewModel model = new ChatViewModel()
             {
                 SenderId = userId,
@@ -282,8 +287,16 @@ namespace Sho8lana.Controllers
                 ReceiverId = receiverId,
                 Messages = chatMessages,
                 ServiceTitle = service.Title,
-                ServiceId = id
+                ServiceId = id,
+                IsReceiverOnline = onlineReceiver != null
             };
+            var unreadMessages = await _context.ServiceMessages.GetAllBy(m => m.ReceiverId == userId && m.ServiceId == id && m.IsRead == false);
+            foreach(var messsage in unreadMessages)
+            {
+                messsage.IsRead = true;
+            }
+            _context.ServiceMessages.UpdateList(unreadMessages.ToList());
+            await _context.complete();
             return View(model);
             
         }
