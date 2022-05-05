@@ -4,8 +4,10 @@
 @model IEnumerable<UserViewModel>
 @{
     ViewData["Title"] = "Users";
+    Layout = "_AdminLayout";
 }
-<@*h1>Users</h1>*@
+@*h1>Users</h1>*@
+<div class="row col-sm-12 col-lg-9">
  <table class="table table-striped mt-4">
      <thead>
          <tr>
@@ -33,3 +35,4 @@
         }
     </tbody>
  </table>
+ </div>

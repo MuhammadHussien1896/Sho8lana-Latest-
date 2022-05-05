@@ -20,7 +20,7 @@
     <div id="carouselExampleControls" class="carousel slide col-sm-12 col-md-6 " data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="/assets/img/services/Service.png" class="col-12" height="200px">
+                <img src="/assets/img/services/Services.jpg" class="col-12" height="200px">
             </div>
             @foreach (var image in Model.Medias)
             {
@@ -51,7 +51,9 @@
             <h6 class"card-subtitle mb-2 text-muted">Customer Instruction</h6>
             <p class="card-text">@Html.DisplayFor(model=>model.CustomerInstructions)</p>
             <h6 class"card-subtitle mb-2 text-muted">Customer</h6>
-            <p class="card-text">@Html.DisplayFor(model=>model.Customer.FirstName) @Html.DisplayFor(model=>model.Customer.LastName) </p>
+           <a asp-controller="customer" asp-action="account" asp-route-id="@Model.CustomerId">
+           <p class="card-text">@Html.DisplayFor(model=>model.Customer.FirstName) 
+            @Html.DisplayFor(model=>model.Customer.LastName) </p></a>
             @if (Model.IsCash)
             {
                 <p class="card-text text-danger">Cash only</p>
@@ -71,7 +73,7 @@
 
 
 
-            @if (User.IsInRole("Admin"))
+            @if (User.IsInRole("Admin")&&Model.IsAccepted==false)
             {
                 <form asp-controller="Admin" asp-action="SendAcceptToUser" method="post">
 

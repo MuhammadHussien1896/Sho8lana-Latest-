@@ -119,7 +119,7 @@ namespace Sho8lana.Controllers
                     return RedirectToAction("account","customer");
                 }
                 ////////////////////////////////////////////////////////////
-                
+                return RedirectToAction(nameof(Index));
             }
             var categories = _context.Categories.GetAllSync();
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
@@ -137,9 +137,9 @@ namespace Sho8lana.Controllers
                 await _context.Services.Delete(id);
                 await _context.complete();
             }
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Categories");
         }
-        
+
         // GET: Service/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -219,7 +219,7 @@ namespace Sho8lana.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Categories");
             }
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
             return View(service);
