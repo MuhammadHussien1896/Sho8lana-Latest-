@@ -9,15 +9,32 @@
         <div class="row justify-content-center">
             <div id="carouselExampleIndicators" class="carousel slide my-1" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active" style="height:70vh">
-                        <img class="d-block w-100" src="~/Images/CategoriesImage/design.jpg" alt="First slide">
-                    </div>
-                    <div class="carousel-item" style="height:70vh">
-                        <img class="d-block w-100" src="~/Images/CategoriesImage/Header.jpg" alt="Second slide">
-                    </div>
-                    <div class="carousel-item" style="height:70vh">
-                        <img class="d-block w-100" src="~/Images/CategoriesImage/programing.jpg" alt="Third slide">
-                    </div>
+                    @{
+                        if (@Model.Medias.Count == 0 && @Model.IsFreelancer==true)
+                        {
+                            <div class="carousel-item active" style="height:70vh">
+                                <img class="d-block w-100" src="~/Images/DefaultImage/defaultService.jpg">
+                            </div>
+                        }
+                        else if(@Model.Medias.Count == 0 && @Model.IsFreelancer == false)
+                        {
+                            <div class="carousel-item active" style="height:70vh">
+                                <img class="d-block w-100" src="~/Images/DefaultImage/defaultHiring.jpg">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="carousel-item active" style="height:70vh">
+                                <div class="d-block h-100 w-100" style="background:url('/Images/services/@Model.Medias.FirstOrDefault().MediaPath') center no-repeat;background-size:contain"></div>
+                            </div>
+                            foreach (var item in @Model.Medias.Skip(1).ToList())
+                            {
+                                <div class="carousel-item" style="height:70vh">
+                                    <div class="d-block h-100 w-100" style="background:url('/Images/services/@item.MediaPath') center no-repeat;background-size:contain"></div>
+                                </div>          
+                            }
+                        }
+                    }
                 </div>
                 <a class="carousel-control-prev" data-bs-target="#carouselExampleIndicators" role="button" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -211,28 +228,39 @@
                     {
                         if (Model.IsCash == true)
                         {
-                         <div class="row justify-content-around my-3">
-                            <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
+                            <div class="row justify-content-around my-3">
+                                <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
                             </div>
 
                         }
                         else
                         {
-                         <div class="row justify-content-around my-3">
-                            <a asp-action="RequestService" asp-controller="Customer" asp-route-id=@Model.ServiceId class="btn btn-success col-5">ارسال طلب الي البائع</a>
-                            <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
-                        </div>   
+                            <div class="row justify-content-around my-3">
+                                <a asp-action="RequestService" asp-controller="Customer" asp-route-id=@Model.ServiceId class="btn btn-success col-5">ارسال طلب الي البائع</a>
+                                <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
+                            </div>
                         } 
                     }
                 }
-             }
+            }
         </div>
         <!-- End Of Price section  -->
         <!-- =======  Seller section  ======= -->
-         <div class="row my-5 justify-content-center border border-Secondery ">
+        <div class="row my-5 justify-content-center border border-Secondery ">
             <p class="h4 my-3 fw-bold">البائع</p>
             <div class="row my-2 justify-content-center align-items-center align-content-center">
-                <img src="~/Images/@Model.Customer.ProfileImage" class="rounded-circle col-3"/>
+                @{
+                    if (@Model.Customer.ProfilePicture == null)
+                    {
+                        <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle col-3"/>
+                    }
+                    else
+                    {
+                        <img class="rounded-circle col-3" src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
+                    }
+
+                }
+                
                 <div class="col-8 d-flex flex-column pe-5">
                     <a asp-controller="customer" asp-action="account" asp-route-id="@Model.CustomerId">
                     <span>@Model.Customer.FirstName @Model.Customer.LastName</span></a>

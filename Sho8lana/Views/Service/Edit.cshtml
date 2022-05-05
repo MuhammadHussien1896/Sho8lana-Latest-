@@ -4,147 +4,257 @@
     ViewData["Title"] = "Edit";
 }
 
-@*<h1>Edit</h1>
-
-<h4>Service</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ServiceId" />
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomerInstructions" class="control-label"></label>
-                <input asp-for="CustomerInstructions" class="form-control" />
-                <span asp-validation-for="CustomerInstructions" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsCash" /> @Html.DisplayNameFor(model => model.IsCash)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsFreelancer" /> @Html.DisplayNameFor(model => model.IsFreelancer)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="PublishDate" class="control-label"></label>
-                <input asp-for="PublishDate" class="form-control" />
-                <span asp-validation-for="PublishDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Rate" class="control-label"></label>
-                <input asp-for="Rate" class="form-control" />
-                <span asp-validation-for="Rate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
-                <span asp-validation-for="CustomerId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>*@
-
-<div class="container">
-    <div class="row">
-        <h4>Update Your Service</h4>
-        <hr />
-        <div class="col-md-6">
+<div class="w-50 my-5 mx-auto" dir="rtl">
+    <div class="row justify-content-center">
+        <p class="h4 col-12 my-3 text-center">تعديل خدمة @Model.Title</p>
+        <div class="col-md-6 col-lg-12">
             <form asp-action="Edit" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="ServiceId" />
-                <input asp-for="Title" type="hidden" />
                 <input asp-for="CustomerId" type="hidden" />
+                <div class="form-group mb-3">
+                    <label asp-for="Title" class="control-label"> العنوان</label>
+                    <input asp-for="Title" class="form-control my-2" />
+                    <span class="text-secondary">قم بإضافة بعض الكلمات المفتاحية لعنوان الخدمة مثل <strong> (برمجة ، ترجمة ، تسجيل صوتي)</strong></span>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
                 
                 <div class="form-group mb-3">
-                    <label asp-for="CategoryId" class="control-label">Category</label>
-                    <select asp-for="CategoryId" class ="form-select" asp-items="ViewBag.CategoryId">
-                        <option selected>Select Category ....</option>
+                    <label asp-for="CategoryId" class="control-label">التصنيف</label>
+                    <select asp-for="CategoryId" class ="form-select my-2" asp-items="ViewBag.CategoryId"
+                        style="background-position: left 0.75rem center;padding-right:.25rem">
+                        <option  selected>قم بإختيار التصنيف المناسب</option>
                     </select>
+                    <span class="text-secondary">اختر التصنيف الملائم لنوع الخدمة التي تريد اضافتها </span>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label asp-for="Description" class="control-label"></label>
-                    <textarea rows="6" asp-for="Description" class="form-control"></textarea>
+                    <label asp-for="Description" class="control-label">وصف الخدمة</label>
+                    <textarea rows="6" asp-for="Description" class="form-control my-2"></textarea>
+                    <span class="text-secondary">قم بوضع وصف ملائم للخدمة</span>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
                
                 <div class="form-group mb-3">
-                    <label asp-for="Price" class="control-label"></label>
-                    <input asp-for="Price" class="form-control" />
+                    <label asp-for="Price" class="control-label">سعر الخدمة</label>
+                    <input asp-for="Price" class="form-control my-2" />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
                 <div class="form-group mb-3">
-                    <label asp-for="CustomerInstructions" class="control-label">Customer Instructions</label>
-                    <textarea rows="6" asp-for="CustomerInstructions" class="form-control"></textarea>
+                    <label asp-for="CustomerInstructions" class="control-label">تعليمات للمشتري</label>
+                    <textarea rows="6" asp-for="CustomerInstructions" class="form-control my-2"></textarea>
                     <span asp-validation-for="CustomerInstructions" class="text-danger"></span>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label asp-for="Medias" class="control-label">Upload Another Images (Maximum 4 images)</label>
-                    <input asp-for="Medias" class="form-control" type="file" value="Upload" multiple/>
-                    <span asp-validation-for="Medias" class="text-danger"></span>
+                    <p class="w-100">قسم الصور </p>
+                    <div class="wrapper row justify-content-around ">
+                          @{
+                              foreach (var item in Model.Medias)
+                              {
+                                    <div class="box col-2 p-0 position-relative">
+                                        <div class="js--image-preview" style="background-image:url('/Images/services/@item.MediaPath')"></div>
+                                        <div class="upload-options">
+                                        <label>
+                                            <input type="file" class="image-upload" accept="image/*" asp-for="Medias" />
+                                        </label>
+                                        </div>
+                                        <i class="fa-solid fa-xmark position-absolute top-0 start-0 DeleteButton" id="@item.MediaId"></i>
+                                    </div>  
+                              }
+                              for (var i = 0; i < 4-Model.Medias.Count; i++)
+                              {
+                                  <div class="box col-2 p-0 position-relative">
+                                        <div class="js--image-preview"></div>
+                                        <div class="upload-options">
+                                        <label>
+                                            <input type="file" class="image-upload" accept="image/*" asp-for="Medias" />
+                                        </label>
+                                        </div>
+                                  </div>
+                              }
+                          }
+                    </div>
+                          <span class="text-danger my-3">ملحوظة عند تغيير الصور يتم رفعها تلقائيا دون الضغط على تغيير الخدمة ولن تتمكن من استعادة الصور القديمة</span>
                 </div>
-                <div class="form-group mb-3">
-                    <label class="control-label">Payment Method</label>
-                </div>
-                <div class="form-check form-check-inline mb-3">
-                  <input class="form-check-input" type="checkbox">
-                  <label class="form-check-label">Online</label>
-                </div>
-                <div class="form-check form-check-inline mb-3">
-                  <input class="form-check-input" asp-for="IsCash">
-                  <label class="form-check-label">Cash</label>
-                </div>
-                <div class="form-group mb-3">
-                    <label class="control-label">Service Type</label>
+                <div class="form-group mb-3 my-2">
+                    <label class="control-label">طريقة الدفع </label>
                 </div>
                 <div class="form-group form-check-inline mb-3">
                     <label class="form-check-label">
-                        <input class="form-check-input" asp-for="IsFreelancer" /> 
-                        <label class="form-check-label">Freelancer</label>
+                        <input class="form-check-input PaymentMethodCash" name="IsCash" type="radio" value="true">
+                        <label class="form-check-label">كاش</label>
                     </label>
                 </div>
                 <div class="form-group form-check-inline mb-3">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" /> 
-                        <label class="form-check-label">Client</label>
+                        <input class="form-check-input PaymentMethodVisa" name="IsCash" type="radio" value="false">
+                        <label class="form-check-label">فيزا</label>
                     </label>
                 </div>
-               
+                <div class="form-group mb-3 my-2">
+                    <label class="control-label">نوع الخدمة</label>
+                </div>
+                <div class="form-group form-check-inline mb-3">
+                    <label class="form-check-label">
+                        <input class="form-check-input Freelance" name="IsFreelancer" type="radio" value="true"/> 
+                        <label class="form-check-label">عرض </label>
+                    </label>
+                </div>
+                <div class="form-group form-check-inline mb-3">
+                    <label class="form-check-label">
+                        <input class="form-check-input NotFreelance" name="IsFreelancer" type="radio" value="true"/> 
+                        <label class="form-check-label">طلب</label>
+                    </label>
+                </div>
             
-                <div class="form-group mb-3">
-                    <input type="submit" value="Edit" class="btn btn-primary btn-lg" />
+                <div class="form-group mb-3 mx-auto col-3 my-2">
+                    <input type="submit" value="تعديل الخدمة" class="btn btn-info btn-lg" />
                 </div>
             </form>
         </div>
     </div>
   </div>
+   <script>
+       /////Preview and Updating Section
+      function initImageUpload(box) {
+          let uploadField = box.querySelector('.image-upload');
+          uploadField.addEventListener('change', getFile);
+          function getFile(e){
+              let file = e.currentTarget.files[0];
+              checkType(file);
+          }
+          function previewImage(file){
+              let thumbs = document.querySelectorAll('.js--image-preview');
+              let thumb=box.querySelector('.js--image-preview');
+              let num=0;
+              if(thumb.style.backgroundImage==""){
+                  for(let i=0;i<thumbs.length;i++){
+                      if(thumbs[i].style.backgroundImage==""){
+                          thumb=thumbs[i];
+                          num=i;
+                          break;
+                      }
+                  }
+              };
+              upload(file,num);
+              thumb.className += ' js--no-default';
+          }
+          function checkType(file){
+              let imageType = /image.*/;
+              if (!file.type.match(imageType)) {
+              throw 'the file type is not image';
+              } 
+              else if (!file){
+              throw 'you did not upload file';
+              } 
+              else {
+              previewImage(file);
+              }
+           }
+           function upload(file,i){
+              let id;
+              let serviceId=Number("@(Model.ServiceId)")
+              data=new FormData();
+              data.append("Pic",file);
+              data.append("ServiceId",serviceId);
+              data.append("updateNo",i);
+              $.ajax({
+                type: "Post",
+                url: '@Url.Action("UploadImage","JsonApi")',
+                processData: false,
+                contentType: false,
+                data:data,
+                success: (data)=> {
+                    DrawData(data);
+                    let cover='<div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>'
+                    document.querySelector(".box").innerHTML+=cover;
+                    var boxes = document.querySelectorAll('.box');
+                        for (let i = 0; i < boxes.length; i++) {
+                        let box = boxes[i];
+                        initImageUpload(box);
+                    }},
+                error: function (ex) {
+                    console.log(ex);
+                }
+                    });
+            }
+      }
+        /////////////
+        let cover='<div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>'
+        document.querySelector(".box").innerHTML+=cover;
+        $(".DeleteButton").on('click',Delete)
+        ////////////
+        function Delete(){
+            let id=Number(event.target.id)
+            $.ajax({
+                type: "Delete",
+                url: '@Url.Action("DeleteImage","JsonApi")',
+                data:{mediaId:id},
+                success: (data)=> {
+                    DrawData(data);
+                    let cover='<div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>'
+                    document.querySelector(".box").innerHTML+=cover;
+                    var boxes = document.querySelectorAll('.box');
+                    for (let i = 0; i < boxes.length; i++) {
+                    let box = boxes[i];
+                    initImageUpload(box);
+                }
+               },
+               error: function (ex) {
+                     console.log(ex);
+               }
+           })
+        }
+
+        // initialize box-scope
+        var boxes = document.querySelectorAll('.box');
+
+        for (let i = 0; i < boxes.length; i++) {
+          let box = boxes[i];
+          initImageUpload(box);
+        }
+        ////draw Data
+        function DrawData(data){
+                 $(".wrapper").empty();
+                    $.each(data,(i,item)=>{
+                        $(".wrapper").append(
+                            `<div class="box col-2 p-0 position-relative">
+                                <div class="js--image-preview" style="background-image:url('/Images/services/${item.mediaPath}')"> </div>
+                                <div class="upload-options">
+                                    <label>
+                                        <input type="file" class="image-upload" accept="image/*" />
+                                    </label>
+                                </div>
+                                    <i class="fa-solid fa-xmark position-absolute top-0 start-0 DeleteButton" id="${item.mediaId}"></i>
+                            </div> `
+                        )
+                    })
+                            $(".DeleteButton").on('click',Delete)
+                        for(let i=0;i<4-data.length;i++){
+                            $(".wrapper").append(
+                                `<div class="box col-2 p-0 position-relative">
+                                    <div class="js--image-preview"></div>
+                                    <div class="upload-options">
+                                        <label>
+                                            <input type="file" class="image-upload" accept="image/*" asp-for="Medias" />
+                                        </label>
+                                    </div>
+                                  </div>`
+                            )
+                        }
+                        }
+        
+        if('@(Convert.ToBoolean(Model.IsCash))'=="True")
+        $(".PaymentMethodCash").prop('checked',true)
+        else
+        $(".PaymentMethodVisa").prop('checked',true)
+        if('@(Convert.ToBoolean(Model.IsFreelancer))'=="True")
+        $(".Freelance").prop('checked',true)
+        else
+        $(".NotFreelance").prop('checked',true)
+
+  </script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
