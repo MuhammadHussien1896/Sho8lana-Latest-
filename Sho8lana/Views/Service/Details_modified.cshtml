@@ -234,7 +234,8 @@
             <div class="row my-2 justify-content-center align-items-center align-content-center">
                 <img src="~/Images/@Model.Customer.ProfileImage" class="rounded-circle col-3"/>
                 <div class="col-8 d-flex flex-column pe-5">
-                    <span>@Model.Customer.FirstName @Model.Customer.LastName</span>
+                    <a asp-controller="customer" asp-action="account" asp-route-id="@Model.CustomerId">
+                    <span>@Model.Customer.FirstName @Model.Customer.LastName</span></a>
                     <span>عضو منذ عام @Model.Customer.RegisterationDate.Year</span>
                     <span>@Model.Customer.City / @Model.Customer.Area</span>
                     <spna>الحالة / @(@Model.Customer.IsVerified?"موثق":"غير موثق")</spna>

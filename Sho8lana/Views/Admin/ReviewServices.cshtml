@@ -43,9 +43,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Customer.FirstName)
             </td>
-            <td>
-               <input class="form-check-input" asp-for="@item.IsAccepted" /> @Html.DisplayFor(modelItem => item.Customer.FirstName)
-            </td>
+            
             <td>
             
                 <a asp-controller="Service"  asp-action="Details" class="btn btn-primary" asp-route-id="@item.ServiceId"> Show Service Details</a> 

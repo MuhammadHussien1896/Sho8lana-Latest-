@@ -24,7 +24,7 @@ namespace Sho8lana.Controllers
             _roleManager = roleManager;
         }
         
-        [AllowAnonymous]
+        
         public async Task<IActionResult>AdminPanel()
         {
             var numberOfCustommers = await _context.Customers.Count();
@@ -118,14 +118,14 @@ namespace Sho8lana.Controllers
             else if (type == "Unverfied")
             {
                 customers = await _context.Customers.GetAllBy(c => c.IsVerified == false
-                                                && c.NationalIdImage != null
+                                                && c.NationalIdPicture != null
                                                 && c.PhoneNumber != null
                                                 && c.ProfilePicture != null);
             }
             else if (type == "Rest")
             {
                  customers = await _context.Customers.GetAllBy(c => c.IsVerified == false
-                                                 && (c.NationalIdImage == null
+                                                 && (c.NationalIdPicture == null
                                                  || c.PhoneNumber == null
                                                  || c.ProfilePicture == null));
             }
@@ -265,7 +265,7 @@ namespace Sho8lana.Controllers
                 _context.Notifications.Add(notification);
                 await _context.complete();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("ReviewUsers");
             }
         }
         [HttpPost]
@@ -286,7 +286,7 @@ namespace Sho8lana.Controllers
                 _context.Notifications.Add(notification);
                 await _context.complete();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("ReviewUsers");
             }
         }
 
