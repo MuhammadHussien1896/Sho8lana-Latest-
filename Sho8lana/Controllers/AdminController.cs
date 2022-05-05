@@ -23,10 +23,27 @@ namespace Sho8lana.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-
-
-        public async Task<IActionResult>Index()
+        
+        
+        public async Task<IActionResult>AdminPanel()
         {
+            var numberOfCustommers = await _context.Customers.Count();
+            ViewBag.NumberOfCustommers = numberOfCustommers;
+
+            var numOfVerifiedUsers = await _context.Customers.Count(a => a.IsVerified);
+            ViewBag.numOfVerifiedUsers = numOfVerifiedUsers;
+
+            var numOfUnverifiedUsers = await _context.Customers.Count(c => c.IsVerified == false);
+            ViewBag.numOfUnverifiedUsers = numOfUnverifiedUsers;
+
+            var numberOfServices = await _context.Services.Count();
+            ViewBag.numberOfServices = numberOfServices;
+
+            var numOfDoneContracts = await _context.Contracts.Count(c=>c.IsDone == true);
+            ViewBag.numOfDoneContracts = numOfDoneContracts;
+
+            var numOfOnlineContracts = await _context.Contracts.Count(c => c.IsDone == false && c.SellerAccepted == true && c.BuyerAccepted == true);
+            ViewBag.numOfOnlineContracts = numOfOnlineContracts;
 
             return View();
         }
@@ -101,16 +118,16 @@ namespace Sho8lana.Controllers
             else if (type == "Unverfied")
             {
                 customers = await _context.Customers.GetAllBy(c => c.IsVerified == false
-                                                && c.NationalIdImage != null
+                                                && c.NationalIdPicture != null
                                                 && c.PhoneNumber != null
-                                                && c.ProfileImage != null);
+                                                && c.ProfilePicture != null);
             }
             else if (type == "Rest")
             {
                  customers = await _context.Customers.GetAllBy(c => c.IsVerified == false
-                                                 && (c.NationalIdImage == null
+                                                 && (c.NationalIdPicture == null
                                                  || c.PhoneNumber == null
-                                                 || c.ProfileImage == null));
+                                                 || c.ProfilePicture == null));
             }
 
             //////paging section
@@ -248,7 +265,7 @@ namespace Sho8lana.Controllers
                 _context.Notifications.Add(notification);
                 await _context.complete();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("ReviewUsers");
             }
         }
         [HttpPost]
@@ -269,7 +286,7 @@ namespace Sho8lana.Controllers
                 _context.Notifications.Add(notification);
                 await _context.complete();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("ReviewUsers");
             }
         }
 

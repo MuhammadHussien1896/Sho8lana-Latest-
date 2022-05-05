@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sho8lana.Data;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Sho8lana.Models.Repositories
 {
@@ -60,7 +61,7 @@ namespace Sho8lana.Models.Repositories
         }
         public async Task<T> GetBy(Expression<Func<T, bool>> expression)
         {
-            T entity = await appDbContext.Set<T>().SingleOrDefaultAsync(expression);
+            T entity = await appDbContext.Set<T>().FirstOrDefaultAsync(expression);
             return entity;
         }
 
@@ -114,6 +115,16 @@ namespace Sho8lana.Models.Repositories
                  appDbContext.Set<T>().UpdateRange(entities);
             appDbContext.SaveChanges();
 
+        }
+
+        public async Task<int> Count()
+        {
+            return await appDbContext.Set<T>().CountAsync();
+        }
+
+        public async Task<int> Count(Expression<Func<T, bool>> expression)
+        {
+            return await appDbContext.Set<T>().CountAsync(expression);
         }
 
 
