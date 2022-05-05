@@ -142,7 +142,6 @@ namespace Sho8lana.Controllers
             }
             if (id == 0) { return NotFound(); }
             
-            var service = await _context.Services.GetById(id);
             if(service.CustomerRequests.Count > 0 || service.Contracts.Count > 0)
             {
                 return RedirectToAction(nameof(Details),new { id = id});
