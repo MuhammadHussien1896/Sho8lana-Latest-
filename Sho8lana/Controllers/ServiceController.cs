@@ -11,6 +11,7 @@ using Sho8lana.Unit_Of_Work;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Sho8lana.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sho8lana.Controllers
 {
@@ -57,6 +58,7 @@ namespace Sho8lana.Controllers
 
         }
         // GET: Service/Create
+        [Authorize(Roles ="User")]
         public IActionResult Create()
         {
             var categories =_context.Categories.GetAllSync();
@@ -68,6 +70,7 @@ namespace Sho8lana.Controllers
         // POST: Service/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,Rate,CategoryId,CustomerId")] Service service,List<IFormFile> Medias)
@@ -98,8 +101,8 @@ namespace Sho8lana.Controllers
                     //loop for every image in media list 
                     foreach (var image in Medias)
                     {
-                        
-                        var path = "./wwwroot/Images/services/" + s.ServiceId + "-" + s.Title + "-" + i + ".jpg";
+                        var name = s.ServiceId + "-" + s.Title + "-" + Guid.NewGuid() + ".jpg";
+                        var path = "./wwwroot/Images/services/" + name;
 
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
@@ -107,7 +110,7 @@ namespace Sho8lana.Controllers
                             Media media = new Media()
                             {
                                 ServiceId = s.ServiceId,
-                                MediaPath = s.ServiceId + "-" + s.Title + "-" + i + ".jpg"
+                                MediaPath = name
                             };
                             //add image to medias table
                             _context.Medias.Add(media);
@@ -131,6 +134,12 @@ namespace Sho8lana.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var customerId = userManager.GetUserId(User);
+            var service = await _context.Services.GetById(id);
+            if (customerId != service.CustomerId)
+            {
+                return LocalRedirect("~/Identity/Account/AccessDenied");
+            }
             if (id == 0) { return NotFound(); }
             else
             {
@@ -139,17 +148,23 @@ namespace Sho8lana.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-        
+
         // GET: Service/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var customerId = userManager.GetUserId(User);
+            var service = await _context.Services.GetById(id);
+            if (customerId != service.CustomerId)
+            {
+                return LocalRedirect("~/Identity/Account/AccessDenied");
+            }
             var categories = _context.Categories.GetAllSync();
             if (id == null)
             {
                 return NotFound();
             }
 
-            var service = await _context.Services.GetById(id);
+            
             if (service == null)
             {
                 return NotFound();
@@ -165,8 +180,13 @@ namespace Sho8lana.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,Rate,CategoryId,CustomerId")] Service service,List<IFormFile> Medias)
         {
-            int i = 1;
+            //int i = 1;
             var categories = _context.Categories.GetAllSync();
+            var customerId = userManager.GetUserId(User);
+            if (customerId != service.CustomerId)
+            {
+                return LocalRedirect("~/Identity/Account/AccessDenied");
+            }
             if (id != service.ServiceId)
             {
                 return NotFound();
@@ -178,35 +198,43 @@ namespace Sho8lana.Controllers
                 {
                     service.IsAccepted = false;
                     _context.Services.Update(service);
+                    Notification notification = new Notification
+                    {
+                        Content = $"تم تعديل خدمة {service.Title} وهى الان في مرحلة المراجعة ",
+                        Date = DateTime.Now,
+                        IsRead = false,
+                        CustomerId = service.CustomerId,
+                    };
+                     _context.Notifications.Add(notification);
                     await _context.complete();
 
-                    var allImages = _context.Medias.GetAllBy(m=>m.ServiceId==service.ServiceId);
-                    foreach(var image in await allImages) 
-                    {
-                        await _context.Medias.Delete(image.MediaId);
-                        await _context.complete();
-                    }
-                    //loop for every image in media list 
-                    foreach (var image in Medias)
-                    {
+                    //var allImages = _context.Medias.GetAllBy(m=>m.ServiceId==service.ServiceId);
+                    //foreach(var image in await allImages) 
+                    //{
+                    //    await _context.Medias.Delete(image.MediaId);
+                    //    await _context.complete();
+                    //}
+                    ////loop for every image in media list 
+                    //foreach (var image in Medias)
+                    //{
 
-                        var path = "./wwwroot/assets/Images/services/" + service.ServiceId + "-" + service.Title + "-" + i + ".jpg";
+                    //    var path = "./wwwroot/Images/services/" + service.ServiceId + "-" + service.Title + "-" + i + ".jpg";
 
-                        using (var stream = new FileStream(path, FileMode.Create))
-                        {
-                            image.CopyTo(stream);
-                            Media media = new Media()
-                            {
-                                ServiceId = service.ServiceId,
-                                MediaPath = service.ServiceId + "-" + service.Title + "-" + i + ".jpg"
-                            };
-                            //add image to medias table
-                            _context.Medias.Add(media);
-                            await _context.complete();
+                    //    using (var stream = new FileStream(path, FileMode.Create))
+                    //    {
+                    //        image.CopyTo(stream);
+                    //        Media media = new Media()
+                    //        {
+                    //            ServiceId = service.ServiceId,
+                    //            MediaPath = service.ServiceId + "-" + service.Title + "-" + i + ".jpg"
+                    //        };
+                    //        //add image to medias table
+                    //        _context.Medias.Add(media);
+                    //        await _context.complete();
 
-                        }
-                        i++;
-                    }
+                    //    }
+                    //    i++;
+                    //}
                 }
                 catch (DbUpdateConcurrencyException)
                 {
