@@ -9,11 +9,16 @@ namespace Sho8lana.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsDone { get; set; }
+        public bool IsCanceled { get; set; }
         [DataType(DataType.Currency)]
         public float ContractPrice { get; set; }
+        public int ContractRateStars { get; set; }
+        public string ContractRateComment { get; set; }
+        public bool ContractRateDone { get; set; }
+        public int DeliveryTime { get; set; }
         public bool BuyerAccepted { get; set; }
+        public bool BuyerCanceled { get; set; }
         public bool SellerAccepted { get; set; }
-        public bool BuyerIsDone { get; set; }
         public bool SellerIsDone { get; set; }
         public string BuyerId { get; set; }
         public string SellerId { get; set; }

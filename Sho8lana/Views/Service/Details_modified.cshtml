@@ -258,7 +258,31 @@
             @{
                 if(userManger.GetUserId(User)!=@Model.CustomerId)
                 {
-                    <a class="btn btn-dark col-8 my-3" asp-route-id="@Model.ServiceId" asp-action="SendMessage">التواصل مع البائع</a>   
+                    //<a class="btn btn-dark col-8 my-3" asp-route-id="@Model.ServiceId" asp-action="SendMessage">التواصل مع البائع</a>
+                    <button type="button" class="btn btn-dark col-8 my-3" data-bs-toggle="modal" data-bs-target="#exampleModal" >التواصل مع البائع</button>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            
+                                <p class="modal-title h5" id="exampleModalLabel">رسالة جديدة إلى @Model.Customer.FirstName @Model.Customer.LastName</p>
+                                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                            
+                          </div>
+                          <div class="modal-body">
+                              <div class="mb-3">
+                                <label class="col-form-label">محتوى الرسالة </label>
+                                <textarea class="form-control" id="txtMsg"></textarea>
+                              </div> 
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
+                            <button type="button" class="btn btn-success" onclick="send('@Model.CustomerId', '@Model.ServiceId')">ارسال</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 }
             }
         </div>
@@ -276,3 +300,16 @@
                 <!-- End Of Safety section  -->
     </div>
 </div>
+
+<script>
+        var message = document.getElementById("txtMsg");
+        function send(receiverId,serviceId){
+            if(message.value){
+                connection.invoke("SendMessage",message.value,receiverId,parseInt(serviceId)).then(()=>{
+                   window.location.href = "@Url.Action("chat","service",new {id = Model.ServiceId,receiverId = Model.CustomerId })";
+                });
+            }else{
+                alert("Message is Empty !");
+            }
+        }
+</script>

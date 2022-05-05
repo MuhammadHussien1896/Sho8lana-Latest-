@@ -53,6 +53,7 @@ namespace Sho8lana.Models
         public bool IsVerified { get; set; }
         [DataType(DataType.Currency)]
         public float Balance { get; set; }
+        public float PendingBalance { get; set; }
         
 
         //navigation properties
