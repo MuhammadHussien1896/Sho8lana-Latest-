@@ -24,5 +24,7 @@ namespace Sho8lana.Models.Repositories
         public Task<T> GetEagerLodingAsync(Expression<Func<T, bool>> expression, string[] includes = null);
         public void UpdateList(List<T> entity);
 
+        public Task<int> Count();
+        public Task<int> Count(Expression<Func<T, bool>> expression);
     }
 }

@@ -17,12 +17,13 @@ namespace Sho8lana.Controllers
             this.context = context;
             this.userManager = userManager;
         }
-        public async Task<IActionResult> account()
+        public async Task<IActionResult> account(string id)
         {
             string customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(c => c.Id == customerId);
-
+            var customer = await context.Customers.GetBy(c => c.Id == id);
+            if(customer == null) { return NotFound(); }
             return View(customer);
+            
 
         }
      

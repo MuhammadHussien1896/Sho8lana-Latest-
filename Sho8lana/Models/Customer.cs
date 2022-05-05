@@ -19,6 +19,7 @@ namespace Sho8lana.Models
             Contracts           = new List<Contract>();
             ServiceMessages     = new List<ServiceMessage>();
             Notifications       = new List<Notification>();
+            ProfilePicture      = null;
         }
 
         [Required,StringLength(15,MinimumLength =3,ErrorMessage ="Firstname must be between 3-15 characters")]
