@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sho8lana.Models;
 using Sho8lana.Paging;
 using Sho8lana.Unit_Of_Work;
+using System.IO;
 
 namespace Sho8lana.Controllers
 {
@@ -52,6 +53,71 @@ namespace Sho8lana.Controllers
         {
             var result = context.Cities.GetAllBy(c => c.Governorate.Governorate_name_en == GovernorateName).Result;
             return Json(result);
+        }
+        [HttpPost]
+        public async Task <IActionResult> UploadImage(IFormFile Pic,int ServiceId,int updateNo)
+        {
+            var service=await context.Services.GetById(ServiceId);
+            var name = service.ServiceId + "-" + service.Title + "-" + Guid.NewGuid()+ ".jpg";
+            if (updateNo < service.Medias.Count)
+            {
+                name=service.Medias.Skip(updateNo+1).Take(1).FirstOrDefault().MediaPath;
+            }
+            var path = "./wwwroot/Images/services/" + name;
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                Pic.CopyTo(stream);
+                if (updateNo < service.Medias.Count)
+                {
+
+                }
+                else
+                {
+                    Media media = new Media()
+                    {
+                        ServiceId = service.ServiceId,
+                        MediaPath = name
+                    };
+                    //add image to medias table
+                    context.Medias.Add(media);
+                    await context.complete();
+                }
+            }
+            var Medias = (await context.Medias.GetAllBy(s => s.ServiceId == ServiceId)).Select(s => new
+            {
+                mediaId = s.MediaId,
+                mediaPath = s.MediaPath,
+                ServiceId = s.ServiceId
+            });
+            return Json(Medias);
+        }
+        [HttpDelete]
+        public async Task <IActionResult>DeleteImage(int mediaId)
+        {
+            var Media=await context.Medias.GetById(mediaId);
+            var serviceid=Media.ServiceId;
+            context.Medias.Delete(Media);
+            var path = "./wwwroot/Images/services/" + Media.MediaPath;
+            System.IO.File.Delete(path);
+            await context.complete();
+            var Medias=(await context.Medias.GetAllBy(s=>s.ServiceId==serviceid)).Select(s => new
+            {
+                mediaId = s.MediaId,
+                mediaPath = s.MediaPath,
+                ServiceId = s.ServiceId
+            });
+            return Json(Medias);
+        }
+        [HttpGet]
+        public  IActionResult GetImages(int serviceId)
+        {
+            var medias = context.Medias.GetAllBy(s => s.ServiceId == serviceId).Result.Select(s => new
+            {
+                mediaId = s.MediaId,
+                mediaPath = s.MediaPath,
+                ServiceId = s.ServiceId
+            });
+            return Json(medias);
         }
     }
 }

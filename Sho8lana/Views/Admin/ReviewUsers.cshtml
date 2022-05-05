@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Customer>
 @{
     ViewData["Title"] = "Admin Control Panel";
+    Layout = "_AdminLayout";
     pagination pager = new pagination();
     int pageNo = 0;
     if (ViewBag.pager != null)
@@ -10,7 +11,7 @@
     }
 }
 
-<div class="row my-5 h-100">
+<div class="row col-sm-12 col-lg-9 my-5 h-100">
     <ul class="nav nav-tabs justify-content-center m-auto col-12" id="myTab" role="tablist">
       <li class="nav-item">
         <a class="nav-link active Verfied customerPanel " id="home-tab" asp-action="ReviewUsers">Verfied Customers</a>
@@ -28,9 +29,7 @@
             <thead class="table-primary">
                 <tr>
             
-                    <th>
-                        @Html.DisplayNameFor(model => model.UserName)
-                    </th>
+                    
                     <th>
                         @Html.DisplayNameFor(model => model.Email)
                     </th>
@@ -41,30 +40,19 @@
                     <th>
                         @Html.DisplayNameFor(model => model.LastName)
                     </th>
-                    <th>
-                         @Html.DisplayNameFor(model => model.IsPremium)
-                    </th>
+                    
                     <th>
                          @Html.DisplayNameFor(model => model.Gender)
                     </th>
                     <th>
                          @Html.DisplayNameFor(model => model.City)
                     </th>
-                    <th>
-                         @Html.DisplayNameFor(model => model.Area)
-                    </th>
-                    <th>
-                         @Html.DisplayNameFor(model => model.Balance)
-                    </th>
+                    
+                    
                     <th>
                          @Html.DisplayNameFor(model => model.PhoneNumber)
                     </th>
-                    <th scope="col" class="col-auto">
-                         @Html.DisplayNameFor(model => model.ProfileImage)
-                    </th>
-                    <th>
-                         @Html.DisplayNameFor(model => model.NationalIdImage)
-                    </th>
+                    
                     <th>
                          Details
                     </th>
@@ -74,9 +62,7 @@
         @foreach (var item in Model) {
                 <tr>
            
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserName)
-                    </td>
+                    
                     <td>
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
@@ -87,42 +73,25 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.LastName)
                     </td>
-                    <td>
-                         @Html.DisplayTextFor(modelItem => item.IsPremium)
-                    </td>
+                    
                     <td>
                          @Html.DisplayFor(modelItem => item.Gender)
                     </td>
                     <td>
                          @Html.DisplayFor(modelItem => item.City)
                     </td>
-                    <td>
-                         @Html.DisplayFor(modelItem => item.Area)
-                    </td>
-                    <td>
-                         @Html.DisplayFor(modelItem => item.Balance)
-                    </td>
+                    
+                    
                     <td>
                          @Html.DisplayFor(modelItem => item.PhoneNumber)
                     </td>
-                    <td>
-                        <div class="w-100" style="background-image:url(/Images/@item.ProfileImage);
-                                                  background-position:center;
-                                                  background-size:contain;
-                                                  background-repeat:no-repeat;
-                                                  height:10vh">
-
-                        </div
-                    </td>
-                    <td>
-                         @Html.DisplayFor(modelItem => item.NationalIdImage)
-                    </td>
+                    
                     <td>
                         @if(ViewBag.Type=="Unverfied"){
                             <a asp-action="VerifingPage" asp-route-id="@item.Id" class="btn btn-danger w-75" > Verify</a> 
                         }
                         else{
-                            <a  class="btn btn-primary w-75" > Show Details</a> 
+                            <a asp-controller="customer" asp-action="account" asp-route-id="@item.Id" class="btn btn-primary w-100" > Show Details</a> 
                         }
 
                     </td>

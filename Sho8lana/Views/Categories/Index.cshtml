@@ -123,18 +123,27 @@
                     <div class="card col-lg-3 col-md-4 col-sm-6 border-0 my-5 px-2 bg-light">
                         <div class="position-relative">
                             <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">
-                              @{
-                                  if (@service.Medias.FirstOrDefault()!=null)
-                                    {
-                                        <img class="card-img-top" src="~/Images/CategoriesImage/@service.Medias.FirstOrDefault().MediaPath">
-                                    }
+                                @{
+                                    if (@service.Medias.FirstOrDefault()!=null)
+                                        {
+                                             <img class="card-img-top" src="~/Images/CategoriesImage/@service.Medias.FirstOrDefault().MediaPath">
+                                        }
                                     else
-                                    {
-                                        <img class="card-img-top" src="~/Images/Defaultimage/defaultService.jpg">
-                                    }
+                                        {
+                                            <img class="card-img-top" src="~/Images/Defaultimage/defaultService.jpg">
+                                        }
                                 }
                             </a>
-                                <img src="~/Images/@service.Customer.ProfileImage" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light" />
+                            @{
+                                if (@service.Customer.ProfilePicture == null)
+                                {
+                                    <img src="~/Images/DefaultImage/UserDefaultImage.png" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light" />
+                                }
+                                else
+                                {
+                                    <img src="data:image/*;base64,@Convert.ToBase64String(@service.Customer.ProfilePicture)" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light" />
+                                }
+                            }
                          </div>
                          <div class="card-body">
                             <p class="card-title mb-3 fw-bold">@service.Title</p>

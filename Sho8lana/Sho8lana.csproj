@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\assets\img\National_id\**" />
+    <Compile Remove="wwwroot\assets\img\profiles\**" />
+    <Content Remove="wwwroot\assets\img\National_id\**" />
+    <Content Remove="wwwroot\assets\img\profiles\**" />
+    <EmbeddedResource Remove="wwwroot\assets\img\National_id\**" />
+    <EmbeddedResource Remove="wwwroot\assets\img\profiles\**" />
+    <None Remove="wwwroot\assets\img\National_id\**" />
+    <None Remove="wwwroot\assets\img\profiles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.8" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.4" />
@@ -25,8 +36,6 @@
 
   <ItemGroup>
     <Folder Include="Filter\" />
-    <Folder Include="wwwroot\assets\img\National_id\" />
-    <Folder Include="wwwroot\assets\img\profiles\" />
     <Folder Include="wwwroot\Images\services\" />
   </ItemGroup>
 

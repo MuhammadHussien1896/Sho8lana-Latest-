@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sho8lana.Data;
 
@@ -11,9 +12,10 @@ using Sho8lana.Data;
 namespace Sho8lana.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220504033827_addingDeliveryTimeToContract")]
+    partial class addingDeliveryTimeToContract
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,23 +216,14 @@ namespace Sho8lana.Migrations
                     b.Property<bool>("BuyerAccepted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("BuyerCanceled")
-                        .HasColumnType("bit");
-
                     b.Property<string>("BuyerId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("ContractPrice")
-                        .HasColumnType("real");
-
-                    b.Property<string>("ContractRateComment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("ContractRateDone")
+                    b.Property<bool>("BuyerIsDone")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ContractRateStars")
-                        .HasColumnType("int");
+                    b.Property<float>("ContractPrice")
+                        .HasColumnType("real");
 
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
@@ -240,9 +233,6 @@ namespace Sho8lana.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCanceled")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDone")
                         .HasColumnType("bit");
@@ -357,9 +347,6 @@ namespace Sho8lana.Migrations
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<float>("PendingBalance")
-                        .HasColumnType("real");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");

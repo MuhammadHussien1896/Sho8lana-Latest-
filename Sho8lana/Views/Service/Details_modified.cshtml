@@ -9,15 +9,32 @@
         <div class="row justify-content-center">
             <div id="carouselExampleIndicators" class="carousel slide my-1" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active" style="height:70vh">
-                        <img class="d-block w-100" src="~/Images/CategoriesImage/design.jpg" alt="First slide">
-                    </div>
-                    <div class="carousel-item" style="height:70vh">
-                        <img class="d-block w-100" src="~/Images/CategoriesImage/Header.jpg" alt="Second slide">
-                    </div>
-                    <div class="carousel-item" style="height:70vh">
-                        <img class="d-block w-100" src="~/Images/CategoriesImage/programing.jpg" alt="Third slide">
-                    </div>
+                    @{
+                        if (@Model.Medias.Count == 0 && @Model.IsFreelancer==true)
+                        {
+                            <div class="carousel-item active" style="height:70vh">
+                                <img class="d-block w-100" src="~/Images/DefaultImage/defaultService.jpg">
+                            </div>
+                        }
+                        else if(@Model.Medias.Count == 0 && @Model.IsFreelancer == false)
+                        {
+                            <div class="carousel-item active" style="height:70vh">
+                                <img class="d-block w-100" src="~/Images/DefaultImage/defaultHiring.jpg">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="carousel-item active" style="height:70vh">
+                                <div class="d-block h-100 w-100" style="background:url('/Images/services/@Model.Medias.FirstOrDefault().MediaPath') center no-repeat;background-size:contain"></div>
+                            </div>
+                            foreach (var item in @Model.Medias.Skip(1).ToList())
+                            {
+                                <div class="carousel-item" style="height:70vh">
+                                    <div class="d-block h-100 w-100" style="background:url('/Images/services/@item.MediaPath') center no-repeat;background-size:contain"></div>
+                                </div>          
+                            }
+                        }
+                    }
                 </div>
                 <a class="carousel-control-prev" data-bs-target="#carouselExampleIndicators" role="button" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -211,30 +228,42 @@
                     {
                         if (Model.IsCash == true)
                         {
-                         <div class="row justify-content-around my-3">
-                            <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
+                            <div class="row justify-content-around my-3">
+                                <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
                             </div>
 
                         }
                         else
                         {
-                         <div class="row justify-content-around my-3">
-                            <a asp-action="RequestService" asp-controller="Customer" asp-route-id=@Model.ServiceId class="btn btn-success col-5">ارسال طلب الي البائع</a>
-                            <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
-                        </div>   
+                            <div class="row justify-content-around my-3">
+                                <a asp-action="RequestService" asp-controller="Customer" asp-route-id=@Model.ServiceId class="btn btn-success col-5">ارسال طلب الي البائع</a>
+                                <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
+                            </div>
                         } 
                     }
                 }
-             }
+            }
         </div>
         <!-- End Of Price section  -->
         <!-- =======  Seller section  ======= -->
-         <div class="row my-5 justify-content-center border border-Secondery ">
+        <div class="row my-5 justify-content-center border border-Secondery ">
             <p class="h4 my-3 fw-bold">البائع</p>
             <div class="row my-2 justify-content-center align-items-center align-content-center">
-                <img src="~/Images/@Model.Customer.ProfileImage" class="rounded-circle col-3"/>
+                @{
+                    if (@Model.Customer.ProfilePicture == null)
+                    {
+                        <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle col-3"/>
+                    }
+                    else
+                    {
+                        <img class="rounded-circle col-3" src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
+                    }
+
+                }
+                
                 <div class="col-8 d-flex flex-column pe-5">
-                    <span>@Model.Customer.FirstName @Model.Customer.LastName</span>
+                    <a asp-controller="customer" asp-action="account" asp-route-id="@Model.CustomerId">
+                    <span>@Model.Customer.FirstName @Model.Customer.LastName</span></a>
                     <span>عضو منذ عام @Model.Customer.RegisterationDate.Year</span>
                     <span>@Model.Customer.City / @Model.Customer.Area</span>
                     <spna>الحالة / @(@Model.Customer.IsVerified?"موثق":"غير موثق")</spna>
@@ -257,7 +286,31 @@
             @{
                 if(userManger.GetUserId(User)!=@Model.CustomerId)
                 {
-                    <a class="btn btn-dark col-8 my-3" asp-route-id="@Model.ServiceId" asp-action="SendMessage">التواصل مع البائع</a>   
+                    //<a class="btn btn-dark col-8 my-3" asp-route-id="@Model.ServiceId" asp-action="SendMessage">التواصل مع البائع</a>
+                    <button type="button" class="btn btn-dark col-8 my-3" data-bs-toggle="modal" data-bs-target="#exampleModal" >التواصل مع البائع</button>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            
+                                <p class="modal-title h5" id="exampleModalLabel">رسالة جديدة إلى @Model.Customer.FirstName @Model.Customer.LastName</p>
+                                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                            
+                          </div>
+                          <div class="modal-body">
+                              <div class="mb-3">
+                                <label class="col-form-label">محتوى الرسالة </label>
+                                <textarea class="form-control" id="txtMsg"></textarea>
+                              </div> 
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلاق</button>
+                            <button type="button" class="btn btn-success" onclick="send('@Model.CustomerId', '@Model.ServiceId')">ارسال</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 }
             }
         </div>
@@ -275,3 +328,16 @@
                 <!-- End Of Safety section  -->
     </div>
 </div>
+
+<script>
+        var message = document.getElementById("txtMsg");
+        function send(receiverId,serviceId){
+            if(message.value){
+                connection.invoke("SendMessage",message.value,receiverId,parseInt(serviceId)).then(()=>{
+                   window.location.href = "@Url.Action("chat","service",new {id = Model.ServiceId,receiverId = Model.CustomerId })";
+                });
+            }else{
+                alert("Message is Empty !");
+            }
+        }
+</script>

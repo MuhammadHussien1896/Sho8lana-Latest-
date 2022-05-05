@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewData["Title"] = "AdminPanel";
+    Layout = "_Layout";
+}
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+
+        <!--===================
+        Header
+        =======================-->
+       
+        
+      <div class="main row">
+        
+        <div class="col-sm-12 col-lg-3">
+        <aside>
+          <div class="sidebar left">
+            
+            <ul class="list-sidebar bg-defoult">
+              <li> <a asp-action="AdminPanel"><i class="fa fa-diamond"></i> <span class="nav-label">Dashboard</span></a> </li>
+
+              <li> <a href="#" data-toggle="collapse" data-target="#dashboard" class="collapsed active" > <i class="fa-solid fa-user"></i> <span class="nav-label"> Users </span> <span class="fa fa-chevron-left pull-right"></span> </a>
+              <ul class="sub-menu collapse" id="dashboard">
+                <li class="active"><a asp-action="ReviewUsers">All Users</a></li>
+                <li><a asp-controller="admin" asp-action="ReviewRolesToUser">Roles</a></li>
+              </ul>
+            </li>
+            <li> <a href="#" data-toggle="collapse" data-target="#products" class="collapsed active" > <i class="fa fa-bar-chart-o"></i> <span class="nav-label">Services</span> <span class="fa fa-chevron-left pull-right"></span> </a>
+            <ul class="sub-menu collapse" id="products">
+              <li class="active"><a asp-controller="Admin" asp-action="ReviewServices">Pending Services</a></li>
+              <li><a asp-controller="Service" asp-action="Create">Add Service</a></li>
+
+    
+            </ul>
+          </li>
+          
+          <li> <a href="#" data-toggle="collapse" data-target="#tables" class="collapsed active" ><i class="fa fa-table"></i> <span class="nav-label">Categories</span><span class="fa fa-chevron-left pull-right"></span></a>
+          <ul  class="sub-menu collapse" id="tables" >
+            <li><a asp-controller="Admin" asp-action="ShowCategories">All Categories</a></li>
+            <li><a asp-controller="Admin" asp-action="CreateCategory">Add Category</a></li>
+            
+          </ul>
+        </li>
+        <li> <a href="#" data-toggle="collapse" data-target="#e-commerce" class="collapsed active" ><i class="fa fa-shopping-cart"></i> <span class="nav-label">E-commerce</span><span class="fa fa-chevron-left pull-right"></span></a>
+        <ul  class="sub-menu collapse" id="e-commerce" >
+          <li><a href=""> Products grid</a></li>
+          <li><a href=""> Products list</a></li>
+          <li><a href="">Product edit</a></li>
+          <li><a href=""> Product detail</a></li>
+          <li><a href="">Cart</a></li>
+          <li><a href=""> Orders</a></li>
+          <li><a href=""> Credit Card form</a> </li>
+        </ul>
+      </li>
+      
+      <li> <a asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house"></i> <span class="nav-label">Home</span></a> </li>
+      <li> <a asp-controller="Home" asp-action="Index"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Services</span></a> </li>
+      <li> <a asp-controller="Home" asp-action="About"><i class="fa-solid fa-circle-info"></i> <span class="nav-label">About</span></a> </li>
+      <li> <a asp-controller="Home" asp-action="Contact_Us"><i class="fa-solid fa-phone"></i> <span class="nav-label">Contact Us</span></a> </li>
+      
+    </ul>
+    </div>
+    </aside>
+    </div>
+    @RenderBody()
+    </div>
+  
+    <script>
+        $(document).ready(function(){
+   $('.button-left').click(function(){
+       $('.sidebar').toggleClass('fliph');
+   });
+     
+});
+    </script>

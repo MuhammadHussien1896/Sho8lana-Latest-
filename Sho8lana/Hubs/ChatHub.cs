@@ -27,17 +27,17 @@ namespace Sho8lana.Hubs
                 MessageDate = DateTime.Now,
                 ServiceId = serviceId,
             };
-            var date = DateTime.Now.ToString();
+            var date = DateTime.Now.ToShortTimeString();
             var receiverConnectionIds = context.OnlineUsers.GetAllBy(u => u.UserId == receiverId).Result.Select(u => u.ConnectionId);
             if(receiverConnectionIds != null)
             {
                 foreach (var receiverConnectionId in receiverConnectionIds)
                 {
-                    await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", message, senderName,date);
+                    await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", message, senderId,date);
                     
                 }
             }
-            await Clients.Client(Context.ConnectionId).SendAsync("ReceiveMessage", message, senderName, date);
+            await Clients.Client(Context.ConnectionId).SendAsync("ReceiveMessage", message, senderId, date);
             context.ServiceMessages.Add(serviceMessage);
             await context.complete();
 

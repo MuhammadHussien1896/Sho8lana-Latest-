@@ -3,37 +3,108 @@
 @{
     ViewData["Title"] = "Chat";
 }
-
-<h5>Chat with @Model.ReceiverName about service : @Model.ServiceTitle</h5>
-<input id="txtInput" type="text" class="form-control" />
-<button id="sendBtn" class="btn btn-primary" onclick="send('@Model.ReceiverId', '@Model.ServiceId')">Send</button>
-<ul id="mylist">
-    @foreach(var message in Model.Messages)
-    {  
-        <li>
-            @message.Customer.FirstName @message.Customer.LastName : @message.MessageContent
-            <br/>
-            <small>@message.MessageDate</small>
-        </li>   
-    }
-</ul>
-
-
+<div class="row my-5 justify-content-around" dir="rtl">
+    <!--=====Service Section=====-->
+    <div class="col-4 border-start px-5">
+        <div class="row mt-4 mb-3 py-5 justify-content-around border border-Secondery">
+            <p class="h5 text-center pb-5">الخدمة "@Model.ServiceTitle"</p>
+            <a class="btn btn-outline-info col-6" asp-controller="service" asp-action="details" asp-route-id="@Model.ServiceId" >تفاصيل الخدمة</a>
+        </div>
+        <div class="row my-5 justify-content-center border border-Secondery ">
+           <p class="h4 my-3 fw-bold">نصائح</p>
+           <ul class="col-11">
+               <li class="my-2">يفضل التعامل من خلال الموقع لضمان حقوقك</li>
+               <li class="my-2">لا ترسل وسائل تواصل خارجية</li>
+               <li class="my-2">اسأل مقدم الخدمة ما تريد معرفته عن هذه الخدمة</li>
+               <li class="my-2">قم بالاتفاق على كافة التفاصيل في هذه المحادثة</li>
+               <li class="my-2">في حال حدوث خلاف سيتم الرجوع للمحادثة لتحديد السبب</li>
+           </ul>
+        </div>
+    </div>
+    <!--=====Chat Section=====-->
+    <div class="col-7 mb-5">
+        
+        <div class="row px-0 justify-content-start">
+        
+            @if (Model.IsReceiverOnline)
+            {
+               <p class="h5">محادثة مع @Model.ReceiverName <i title="متصل" style="color:green;font-size:10px" class="fa-solid fa-circle align-top"></i></p>
+           
+            }
+            else
+            {
+                <p class="h5">محادثة مع @Model.ReceiverName <i title="غير متصل" style="color:grey;font-size:10px" class="fa-solid fa-circle align-top"></i></p>
+            }
+        </div>
+    
+        <div class="row justify-content-start mb-3 border-bottom border-secondery pb-3">
+            <input id="txtInput" type="text" class="col-9"  onkeypress="fire(event)"/>
+            <button id="sendBtn" type="submit" class="btn btn-outline-success col-2 mx-2" onclick="send('@Model.ReceiverId', '@Model.ServiceId')">ارسال</button>
+        </div>
+        <div id="chat"> 
+        @foreach(var message in Model.Messages)
+        {
+        
+            @if(Model.SenderId == message.CustomerId)
+            {
+                <div class="row justify-content-start mt-3">
+                    @*<div class="col-7  rounded bg-success text-white py-3">@message.MessageContent</div>*@
+                    <div class="col-7  rounded text-white py-3" style="background-color:#8227DA">@message.MessageContent</div>
+                    <small class="col-2 text-end" style="direction:ltr">
+                        @if(message.MessageDate.Date == DateTime.Now.Date)
+                        {
+                            @message.MessageDate.ToShortTimeString()
+                        }
+                        else
+                        {
+                            @message.MessageDate.ToShortTimeString() <br/> @message.MessageDate.ToShortDateString()
+                        }
+                    </small>
+                </div>
+            }
+            else
+            {
+                <div class="row justify-content-start mt-3" style="direction:ltr">
+                    @*<div class="col-7 rounded bg-dark text-white py-3" style="direction:rtl">@message.MessageContent</div>*@
+                    <div style="direction:rtl" class="col-7 rounded bg-light py-3 border border-secondary">@message.MessageContent</div>
+                    <small class="col-2">
+                        @if(message.MessageDate.Date == DateTime.Now.Date)
+                        {
+                            @message.MessageDate.ToShortTimeString()
+                        }
+                        else
+                        {
+                            @message.MessageDate.ToShortTimeString() <br/> @message.MessageDate.ToShortDateString() 
+                        }
+                    </small>
+                </div>
+            }
+          
+        }
+        </div> 
+    </div>
+    
+</div>
 
 <script>
     $(function(){
-        //alert("script works!");
-        connection.on("receiveMessage",(message,name,date)=>{
-            //alert("new message");
-            //$("ul").appendTo($`<li>${name} : ${message}<br/><small>${date}</small></li>`);
-            $('#mylist').prepend('<li>'+ name +' : '+ message + '<br/><small>'+ date +'</small></li>');
+        connection.on("receiveMessage",(message,senderId,date)=>{ 
+            //$('#mylist').prepend('<li>'+ name +' : '+ message + '<br/><small>'+ date +'</small></li>');
+            if(senderId == '@Model.SenderId'){
+                $('#chat').prepend(`<div class="row justify-content-start mt-3">
+                <div class="col-7  rounded text-white py-3" style="background-color:#8227DA">${message}</div>
+                <small class="col-2 text-end" style="direction:ltr">${date}</small>
+                </div>`);
+            }else{
+                $('#chat').prepend(`<div class="row justify-content-start mt-3" style="direction:ltr">
+                <div style="direction:rtl" class="col-7 rounded bg-light py-3 border border-secondary">${message}</div>
+                <small class="col-2">${date}</small>
+                </div>`);
+            }
+            
         });
         
-        //$("#sendBtn").click(()=>{
-        //    connection.invoke("sendMessage",$("#txtInput").val(),"","").then(()=>{
-        //        alert("sent!");
-        //    })
-        //})
+        
     });
     var message = document.getElementById("txtInput");
     function send(receiverId,serviceId){
@@ -44,6 +115,12 @@
         }else{
             alert("Message is Empty !");
         }
+    }
+    function fire(event){
+        if(event.key === "Enter"){
+                event.preventDefault();
+                document.getElementById("sendBtn").click();
+            }
     }
 </script>
 

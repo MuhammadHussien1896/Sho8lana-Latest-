@@ -1,0 +1,43 @@
+﻿
+@{
+    Layout = "_AdminLayout";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AdminPanel</title>
+    
+</head>
+<body>
+    <div class="row col-sm-12 col-lg-9 align-items-center justify-content-center bg-black">
+            <div class="col-sm-9 col-lg-4 text-center bg-black text-white">
+                <h1 data-purecounter-start="0" data-purecounter-end=@ViewBag.NumberOfCustommers data-purecounter-duration="1" class="purecounter"></h1>
+                <h1>Users</h1>
+            </div>
+          <div class="col-sm-9 col-lg-4 text-center bg-black text-white">
+            <h1 data-purecounter-start="0" data-purecounter-end=@ViewBag.numOfVerifiedUsers data-purecounter-duration="1" class="purecounter"></h1>
+            <h1>Verified Users</h1>
+          </div>
+          <div class="col-sm-9 col-lg-4 text-center bg-black text-white">
+            <h1 data-purecounter-start="0" data-purecounter-end=@ViewBag.numOfUnverifiedUsers data-purecounter-duration="1" class="purecounter"></h1>
+            <h1>Unverified Users</h1>
+          </div>
+
+           <div class="col-sm-9 col-lg-4 text-center bg-black text-white">
+                <h1 data-purecounter-start="0" data-purecounter-end=@ViewBag.numberOfServices data-purecounter-duration="1" class="purecounter"></h1>
+                <h1>Services</h1>
+            </div>
+          <div class="col-sm-9 col-lg-4 text-center bg-black text-white">
+            <h1 data-purecounter-start="0" data-purecounter-end=@ViewBag.numOfDoneContracts data-purecounter-duration="1" class="purecounter"></h1>
+            <h1>Done Contracts</h1>
+          </div>
+          <div class="col-sm-9 col-lg-4 text-center bg-black text-white">
+            <h1 data-purecounter-start="0" data-purecounter-end=@ViewBag.numOfOnlineContracts data-purecounter-duration="1" class="purecounter"></h1>
+            <h1>Online Contracts</h1>
+          </div>
+        </div>   
+</body>
+</html>

@@ -92,9 +92,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
                 FirstName=user.FirstName,
                 LastName=user.LastName,
                 PhoneNumber = phoneNumber,
-                ProfilePicture=user.ProfilePicture,
-                AboutMe=user.AboutMe
-             
+                ProfilePicture=user.ProfilePicture
             };
         }
 
@@ -165,6 +163,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
                 {
                     await file.CopyToAsync(dataStream);
                     user.ProfilePicture=dataStream.ToArray();
+                    //user.ProfilePicture = Array.ConvertAll(dataStream.ToArray(), i => (byte?)i); 
                 }
                 await _userManager.UpdateAsync(user);
 
