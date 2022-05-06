@@ -187,7 +187,8 @@ namespace Sho8lana.Controllers
                 {
                     PendingContracts            = contracts.Where(c => c.IsDone == false && c.StartDate == default && !(c.BuyerAccepted && c.SellerAccepted)).ToList(),
                     PendingPaymentContracts     = contracts.Where(c => c.IsDone == false && c.StartDate == default && (c.BuyerAccepted && c.SellerAccepted)).ToList(),
-                    ActiveContracts             = contracts.Where(c => c.IsDone == false && c.StartDate != default).ToList(),
+                    ActiveContracts             = contracts.Where(c => c.IsDone == false && c.StartDate != default && c.IsCanceled == false).ToList(),
+                    CanceledContracts           = contracts.Where(c => c.IsCanceled == true).ToList(),
                     DoneContracts               = contracts.Where(c => c.IsDone == true).ToList(),
                     UserId                      = customerId
                 };
@@ -254,11 +255,68 @@ namespace Sho8lana.Controllers
                 return NotFound();
             }
         }
+        public async Task<IActionResult> ContractBuyerSellerCancel(int id)
+        {
+            string customerId = userManager.GetUserId(User);
+            var contract = await context.Contracts.GetById(id);
+            if (contract != null)
+            {
+                if (contract.SellerId == customerId)
+                {
+                    contract.IsCanceled = true;
+                    contract.EndDate = DateTime.Now;
+                    // contract price goes to buyer now
+                    await AddBalance(contract.BuyerId, contract.ContractPrice);
+                    var seller = await context.Customers.GetById(customerId);
+                    string content = $"تم الغاء العقد من قبل '{seller.FirstName} {seller.LastName}' لخدمة '{contract.Service.Title}'." +
+                        $"وتم ارجاع سعر الخدمة الى حسابك ";
+                    AddNotification(contract.BuyerId, content);
+                    //buyer can rate the service now
+                }
+                else
+                {
+                    contract.BuyerCanceled = true;
+                    AddNotification(contract.SellerId, $"لقد طلب المشتري إلغاء الخدمة '{contract.Service.Title}' قم بإلغاء العقد اذا لم يتم التوصل لاتفاق.");
+                    //by the end date a function runs to determine who will take the price
+                }
+
+                context.Contracts.Update(contract);
+                await context.complete();
+                return RedirectToAction(nameof(CustomerContracts));
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
         private async Task AddPendingBalance(string sellerId,float balance)
         {
             var seller = await context.Customers.GetById(sellerId);
             seller.PendingBalance += balance;
             context.Customers.Update(seller);
+            
+        }
+        private async Task AddBalance(string buyerId, float balance)
+        {
+            var buyer = await context.Customers.GetById(buyerId);
+            buyer.Balance += balance;
+            context.Customers.Update(buyer);
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> RateContract(int Id,int ContractRateStars,string ContractRateComment)
+        {
+            if (ModelState.IsValid)
+            {
+                var contract = await context.Contracts.GetById(Id);
+                contract.ContractRateStars = ContractRateStars;
+                contract.ContractRateComment = ContractRateComment;
+                contract.ContractRateDone = true;
+                context.Contracts.Update(contract);
+                AddNotification(contract.BuyerId, $"تم إضافة تقييمك لخدمة '{contract.Service.Title}' بنجاح");
+                await context.complete();
+            }
+            return RedirectToAction(nameof(CustomerContracts));
             
         }
         //public async Task<IActionResult> EditContractPrice(int id)
@@ -277,23 +335,23 @@ namespace Sho8lana.Controllers
         //    return View(model);
         //}
         [HttpPost]
-        public async Task<IActionResult> EditContractPrice(ContractViewModel model)
+        public async Task<IActionResult> EditContractPrice(int Id,float Price,int DeliveryTime)
         {
             if (ModelState.IsValid)
             {
-                var contract = await context.Contracts.GetById(model.Id);
-                contract.ContractPrice = model.Price;
-                contract.DeliveryTime = model.DeliveryTime;
+                var contract = await context.Contracts.GetById(Id);
+                contract.ContractPrice = Price;
+                contract.DeliveryTime = DeliveryTime;
                 context.Contracts.Update(contract);
                 await context.complete();
-                return RedirectToAction(nameof(AcceptContract),new {id = model.Id });
+                return RedirectToAction(nameof(AcceptContract),new {Id });
             }
             else
             {
                 return RedirectToAction(nameof(CustomerContracts));
             }
         }
-            public async Task<IActionResult> DeleteContract(int id)
+        public async Task<IActionResult> DeleteContract(int id)
         {
             string customerId = userManager.GetUserId(User);
             var contract = await context.Contracts.GetById(id);
@@ -301,7 +359,7 @@ namespace Sho8lana.Controllers
             {
                 if (contract.CustomerId == customerId || contract.Service.CustomerId == customerId)
                 {
-                    if(contract.IsDone == false && contract.StartDate == default && !(contract.BuyerAccepted && contract.SellerAccepted))
+                    if(contract.IsDone == false && contract.StartDate == default)
                     {
                         await context.Contracts.Delete(id);
                         string content = $"لقد تم فسخ العقد لخدمة {contract.Service.Title}";

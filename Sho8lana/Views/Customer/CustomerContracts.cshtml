@@ -15,6 +15,7 @@
           <a class="list-group-item list-group-item-action" id="list-home2-list" data-bs-toggle="list" href="#list-home2" role="tab" aria-controls="list-home2">العقود في انتظار الدفع</a>
           <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list" href="#list-profile" role="tab" aria-controls="list-profile">العقود قيد التنفيذ</a>
           <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list" href="#list-messages" role="tab" aria-controls="list-messages">العقود المنتهية</a>
+          <a class="list-group-item list-group-item-action" id="list-messages2-list" data-bs-toggle="list" href="#list-messages2" role="tab" aria-controls="list-messages2">العقود الملغاه</a>
       </div>
       </div>
       <div class="col-8">
@@ -23,7 +24,7 @@
 
             @if(Model.PendingContracts.Count() == 0)
             {
-                <h1 class="text-center mt-5">لا توجد عقود في انتظار البدء</h1>
+                <p class="text-center mt-5 h1">لا توجد عقود في انتظار البدء</p>
             }
             else
             {
@@ -46,6 +47,7 @@
                         @*you are customer*@
                         @if(contract.ContractPrice == default && Model.UserId == contract.CustomerId)
                         {
+                           <p class="h5 my-2 fw-bold">حالة الخدمة</p>
                            <p>لم يتم تحديد السعر ومدة التنفيذ حتى الآن ، من فضلك انتظر تحديد السعر ومدة التنفيذ من قبل ناشر الخدمة</p>
                         }//you are service owner
                         else if(contract.ContractPrice == default && Model.UserId == contract.SericeOwnerId)
@@ -78,7 +80,7 @@
                             //im the buyer and buyer accepted the service
                             @if((Model.UserId == contract.BuyerId && contract.BuyerAccepted)||(Model.UserId == contract.SellerId && contract.SellerAccepted))
                             {
-                                
+                                <p class="h5 my-2 fw-bold">حالة الخدمة</p>
                                 <p>لقد قبلت طلب العقد .. فى انتظار قبول الطرف الاخر</p>
                             }
                             
@@ -140,7 +142,7 @@
 
             @if(Model.PendingPaymentContracts.Count() == 0)
             {
-                <h1 class="text-center mt-5">لا توجد عقود في انتظار الدفع</h1>
+                <p class="text-center mt-5 h1">لا توجد عقود في انتظار الدفع</p>
             }
             else
             {
@@ -160,19 +162,20 @@
                             <h5 class="card-title">عقد مع العميل @contract.Customer.FirstName @contract.Customer.LastName</h5> 
                         }
                         <p class="row row-col-2">
-                                <span>سعر الخدمة المتفق عليه : @contract.ContractPrice دولار</span>
-                                <span>مدة التسليم : @contract.DeliveryTime يوم</span>
+                                <span class="col">سعر الخدمة المتفق عليه : @contract.ContractPrice دولار</span>
+                                <span class="col">مدة التسليم : @contract.DeliveryTime يوم</span>
                         </p>
                         
                         @if(Model.UserId == contract.BuyerId)
                         {
                             
-                                <form asp-action="CreateCheckoutSession" asp-controller="payment" asp-route-CustomerId="@contract.CustomerId" asp-route-ContractId="@contract.ContractId" method="POST">
+                                <form style="display:inline" asp-action="CreateCheckoutSession" asp-controller="payment" asp-route-CustomerId="@contract.CustomerId" asp-route-ContractId="@contract.ContractId" method="POST">
                                     <button type="submit" class="btn-primary btn">الانتقال للدفع</button>
                                 </form>
                         }
                         else
                         {
+                            <p class="h5 my-2 fw-bold">حالة الخدمة</p>
                             <p>في انتظار المشتري لدفع الخدمة</p>
                         }
                                 
@@ -234,7 +237,7 @@
 
             @if(Model.ActiveContracts.Count() == 0)
             {
-                <h1 class="text-center mt-5">لا توجد عقود قيد التنفيذ</h1>
+                <p class="text-center mt-5 h1">لا توجد عقود قيد التنفيذ</p>
             }
             else
             {
@@ -266,30 +269,70 @@
                             </ul>
                         </p>
                         @*<a href="#" class="btn btn-danger">إلغاء الطلب</a>*@
+                        <p class="h5 my-2 fw-bold">حالة الخدمة</p>
                         @if(Model.UserId == contract.SellerId && contract.SellerIsDone)
                         {
-                            <p>تم ارسال طلب لأستلام الخدمة علماً بأنه اذا لم يستلم الخدمة قبل الوقت المحدد يتم تحويل سعر الخدمة في رصيدك المعلق بنهاية المدة </p>
+                            @if(contract.BuyerCanceled)
+                            {
+                                <p>تم ارسال طلب لأستلام الخدمة علماً بأنه اذا لم يستلم المشتري الخدمة قبل الوقت المحدد يتم تحويل سعر الخدمة في رصيدك المعلق بنهاية المدة </p>
+                                <p>لقد قام المشترى بطلب إلغاء العقد </p>
+                            }
+                            else
+                            {
+                                <p>تم ارسال طلب لأستلام الخدمة علماً بأنه اذا لم يستلم الخدمة قبل الوقت المحدد يتم تحويل سعر الخدمة في رصيدك المعلق بنهاية المدة </p>
+                            }
                                         
                         }else if(Model.UserId == contract.SellerId && !contract.SellerIsDone)
                         {
+                            @if(contract.BuyerCanceled)
+                            {
+                                <p>لقد قام المشترى بطلب إلغاء العقد </p>
+                            }
                             <a class="btn btn-success" asp-controller="Customer" asp-action="ContractBuyerSellerDone" asp-route-id="@contract.ContractId" >ارسل طلب استلام الخدمة</a>
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                              إلغاء الطلب
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="cancel('@contract.ContractId')">
+                                إلغاء العقد
                             </button>
+                           
+                            
                         }
                         else if(Model.UserId == contract.BuyerId && contract.SellerIsDone)
                         {
-                            <p>لقد أنهى البائع العمل وارسل لك طلب استلام ، الرجاء مراجعة الخدمة بشكل جيد قبل الضغط على استلام الخدمة </p>
-                            @*<a class="btn btn-success" asp-controller="Customer" asp-action="ContractBuyerSellerDone" asp-route-id="@contract.ContractId" >استلام الخدمة</a>*@
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#done"  onclick="sendId('@contract.ContractId')">
-                              استلام الخدمة
-                            </button>
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                              إلغاء الطلب
-                            </button>
+                            @if(contract.BuyerCanceled)
+                            {
+                                <p>لقد أنهى البائع العمل وارسل لك طلب استلام ، ولكنك قمت بطلب إلغاء العقد </p>
+                                <p>تذكر أنه في هذه الحالة بإنتهاء مدة التسليم يتحول سعر الخدمة إلى البائع </p>
+                                <p>رجاء قم بالتواصل مع البائع للتفاهم بشأن استلام الخدمة </p>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#done"  onclick="sendId('@contract.ContractId')">
+                                  استلام الخدمة
+                                </button>
+                            }
+                            else
+                            {
+                               <p>لقد أنهى البائع العمل وارسل لك طلب استلام ، الرجاء مراجعة الخدمة بشكل جيد قبل الضغط على استلام الخدمة </p>
+                                @*<a class="btn btn-success" asp-controller="Customer" asp-action="ContractBuyerSellerDone" asp-route-id="@contract.ContractId" >استلام الخدمة</a>*@
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#done"  onclick="sendId('@contract.ContractId')">
+                                  استلام الخدمة
+                                </button>
+                                @*<button type="button" id="cancelBtn" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                  إلغاء العقد
+                                </button> *@
+                            }
+                            
                         }else
                         {
-                            <p>في انتظار البائع لإتمام الخدمة وارسال طلب لك للاستلام</p>
+                            @if(contract.BuyerCanceled){
+                                <p>لقد قمت بطلب إلغاء العقد ولكن لم ينهي البائع العمل بعد</p>
+                                <p>اذا لم ينهي البائع العمل في المدة المحددة ، سيتم ارجاع سعر الخدمة إلى حسابك بعد انتهاء المدة</p>
+                                <p>يمكن الغاء العقد مباشرة من قبل البائع</p>
+                            }
+                            else
+                            {
+                                <p>في انتظار البائع لإتمام الخدمة وارسال طلب لك للاستلام</p>
+                                <button type="button"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="cancel('@contract.ContractId')">
+                                  إلغاء العقد
+                                </button>
+                            }
+                            
                         }
                         
                         
@@ -301,15 +344,15 @@
                           <div class="modal-dialog">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">أنت على وشك إلغاء الطلب هل أنت متأكد ؟</h5>
+                                <h5 class="modal-title" id="staticBackdropLabel">أنت على وشك إلغاء العقد هل أنت متأكد ؟</h5>
                                 <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
                               </div>
                               <div class="modal-body">
-                                بالضغط على زر المسح سيتم مسح الطلب نهائياً !
+                                 العقد قيد التنفيذ ، الرجاء مراجعة التعليمات جيدا قبل الالغاء !
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">العودة</button>
-                                <button type="button" class="btn btn-danger" asp-controller="Customer" asp-action="DeleteRequest">مسح الطلب</button>
+                                <button type="button" id="cancelBtn" class="btn btn-danger">إلغاء العقد</button>
                               </div>
                             </div>
                           </div>
@@ -339,6 +382,13 @@
                                 window.location.href = link;
                             });
                         }
+                        function cancel(id){
+                            document.getElementById("cancelBtn").addEventListener("click",()=>{
+                                var link = '@Url.Action("ContractBuyerSellerCancel","customer",new {id= "-1"})';
+                                link = link.replace("-1",id);
+                                window.location.href = link;
+                            });
+                        }
                 </script>
             } 
           
@@ -348,7 +398,7 @@
             
               @if(Model.DoneContracts.Count() == 0)
             {
-                <h1 class="text-center mt-5">لا توجد عقود قد تم الانتهاء منها</h1>
+                <p class="text-center mt-5 h1">لا توجد عقود قد تم الانتهاء منها</p>
             }
             else
             {
@@ -356,7 +406,104 @@
                 {
                     <div class="card mt-3 mb-3">
                         <div class="card-header">
-                               عقد قيد التنفيذ لخدمة : @contract.Service.Title  
+                               عقد تم بنجاح لخدمة : @contract.Service.Title  
+                        </div>
+                        <div class="card-body">
+                        @if (Model.UserId == contract.CustomerId)
+                        {
+                            <h5 class="card-title">عقد مع العميل @contract.Service.Customer.FirstName @contract.Service.Customer.LastName</h5>    
+                        }
+                        else
+                        {
+                            <h5 class="card-title">عقد مع العميل @contract.Customer.FirstName @contract.Customer.LastName</h5> 
+                        }
+                            <p>سعر الخدمة المتفق عليه : @contract.ContractPrice</p>
+                        
+                        @*<a class="btn btn-outline-info" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تقييم الخدمة</a>*@
+                            <div class="row justify-content-start">
+                                @if(!contract.ContractRateDone)
+                                {
+                                    <button type="button"  class="btn btn-success col-3 mx-2" data-bs-toggle="modal" data-bs-target="#rate" onclick="rate('@contract.ContractId')">
+                                      تقييم الخدمة
+                                    </button>        
+                                }
+
+                                <a class="btn btn-outline-info col-3 mx-2" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تفاصيل الخدمة</a>
+                                
+                                <small class="col-4 me-auto">تاريخ انتهاء الخدمة : @contract.EndDate.ToShortDateString()</small>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+
+                <div class="modal fade" id="rate" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            
+                                <p class="modal-title h5" id="exampleModalLabel">تقييم الخدمة</p>
+                                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                            
+                          </div>
+                          <form id="rateForm" asp-action="RateContract" asp-controller="customer"  >
+                          <div class="modal-body">
+                              
+                            <div class="form-group my-2 row">
+
+                                <label class="col-3" asp-for="ContractRateStars"></label>
+                                <select class="col-2" asp-for="ContractRateStars">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                                <span asp-validation-for="ContractRateStars"></span>
+                            </div>
+                            <div class="form-group my-2 row justify-content-center">
+                                <label asp-for="ContractRateComment"></label>
+                                <textarea asp-for="ContractRateComment" class="col-11 my-2" rows="4"></textarea>
+                                <span asp-validation-for="ContractRateComment"></span>
+                            </div>
+ 
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">رجوع</button>
+                            <button type="submit" class="btn btn-success" >ارسال التقييم</button>
+                          </div>
+                          </form>
+                        </div>
+                      </div>
+                </div>
+                <script>
+                    function rate(id){
+                            @*document.getElementById("rateForm").append(` < input asp-for="Id" value="${id}" >`);*@
+                            $("#rateForm").append(' <input name="Id" value="'+id+'" hidden>');
+                            @*document.getElementById("rateForm").setAttribute("asp-route-id",id);*@
+                        }
+                </script>
+                
+               
+            }
+
+
+
+          </div>
+
+          <div class="tab-pane fade" id="list-messages2" role="tabpanel" aria-labelledby="list-messages2-list">
+            
+              @if(Model.CanceledContracts.Count() == 0)
+            {
+                <p class="text-center mt-5 h1">لا توجد عقود قد تم الغاءها</p>
+            }
+            else
+            {
+                foreach(var contract in Model.CanceledContracts)
+                {
+                    <div class="card mt-3 mb-3">
+                        <div class="card-header">
+                               عقد ملغي لخدمة : @contract.Service.Title  
                         </div>
                         <div class="card-body">
                         @if (Model.UserId == contract.CustomerId)
@@ -368,9 +515,11 @@
                             <h5 class="card-title">عقد مع العميل @contract.Customer.FirstName @contract.Customer.LastName</h5> 
                         }
                         <p>سعر الخدمة المتفق عليه : @contract.ContractPrice</p>
-                        <small>تاريخ انتهاء الخدمة : @contract.EndDate</small>
-                        @*<a class="btn btn-outline-info" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تقييم الخدمة</a>*@
-                        <a class="btn btn-outline-info" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تفاصيل الخدمة</a>
+                        <div class="row justify-content-start">
+                            <a class="btn btn-outline-info col-3 mx-2" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تفاصيل الخدمة</a>
+                                
+                            <small class="col-4 me-auto">تاريخ الغاء العقد : @contract.EndDate.ToShortDateString()</small>
+                        </div>
                         </div>
                     </div>
                 }
