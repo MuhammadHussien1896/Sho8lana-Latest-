@@ -25,6 +25,14 @@ namespace Sho8lana.Data
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Customer>().Property(m => m.Country).IsRequired(false);
+            builder.Entity<Customer>().Property(m => m.Area).IsRequired(false);
+            builder.Entity<Customer>().Property(m => m.City).IsRequired(false);
+            builder.Entity<Customer>().Property(m => m.FirstName).IsRequired(false);
+            builder.Entity<Customer>().Property(m => m.LastName).IsRequired(false);
+            builder.Entity<Customer>().Property(m => m.Gender).IsRequired(false);
+
+        
             base.OnModelCreating(builder);
             builder.Entity<Customer>().Ignore(i => i.PhoneNumberConfirmed);
             builder.Entity<OnlineUser>().HasKey(k => new {k.UserId,k.ConnectionId});
