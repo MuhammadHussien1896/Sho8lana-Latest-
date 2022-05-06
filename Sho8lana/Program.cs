@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
@@ -31,6 +32,24 @@ builder.Services.AddSignalR();
 
 builder.Services.AddMvc().AddJsonOptions(options =>
 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+var services = builder.Services;
+//var configuration=builder.Configuration;
+
+
+services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)  
+       .AddGoogle(options =>
+       {
+
+           options.ClientId = "142484325254-saqqcaksdr0tjh22pb17m7lqu4joovno.apps.googleusercontent.com";
+           options.ClientSecret = "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";
+
+       }).AddFacebook(options =>
+       {
+
+           options.ClientId = "718694602584796";
+           options.ClientSecret = "482adbb890fb5e901a5603f6b22a36d5";
+
+       });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
