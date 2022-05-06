@@ -179,6 +179,46 @@
            </div>
         </div>
     <!-- End Details section  -->
+               <div class="row mt-5 justify-content-center border border-Secondery">
+                <p class="h5 my-3 text-secondary col-12 fw-bold">التعليقات</p>
+                @foreach (var comment in @Model.Contracts)
+                {
+                    if (comment.ContractRateDone)
+                    {
+                        <div class="row justify-content-start py-3 border-bottom border-Secondery">
+                            <div class="row justify-content-start align-items-center d-flex">
+                                @if (@comment.Customer.ProfilePicture == null)
+                                {
+                                    <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle col-1"/>
+                                }
+                                else
+                                {
+                                    <img class="rounded-circle col-1" src="data:image/*;base64,@Convert.ToBase64String(@comment.Customer.ProfilePicture)" />
+                                }
+                               <div class="col-8">
+                                    <p class="fw-bold fs-5 p-0 m-0 text-primary">@comment.Customer.FirstName @comment.Customer.LastName</p>
+                                    <p class="p-0 m-0">@comment.EndDate.Date.ToShortDateString()</p>
+                                </div>
+                                <div class="ratings me-0 col-3"> 
+                                 @{
+                                     for (var i = 0; i < (int)5-@comment.ContractRateStars/2; i++)
+                                     {
+                                        <i class="fa fa-star"></i>   
+                                     }
+                                     for (var i = 0; i < (int)@comment.ContractRateStars/2; i++)
+                                     {
+                                         <i class="fa fa-star rating-color"></i> 
+                                     }
+                                }
+                                    </div>
+                            </div>
+                            <div class="col-12 my-3 fs-5 fw-bold">
+                                @comment.ContractRateComment
+                            </div>
+                        </div>
+                    }
+                }
+           </div>
     </div>
     <div class="col-4">
       <!-- =======  Price section  ======= -->
@@ -222,7 +262,7 @@
 
                     </div>
                 }
-                else
+                else 
                 {
                     if (Model.IsFreelancer == true)
                     {
@@ -326,6 +366,30 @@
            </ul>
         </div>
                 <!-- End Of Safety section  -->
+        @if (User.IsInRole("Admin")&&Model.IsAccepted==false)
+            {
+                <div class="row my-5 justify-content-center border border-Secondery ">
+                    <form asp-controller="Admin" asp-action="SendRejectToUser" method="post">
+                        <div class="form-floating row">
+                            <textarea name="messagenotfi" class="form-control row m-0" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 18vh"></textarea>
+                            <label for="floatingTextarea2" dir="ltr">Reason For Rejected</label>
+                            <input type="text" name="UserId" value="@Model.CustomerId" hidden>
+                            <input type="text" name="ServiceId" value="@Model.ServiceId" hidden>
+                        </div>
+                        <div class="row justify-content-around my-3">
+                        <div class="mb-3 col-4 d-flex justify-content-center">
+                            <input type="submit" value="Reject" class="btn btn-outline-danger btn-lg" />
+                        </div>
+                        <div class="mb-3 col-4 d-flex justify-content-around">
+                            <form asp-controller="Admin" asp-action="SendAcceptToUser" method="post">
+                                    <input type="text" name="UserId" value="@Model.CustomerId" hidden>
+                                    <input type="text" name="ServiceId" value="@Model.ServiceId" hidden>
+                                    <input type="submit" value="Accept" class="btn btn-outline-success btn-lg" />
+                            </form>
+                        </div>
+                    </form>
+                </div>
+            }
     </div>
 </div>
 

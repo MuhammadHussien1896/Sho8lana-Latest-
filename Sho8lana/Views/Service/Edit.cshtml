@@ -117,134 +117,98 @@
   </div>
    <script>
        /////Preview and Updating Section
-      function initImageUpload(box) {
-          let uploadField = box.querySelector('.image-upload');
-          uploadField.addEventListener('change', getFile);
-          function getFile(e){
-              let file = e.currentTarget.files[0];
-              checkType(file);
-          }
-          function previewImage(file){
-              let thumbs = document.querySelectorAll('.js--image-preview');
-              let thumb=box.querySelector('.js--image-preview');
-              let num=0;
-              if(thumb.style.backgroundImage==""){
-                  for(let i=0;i<thumbs.length;i++){
-                      if(thumbs[i].style.backgroundImage==""){
-                          thumb=thumbs[i];
-                          num=i;
-                          break;
-                      }
-                  }
-              };
-              upload(file,num);
-              thumb.className += ' js--no-default';
-          }
-          function checkType(file){
-              let imageType = /image.*/;
-              if (!file.type.match(imageType)) {
-              throw 'the file type is not image';
-              } 
-              else if (!file){
-              throw 'you did not upload file';
-              } 
-              else {
-              previewImage(file);
-              }
-           }
-           function upload(file,i){
-              let id;
-              let serviceId=Number("@(Model.ServiceId)")
-              data=new FormData();
-              data.append("Pic",file);
-              data.append("ServiceId",serviceId);
-              data.append("updateNo",i);
-              $.ajax({
-                type: "Post",
-                url: '@Url.Action("UploadImage","JsonApi")',
-                processData: false,
-                contentType: false,
-                data:data,
-                success: (data)=> {
-                    DrawData(data);
-                    let cover='<div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>'
-                    document.querySelector(".box").innerHTML+=cover;
-                    var boxes = document.querySelectorAll('.box');
-                        for (let i = 0; i < boxes.length; i++) {
-                        let box = boxes[i];
-                        initImageUpload(box);
-                    }},
-                error: function (ex) {
-                    console.log(ex);
-                }
-                    });
-            }
-      }
-        /////////////
         let cover='<div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>'
         document.querySelector(".box").innerHTML+=cover;
-        $(".DeleteButton").on('click',Delete)
-        ////////////
-        function Delete(){
-            let id=Number(event.target.id)
-            $.ajax({
-                type: "Delete",
-                url: '@Url.Action("DeleteImage","JsonApi")',
-                data:{mediaId:id},
-                success: (data)=> {
-                    DrawData(data);
-                    let cover='<div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>'
-                    document.querySelector(".box").innerHTML+=cover;
-                    var boxes = document.querySelectorAll('.box');
-                    for (let i = 0; i < boxes.length; i++) {
-                    let box = boxes[i];
-                    initImageUpload(box);
+           //upload Image Function
+        function upload(file,i){
+
+
+            }
+            $(document).on("change",".image-upload",(e)=>{
+                let serviceId=Number("@(Model.ServiceId)")
+                let file = e.currentTarget.files[0];
+                let thumbs = $('.js--image-preview');
+                let thumb = $(e.target).parent().parent().parent().find('.js--image-preview');
+                let num=0;
+                if($(thumb).css("background-image")=='none'){
+                    for(let i=0;i<thumbs.length;i++){
+                        if($(thumbs[i]).css("background-image")=='none'){
+                            thumb=thumbs[i];
+                            num=i;
+                            break;
+                        }
+                    }
                 }
-               },
-               error: function (ex) {
-                     console.log(ex);
-               }
-           })
-        }
-
-        // initialize box-scope
-        var boxes = document.querySelectorAll('.box');
-
-        for (let i = 0; i < boxes.length; i++) {
-          let box = boxes[i];
-          initImageUpload(box);
-        }
-        ////draw Data
-        function DrawData(data){
-                 $(".wrapper").empty();
-                    $.each(data,(i,item)=>{
-                        $(".wrapper").append(
-                            `<div class="box col-2 p-0 position-relative">
-                                <div class="js--image-preview" style="background-image:url('/Images/services/${item.mediaPath}')"> </div>
-                                <div class="upload-options">
-                                    <label>
-                                        <input type="file" class="image-upload" accept="image/*" />
-                                    </label>
-                                </div>
-                                    <i class="fa-solid fa-xmark position-absolute top-0 start-0 DeleteButton" id="${item.mediaId}"></i>
-                            </div> `
-                        )
-                    })
-                            $(".DeleteButton").on('click',Delete)
-                        for(let i=0;i<4-data.length;i++){
-                            $(".wrapper").append(
-                                `<div class="box col-2 p-0 position-relative">
-                                    <div class="js--image-preview"></div>
-                                    <div class="upload-options">
-                                        <label>
-                                            <input type="file" class="image-upload" accept="image/*" asp-for="Medias" />
-                                        </label>
-                                    </div>
-                                  </div>`
-                            )
-                        }
-                        }
-        
+                let reader = new FileReader();
+                data=new FormData();
+                data.append("Pic",file);
+                data.append("ServiceId",serviceId);
+                data.append("updateNo",num);
+                $.ajax({
+                    type: "Post",
+                    url: '@Url.Action("UploadImage","JsonApi")',
+                    processData: false,
+                    contentType: false,
+                    data:data,
+                    success: (data)=> {
+                        drawData(data)
+                        reader.onload= ()=>{
+                        $(thumb).css("background-image",'url(' + reader.result + ')');
+                };
+                reader.readAsDataURL(file);
+                    },
+                    error: function (ex) {
+                        console.log(ex);
+                    }
+                });
+                $(thumb).addClass('js--no-default');
+            });
+            $(document).on("click",".DeleteButton",()=>{
+                let id=Number(event.target.id)
+                $.ajax({
+                    type: "Delete",
+                    url: '@Url.Action("DeleteImage","JsonApi")',
+                    data:{mediaId:id},
+                    success: (data)=> {
+                        drawData(data)
+                        },
+                     error: function (ex) {
+                        console.log(ex);
+                    }
+                })
+                });
+                function drawData(data){
+                         $(".wrapper").empty();
+                            $.each(data,(i,item)=>{
+                                $(".wrapper").append(
+                                    `<div class="box col-2 p-0 position-relative">
+                                        <div class="js--image-preview" style="background-image:url('/Images/services/${item.mediaPath}')"> </div>
+                                        <div class="upload-options">
+                                            <label>
+                                                <input type="file" class="image-upload" accept="image/*" />
+                                            </label>
+                                        </div>
+                                            <i class="fa-solid fa-xmark position-absolute top-0 start-0 DeleteButton" id="${item.mediaId}"></i>
+                                    </div> `
+                                    )
+                                });
+                                for(let i=0;i<4-data.length;i++){
+                                    $(".wrapper").append(
+                                        `<div class="box col-2 p-0 position-relative">
+                                            <div class="js--image-preview"></div>
+                                            <div class="upload-options">
+                                                <label>
+                                                    <input type="file" class="image-upload" accept="image/*" asp-for="Medias" />
+                                                </label>
+                                            </div>
+                                        </div>`
+                                    )
+                                }
+                                let cover='<div class="h-25 w-75 cover  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>'
+                                if($(".box").first().children(".cover").length==0){
+                                    $(".box").first().append(cover);
+                                }
+                }
         if('@(Convert.ToBoolean(Model.IsCash))'=="True")
         $(".PaymentMethodCash").prop('checked',true)
         else

@@ -55,7 +55,7 @@
                             <input type="file" class="image-upload" accept="image/*" asp-for="Medias" />
                           </label>
                         </div>
-                        <i class="fa-solid fa-xmark position-absolute top-0 start-0 DeleteButton"></i>
+                        <i class="fa-solid fa-xmark cover position-absolute top-0 start-0 DeleteButton"></i>
                         <div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>
                       </div>
                       <div class="box col-2 p-0 position-relative">
@@ -126,74 +126,46 @@
     </div>
 </div>
   <script>
-      function initImageUpload(box) {
-          let uploadField = box.querySelector('.image-upload');
-          uploadField.addEventListener('change', getFile);
-          function getFile(e){
-              let file = e.currentTarget.files[0];
-              checkType(file);
+      $(document).on("change",".image-upload",(e)=>{
+          console.log(e)
+          let file = e.currentTarget.files[0];
+          let thumbs = $('.js--image-preview');
+          let thumb = $(e.target).parent().parent().parent().find('.js--image-preview');
+          console.log(thumb.css("background-image"))
+          if($(thumb).css("background-image")=='none'){
+              for(let i=0;i<thumbs.length;i++){
+                  if($(thumbs[i]).css("background-image")=='none'){
+                      thumb=thumbs[i];
+                      break;
+                  }
+              }
           }
-          function previewImage(file){
-              let thumbs = document.querySelectorAll('.js--image-preview');
-              let thumb=box.querySelector('.js--image-preview');
-              if(thumb.style.backgroundImage==""){
-                  for(let i=0;i<thumbs.length;i++){
-                    if(thumbs[i].style.backgroundImage==""){
-                          thumb=thumbs[i];
-                        break;
-                    }
-                }
-              }
-
-              reader = new FileReader();
-              reader.onload = function() {
-                  thumb.style.backgroundImage = 'url(' + reader.result + ')';
-              }
-              reader.readAsDataURL(file);
-              thumb.className += ' js--no-default';
+          let reader = new FileReader();
+          reader.onload= ()=>{
+              $(thumb).css("background-image",'url(' + reader.result + ')');
           }
-          function checkType(file){
-              let imageType = /image.*/;
-              if (!file.type.match(imageType)) {
-              throw 'the file type is not image';
-              } 
-              else if (!file){
-              throw 'you did not upload file';
-              } 
-              else {
-              previewImage(file);
-              }
-           }
-    }
-
-        // initialize box-scope
-        var boxes = document.querySelectorAll('.box');
-
-        for (let i = 0; i < boxes.length; i++) {
-          let box = boxes[i];
-          initImageUpload(box);
-        }
-        $(".DeleteButton").on("click",()=>{
-            $(event.target).parent().remove();
-            $(".wrapper").append(
-                `     <div class="box col-2 p-0  position-relative">
+          reader.readAsDataURL(file);
+          $(thumb).addClass('js--no-default');
+          
+      })
+            $(document).on("click",".DeleteButton",()=>{
+                $(event.target).parent().remove();
+                $(".wrapper").append(
+                    `<div class="box col-2 p-0  position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
-                          <label>
+                        <label>
                             <input type="file" class="image-upload" accept="image/*" name="Medias" />
-                          </label>
+                        </label>
                         </div>
                         <i class="fa-solid fa-xmark position-absolute top-0 start-0 DeleteButton"></i>
-                        </div>`
-            );
-                    var boxes = document.querySelectorAll('.box');
-                    for (let i = 0; i < boxes.length; i++) {
-                        let box = boxes[i];
-                        initImageUpload(box);
-                    }
-                    let cover='<div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>'
-                    document.querySelector(".box").innerHTML+=cover;
-        })
+                    </div>`
+                );
+            let cover='<div class="h-25 w-75 cover  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>'
+            if($(".box").first().children(".cover").length==0){
+                $(".box").first().append(cover);
+            }
+      })
   </script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

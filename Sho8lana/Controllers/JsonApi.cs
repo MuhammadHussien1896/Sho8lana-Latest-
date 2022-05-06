@@ -61,28 +61,31 @@ namespace Sho8lana.Controllers
             var name = service.ServiceId + "-" + service.Title + "-" + Guid.NewGuid()+ ".jpg";
             if (updateNo < service.Medias.Count)
             {
-                name=service.Medias.Skip(updateNo+1).Take(1).FirstOrDefault().MediaPath;
+                if (updateNo == 0)
+                {
+                    name = service.Medias.Skip(updateNo).Take(1).FirstOrDefault().MediaPath;
+                }
+                else
+                {
+                    name = service.Medias.Skip(updateNo+1).Take(1).FirstOrDefault().MediaPath;
+                }
             }
             var path = "./wwwroot/Images/services/" + name;
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 Pic.CopyTo(stream);
-                if (updateNo < service.Medias.Count)
-                {
-
-                }
-                else
-                {
-                    Media media = new Media()
-                    {
-                        ServiceId = service.ServiceId,
-                        MediaPath = name
-                    };
-                    //add image to medias table
-                    context.Medias.Add(media);
-                    await context.complete();
-                }
             }
+            if (updateNo >= service.Medias.Count)
+            {
+                Media media = new Media()
+                {
+                    ServiceId = service.ServiceId,
+                    MediaPath = name
+                };
+                //add image to medias table
+                context.Medias.Add(media);
+            }
+            await context.complete();
             var Medias = (await context.Medias.GetAllBy(s => s.ServiceId == ServiceId)).Select(s => new
             {
                 mediaId = s.MediaId,
