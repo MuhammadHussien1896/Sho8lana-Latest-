@@ -314,11 +314,31 @@ namespace Sho8lana.Controllers
                 contract.ContractRateDone = true;
                 context.Contracts.Update(contract);
                 AddNotification(contract.BuyerId, $"تم إضافة تقييمك لخدمة '{contract.Service.Title}' بنجاح");
+                await CalculateOverallRate(contract.ServiceId, contract.ContractRateStars);
                 await context.complete();
             }
             return RedirectToAction(nameof(CustomerContracts));
             
         }
+        private async Task CalculateOverallRate(int serviceId,int newRate)
+        {
+            var service = await context.Services.GetEagerLodingAsync(s => s.ServiceId == serviceId,new string[] {"Contracts"});
+            if(service != null)
+            {
+                if(service.Rate == default)
+                {
+                    service.Rate = newRate;
+                }
+                else
+                {
+                    var numOfRatedContracts = service.Contracts.Where(c => c.ContractRateDone).Count();
+                    var numOfAllStars = service.Contracts.Where(c => c.ContractRateDone).Sum(c => c.ContractRateStars);
+                    service.Rate = (float)numOfAllStars / numOfRatedContracts;
+                }
+                context.Services.Update(service);
+            }
+
+        } 
         //public async Task<IActionResult> EditContractPrice(int id)
         //{
         //    string customerId = userManager.GetUserId(User);
@@ -422,8 +442,8 @@ namespace Sho8lana.Controllers
                         //    $" {customer.FirstName} {customer.LastName} about your service : {RequestedService.Title} "
                         //});
                         AddNotification(RequestedService.CustomerId,
-                            $"You have a new request from" +
-                            $" {customer.FirstName} {customer.LastName} about your service : {RequestedService.Title} ");
+                            $"لديك طلب جديد من" +
+                            $" {customer.FirstName} {customer.LastName} عن خدمة : {RequestedService.Title} ");
 
                         await context.complete();
                         return RedirectToAction(nameof(CustomerRequests));

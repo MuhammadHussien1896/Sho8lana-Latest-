@@ -7,7 +7,7 @@
 
 }
 
-<div class="row my-5 container" dir="rtl">
+<div class="row my-5" dir="rtl">
     <div class="col-12">
         <div class="text-center">
            @if (@Model.ProfilePicture ==null)
@@ -30,7 +30,7 @@
         </div>   
         @if (userManger.GetUserId(User) == @Model.Id)
         {
-           <a href="/identity/Account/manage" class="btn btn-success float-left">تعديل الملف الشخصي</a>
+           <a href="/identity/Account/manage" class="btn btn-success mx-5 float-left">تعديل الملف الشخصي</a>
         }
     </div>
 
@@ -93,7 +93,7 @@
                 <div class="fw-bold">متاح التعامل بالفيزا فقط </div>
                 }
                 }
-                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Count</span></div>
+                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Where(c => c.IsDone).Count()</span></div>
                 <div class="fw-normal">تاريخ النشر :<span
                         class="fw-bold">@service.PublishDate.ToString("MM/dd/yyyy")</span></div>
             </div>
