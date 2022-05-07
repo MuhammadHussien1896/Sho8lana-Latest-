@@ -173,7 +173,7 @@
                                             <div class="fw-bold">متاح التعامل بالفيزا فقط </div>
                                         }
                                     }
-                                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Count</span></div>
+                                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Where(c => c.IsDone).Count()</span></div>
                                 <div class="fw-normal">تاريخ النشر :<span class="fw-bold">@service.PublishDate.ToString("MM/dd/yyyy")</span></div>
                             </div>
                          </div>
