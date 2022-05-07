@@ -1,7 +1,7 @@
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Serialization;
 using Sho8lana.Data;
 using Sho8lana.Hubs;
 using Sho8lana.Models;
@@ -29,12 +29,16 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddSignalR();
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(connectionString));
+builder.Services.AddHangfireServer();
+builder.Services.AddControllers()
+        .AddNewtonsoftJson(x =>x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 
 builder.Services.AddMvc().AddJsonOptions(options =>
 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 var services = builder.Services;
 //var configuration=builder.Configuration;
-
 
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)  
        .AddGoogle(options =>
@@ -71,7 +75,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseHangfireDashboard(pathMatch:"/hangfire");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -23,6 +23,7 @@ namespace Sho8lana.Models
         public string BuyerId { get; set; }
         public string SellerId { get; set; }
         public string SericeOwnerId { get; set; }
+        public string JobId { get; set; }
 
         //navigation properties
         [ForeignKey("Customer")]
