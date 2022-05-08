@@ -5,29 +5,8 @@
     ViewData["Title"] = "DisplayMessages";
     var receiver = "" ;
 }
-<link href="~/assets/css/displayMessages.css" rel="stylesheet">
 
-@*<h1>DisplayMessages</h1>
-@if(Model == null){
-    <h3>No Received Messages !</h3>
-}else{
-    @foreach(var item in Model)
-    {
-        if (UserManager.GetUserId(User) == item.CustomerId)
-        {
-            <h4>You : @item.MessageContent</h4>
-            <p class="d-none">@(receiver = item.ReceiverId)</p>
-        }
-        else
-        {
-            <h4>@item.Customer.FirstName @item.Customer.LastName : @item.MessageContent</h4>
-            <p class="d-none">@(receiver = item.CustomerId)</p>
-        }
-        <small>@item.MessageDate</small>
-        <br />
-        <a class="btn btn-primary" asp-controller="service" asp-action="chat" asp-route-id="@item.ServiceId" asp-route-receiverId="@receiver" >Send Message</a>
-    }
-}*@
+<link href="~/assets/css/displayMessages.css" rel="stylesheet">
 
 <div class="container mt-5" style="direction:rtl">
     <div class="row d-flex justify-content-center">

@@ -1,0 +1,59 @@
+﻿@model ShowMessagesViewModel
+@{
+    ViewData["Title"] = "الرسائل";
+}
+
+<link href="~/assets/css/displayMessages.css" rel="stylesheet">
+
+<div class="container mt-5" style="direction:rtl">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-12">
+            <div class="headings row mb-3">
+                <p class="fs-4 col-8">محادثة بين البائع @Model.SellerName والمشترى @Model.BuyerName</p>
+                <a class="btn btn-outline-info col-2 me-auto" asp-action="details" asp-controller="service" asp-route-id="@Model.ServiceId">صفحة الخدمة</a>
+            </div>
+                @if(Model.Messages == null){
+                    <p class="fs-4">لا توجد رسائل</p>
+                }else{
+                <div class="overflow-auto px-3" style="height:80vh">
+
+                    @foreach(var message in Model.Messages)
+                    {
+                      
+                        @if (Model.BuyerId == message.CustomerId)
+                        {
+                            <div class="card p-3 mb-5 text-white" style="background-color:#6441A4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="user d-flex flex-row align-items-center">  
+                                    <span>
+                                        <small class="fs-5">@Model.BuyerName :</small>
+                                        <small class="fs-5">@message.MessageContent</small>
+                                    </span> 
+                                </div> <small style="direction:ltr">@message.MessageDate.ToShortDateString() @message.MessageDate.ToShortTimeString()</small>
+                            </div>
+                            </div>
+                        }
+                        else
+                        {
+                           <div class="card p-3 mb-5 text-white" style="background-color:#392E5C">
+                           <div class="d-flex justify-content-between align-items-center">
+                                <div class="user d-flex flex-row align-items-center">  
+                                    <span>
+                                        <small class="fs-5">@Model.SellerName :</small>
+                                        <small class="fs-5">@message.MessageContent</small>
+                                    </span> 
+                                </div> <small  style="direction:ltr">@message.MessageDate.ToShortDateString() @message.MessageDate.ToShortTimeString()</small>
+                            </div>
+                            </div>
+                        }
+                        
+                     
+                    }
+                </div>
+                }
+                
+            
+        </div>
+    </div>
+</div>
+
