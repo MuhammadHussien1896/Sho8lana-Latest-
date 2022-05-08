@@ -480,12 +480,18 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> CustomerNotifcations()
         {
             var customerId = userManager.GetUserId(User);
-            var notification = await context.Notifications.GetAllBy(c => c.CustomerId == customerId);
+            var customer=await context.Customers.GetBy(s=>s.Id==customerId);
+            var notification = (await context.Notifications.GetAllBy(c => c.CustomerId == customerId)).OrderByDescending(s=>s.Date);
+            var model = new UserNotifcationViewModel()
+            {
+                customerImage = customer.ProfilePicture,
+                Notifications = notification
+            };
             if (customerId == null)
             {
                 return NotFound();
             };
-            return View(notification);
+            return View(model);
         }
 
     }

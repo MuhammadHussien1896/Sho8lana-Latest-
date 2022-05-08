@@ -1,24 +1,39 @@
-﻿@model IEnumerable<Notification>
+﻿@model UserNotifcationViewModel 
 @{
     ViewData["Title"] = "Notifcations";
 
 }
 <div class="row justify-content-center services section-bg" dir="rtl">
     @{
-        <div class="my-3 me-5 col-12">الإشعارات الغير مقروءه</div>
-        foreach (var item in Model)
+        foreach (var item in Model.Notifications)
         {
-            if (item.IsRead == false)
-            {
                 <div class="col-8 border-bottom my-3">
                     <div class="icon-box iconbox-blue p-3 row">
                         <div class="col-2 d-flex justify-content-center align-items-center">
-                            <img src="~/images/@item.Customer.ProfileImage" class="rounded-circle w-50">
+                            <a class="nav-link scrollto" asp-controller="customer" asp-action="account" asp-route-id="@item.CustomerId" title="Manage">
+                                @if (Model.customerImage != null)
+                                {
+                                    <img class="rounded-circle w-100" alt="Profile" src="data:image/*;base64,@(Convert.ToBase64String(Model.customerImage))" />
+                                }
+                                else
+                                {
+                                    <img class="rounded-circle w-100" alt="Profile" src="~/Images/DefaultImage/UserDefaultImage.png" />
+                                }
+                              </a>
                         </div>
                         <div class="col-10">
-                            <div class="fs-5 p-3 text-end">
-                                @item.Content
-                            </div>
+                            @if (item.IsRead == false)
+                            {
+                                <div class="fs-5 p-3 fw-bold text-end">
+                                    @item.Content
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="fs-5 p-3 text-end">
+                                    @item.Content
+                                </div>   
+                            }
                             <div class="text-end smallFont">
                                 <span>منذ</span>
                                 @{
@@ -48,53 +63,64 @@
                     </div>
                 </div>
                 }
-        }
-        <div class="my-3 me-5 col-12">الإشعارات المقروءه</div>
-        foreach (var item in Model)
-        {
-            if (item.IsRead == true)
-            {
-                <div class="col-8 border-bottom my-3">
-                    <div class="icon-box iconbox-blue p-3 row">
-                        <div class="col-2 d-flex justify-content-center align-items-center">
-                            <img src="~/images/@item.Customer.ProfileImage" class="rounded-circle w-50">
-                        </div>
-                        <div class="col-10">
-                            <div class="fs-5 p-3 text-end">
-                                @item.Content
-                            </div>
-                            <div class="text-end smallFont">
-                                <span>منذ</span>
-                                @{
-                                    if ((DateTime.Now.Year - item.Date.Year) > 0)
-                                    {
-                                        <span>@(DateTime.Now.Year-item.Date.Year) سنة</span>
-                                    }
-                                    if ((DateTime.Now.Month - item.Date.Month) > 0)
-                                    {
-                                        <span>@(DateTime.Now.Year-item.Date.Year) شهر</span>
-                                    }
-                                    if ((DateTime.Now.Day - item.Date.Day) > 0)
-                                    {
-                                        <span>@(DateTime.Now.Day-item.Date.Day) يوم</span>
-                                    }
-                                    if ((DateTime.Now.Hour - item.Date.Hour) > 0)
-                                    {
-                                        <span>@(DateTime.Now.Hour-item.Date.Hour) ساعة</span>
-                                    }
-                                    if ((DateTime.Now.Minute - item.Date.Minute) > 0)
-                                    {
-                                        <span>@(DateTime.Now.Minute-item.Date.Minute) دقيقة</span>
-                                    }
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                }
-        }
+        
     }
 </div>
+@*//        <div class="my-3 me-5 col-12">الإشعارات المقروءه</div>
+//        foreach (var item in Model.Notifications)
+//        {
+//            if (item.IsRead == true)
+//            {
+//                <div class="col-8 border-bottom my-3">
+//                    <div class="icon-box iconbox-blue p-3 row">
+//                        <div class="col-2 d-flex justify-content-center align-items-center">
+//                            <a class="nav-link scrollto" asp-controller="customer" asp-action="account" asp-route-id="@item.CustomerId" title="Manage">
+//                                @if (Model.customerImage != null)*@
+@*//                                {
+//                                    <img class="rounded-circle w-75" alt="Profile" src="data:image/*;base64,@(Convert.ToBase64String(Model.customerImage))" />
+//                                }
+//                                else
+//                                {
+//                                    <img class="rounded-circle w-75" alt="Profile" src="~/Images/DefaultImage/UserDefaultImage.png" />
+//                                }
+//                              </a>
+//                        </div>
+//                        <div class="col-10">
+//                            <div class="fs-5 p-3 fw-bold text-end">
+//                                @item.Content
+//                            </div>
+//                            <div class="text-end smallFont text-success">
+//                                <span>منذ</span>
+//                                @{
+//                                    if ((DateTime.Now.Year - item.Date.Year) > 0)
+//                                    {
+//                                        <span>@(DateTime.Now.Year-item.Date.Year) سنة</span>
+//                                    }
+//                                    if ((DateTime.Now.Month - item.Date.Month) > 0)
+//                                    {
+//                                        <span>@(DateTime.Now.Year-item.Date.Year) شهر</span>
+//                                    }
+//                                    if ((DateTime.Now.Day - item.Date.Day) > 0)
+//                                    {
+//                                        <span>@(DateTime.Now.Day-item.Date.Day) يوم</span>
+//                                    }
+//                                    if ((DateTime.Now.Hour - item.Date.Hour) > 0)
+//                                    {
+//                                        <span>@(DateTime.Now.Hour-item.Date.Hour) ساعة</span>
+//                                    }
+//                                    if ((DateTime.Now.Minute - item.Date.Minute) > 0)
+//                                    {
+//                                        <span>@(DateTime.Now.Minute-item.Date.Minute) دقيقة</span>
+//                                    }
+//                                }
+//                            </div>
+//                        </div>
+//                    </div>
+//                </div>
+//                }
+//        }
+//    }
+//</div>*@
 <script>
     $(window).on("load",function(e){
                $.ajax({  

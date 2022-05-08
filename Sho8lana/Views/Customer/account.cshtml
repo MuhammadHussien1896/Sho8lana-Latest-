@@ -7,12 +7,12 @@
 
 }
 
-<div class="row my-5 container" dir="rtl">
+<div class="row my-5" dir="rtl">
     <div class="col-12">
         <div class="text-center">
            @if (@Model.ProfilePicture ==null)
                 {
-                    <img class="rounded-circle mx-auto d-block" style="width:148px; height:148px;" src="~/Images/202022.jpg" />
+                    <img class="rounded-circle mx-auto d-block" style="width:148px; height:148px;" src="~/Images/DefaultImage/UserDefaultImage.png" />
                 }
             else
                 {
@@ -27,11 +27,13 @@
                      @*<i class="bi bi-check-square-fill " style="color:green" title="هوية موثقة"></i>*@
                  } 
             <h1>@Model.FirstName @Model.LastName</h1>
-        </div>   
-        @if (userManger.GetUserId(User) == @Model.Id)
-        {
-           <a href="/identity/Account/manage" class="btn btn-success float-left">تعديل الملف الشخصي</a>
-        }
+        </div>
+        <div class="col-12 d-flex justify-content-center align-items-center">
+            @if (userManger.GetUserId(User) == @Model.Id)
+            {
+               <a href="/identity/Account/manage" class="btn btn-success float-left m-auto">تعديل الملف الشخصي</a>
+            }
+        </div>
     </div>
 
 </div>
@@ -49,21 +51,21 @@
            <h3 class="h4 my-3 fw-bold">خدماتي</h3>
            <hr />
            <div class="row gy-4">
-<div class="card-deck row justify-content-around">
+<div class="card-deck row justify-content-start">
     @{
     foreach (var service in Model.Services)
     {
     <div class="card col-lg-3 col-md-4 col-sm-6 border-0 my-5 px-2 bg-light">
-        <div class="position-relative">
+        <div class="h-50">
             <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">
                 @{
                 if (@service.Medias.FirstOrDefault()!=null)
                 {
-                <img class="card-img-top" src="~/Images/CategoriesImage/@service.Medias.FirstOrDefault().MediaPath">
+                <img class="card-img-top h-100" src="~/Images/services/@service.Medias.FirstOrDefault().MediaPath">
                 }
                 else
                 {
-                <img class="card-img-top" src="~/Images/Defaultimage/defaultService.jpg">
+                <img class="card-img-top h-100" src="~/Images/Defaultimage/defaultService.jpg">
                 }
                 }
             </a>
@@ -93,7 +95,7 @@
                 <div class="fw-bold">متاح التعامل بالفيزا فقط </div>
                 }
                 }
-                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Count</span></div>
+                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Count(s=>s.IsDone==true)</span></div>
                 <div class="fw-normal">تاريخ النشر :<span
                         class="fw-bold">@service.PublishDate.ToString("MM/dd/yyyy")</span></div>
             </div>

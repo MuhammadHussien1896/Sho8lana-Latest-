@@ -288,3 +288,6 @@ i.material-icons {
         transform: scale(2.5);
     }
 }
+.fontNoto{
+    font-family:'Noto Kufi arabic' !important
+}

@@ -180,9 +180,9 @@
         </div>
     <!-- End Details section  -->
                <div class="row mt-5 justify-content-center border border-Secondery">
-                <p class="h5 my-3 text-secondary col-12 fw-bold">التعليقات</p>
-                @foreach (var comment in @Model.Contracts)
-                {
+               <p class="h5 my-3 text-secondary col-12 fw-bold">التعليقات</p>
+               @foreach (var comment in @Model.Contracts)
+               {
                     if (comment.ContractRateDone)
                     {
                         <div class="row justify-content-start py-3 border-bottom border-Secondery">
@@ -200,17 +200,16 @@
                                     <p class="p-0 m-0">@comment.EndDate.Date.ToShortDateString()</p>
                                 </div>
                                 <div class="ratings me-0 col-3"> 
-                                 @{
-                                     for (var i = 0; i < (int)5-@comment.ContractRateStars/2; i++)
-                                     {
+                                    @for (var i = 0; i < (int)5-@comment.ContractRateStars/2; i++)
+                                    {
                                         <i class="fa fa-star"></i>   
-                                     }
-                                     for (var i = 0; i < (int)@comment.ContractRateStars/2; i++)
-                                     {
-                                         <i class="fa fa-star rating-color"></i> 
-                                     }
-                                }
-                                    </div>
+                                    }
+                                    @for (var i = 0; i < (int)@comment.ContractRateStars/2; i++)
+                                    {
+                                        <i class="fa fa-star rating-color"></i> 
+                                    }
+                              
+                                </div>
                             </div>
                             <div class="col-12 my-3 fs-5 fw-bold">
                                 @comment.ContractRateComment
@@ -380,6 +379,7 @@
                         <div class="mb-3 col-4 d-flex justify-content-center">
                             <input type="submit" value="Reject" class="btn btn-outline-danger btn-lg" />
                         </div>
+                    </form>
                         <div class="mb-3 col-4 d-flex justify-content-around">
                             <form asp-controller="Admin" asp-action="SendAcceptToUser" method="post">
                                     <input type="text" name="UserId" value="@Model.CustomerId" hidden>
@@ -387,7 +387,7 @@
                                     <input type="submit" value="Accept" class="btn btn-outline-success btn-lg" />
                             </form>
                         </div>
-                    </form>
+
                 </div>
             }
     </div>
