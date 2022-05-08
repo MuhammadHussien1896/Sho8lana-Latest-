@@ -429,7 +429,8 @@
                                 }
 
                                 <a class="btn btn-outline-info col-3 mx-2" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تفاصيل الخدمة</a>
-                                @if(Model.UserId == contract.BuyerId && contract.ComplainId == null)
+                                @if(Model.UserId == contract.BuyerId && contract.ComplainId == null 
+                                && DateTime.Compare(DateTime.Now,contract.EndDate.AddDays(7)) < 0)
                                 {
                                     <button type="button"  class="btn btn-danger col-3 mx-2" data-bs-toggle="modal" data-bs-target="#complain" onclick="complain('@contract.ContractId')">
                                       ارسال شكوى
@@ -437,6 +438,10 @@
                                 }
                                 
                                 <small class="col-4 me-auto">تاريخ انتهاء الخدمة : @contract.EndDate.ToShortDateString()</small>
+                                @if(Model.UserId == contract.BuyerId && contract.ComplainId != null)
+                                {
+                                    <p class="text-secondary">تم ارسال شكوى بخصوص هذا العقد بتاريخ @contract.Complain.Date.ToShortDateString()</p>        
+                                }
                             </div>
                         </div>
 
