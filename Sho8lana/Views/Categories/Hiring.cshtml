@@ -26,96 +26,93 @@
                 <p>تصفح الخدمات المطلوبة وتواصل مع صاحب الخدمة لتحصل عليها </p>
             </div>
         </div>
-                <div class="col-12 my-5 d-flex justify-content-center">
-                    <form asp-action="index" asp-controller="Categories"  asp-route-id="@CatId">
-                        <input type="checkbox" checked data-toggle="toggle" data-off="خدمات" data-on="طلبات"
-                         data-onstyle="primary" data-offstyle="success" id="checkbox">
-                    </form>            
-                </div>
-            <div class="col-2" style="direction:rtl">
-                 <div class="d-flex flex-column flex-shrink-0 mb-5 icon-box iconbox-blue w-100" style="width: 280px;direction:rtl">
-                    <a href="/" class="d-flex align-items-center justify-content-center link-dark text-decoration-none">
-                      <span class="fs-4">خدماتنا</span>
-                    </a>
-                    <form asp-action="search" method="get">
-                        <input type="hidden" value="false" name="type" />
-                        <input type="Text" value="@text" name="text" class="form-control my-3" placeholder="أكتب ماتريد البحث عنه">
-                   
+        <div class="col-12 my-5 d-flex justify-content-center">
+            <form asp-action="index" asp-controller="Categories"  asp-route-id="@CatId">
+                <input type="checkbox" checked data-toggle="toggle" data-off="خدمات" data-on="طلبات"
+                data-onstyle="primary" data-offstyle="success" id="checkbox">
+            </form>            
+        </div>
+        <div class="col-2" style="direction:rtl">
+            <div class="d-flex flex-column flex-shrink-0 mb-5 icon-box iconbox-blue w-100" style="width: 280px;direction:rtl">
+                <a href="/" class="d-flex align-items-center justify-content-center link-dark text-decoration-none">
+                    <span class="fs-4">خدماتنا</span>
+                </a>
+                <form asp-action="search" method="get">
+                    <input type="hidden" value="false" name="type" />
+                    <input type="Text" value="@text" name="text" class="form-control my-3" placeholder="أكتب ماتريد البحث عنه">                   
                     <select class="form-select text-center selectCategories" name="CatId" size="8" aria-label="size 3 select example">
-                @{
-                    foreach (var item in Model.categories)
+                    @foreach (var item in Model.categories)
                     {
-                          <option value="@item.CategoryId" class="CategoryOptions">@item.Name</option>    
+                        <option value="@item.CategoryId" class="CategoryOptions">@item.Name</option>    
                     }
-
-                }
                     </select>
-                      <div>
-                          <div class="my-3" >الترتيب حسب السعر</div>
-                          <select class="my-3 form-select PriceSelect"   name="Price" >
-                              <option value="negogation">غير محدد</option>
-                              <option value="5">5$</option>
-                              <option value="10">10$</option>
-                              <option value="15">15$</option>
-                              <option value="20">20$</option>
-                              <option value="@int.MaxValue">غير محدود</option>
-                          </select>
-                      </div>
-                      <div class=row>
+                    <div>
+                        <div class="my-3" >الترتيب حسب السعر</div>
+                        <select class="my-3 form-select PriceSelect"   name="Price" >
+                            <option value="negogation">غير محدد</option>
+                            <option value="5">5$</option>
+                            <option value="10">10$</option>
+                            <option value="15">15$</option>
+                            <option value="20">20$</option>
+                            <option value="@int.MaxValue">غير محدود</option>
+                        </select>
+                    </div>
+                    <div class=row>
                         <div class="form-check col-12 my-3">
-                          <input class="form-check-input ms-0 float-none trustseller" type="checkbox" name="Truste" value="true" id="flexCheckDefault">
-                          <label class="form-check-label fw-bold" for="flexCheckDefault">
-                            بائع موثوق
-                          </label>
+                            <input class="form-check-input ms-0 float-none trustseller" type="checkbox" name="Truste" value="true" id="flexCheckDefault">
+                            <label class="form-check-label fw-bold" for="flexCheckDefault">بائع موثوق</label>
                         </div>
-                        </div>
-                        <input class="btn btn-primary" type="submit" />
-                        </form>
-
+                    </div>
+                    <input class="btn btn-primary" type="submit" />
+               </form>
             </div>
-            </div>
-            <div class="col-9" >
-            @{
-                foreach (var service in Model.services)
-                {
-                    
-                        <div class="card-deck">
-                      <div class="card col-lg-3 col-md-4 col-sm-6 border-0">
-                                <div class="position-relative">
-                                <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">
-                                   @{
-                                        if (@service.Medias.FirstOrDefault()!=null)
-                                        {
-                                        <img class="card-img-top" src="~/Images/CategoriesImage/@service.Medias.FirstOrDefault().MediaPath">
+        </div>
+        <div class="col-9" >
+            <div class="card-deck row justify-content-start">
+                @{
+                    foreach (var service in Model.services)
+                    {
+                        <div class="card col-lg-3 col-md-4 col-sm-6 border-0">
+                            <div class="position-relative h-50">
+                                <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">                                    
+                                    @if (@service.Medias.FirstOrDefault()!=null)
+                                    {
+                                        <img class="card-img-top h-100" src="~/Images/services/@service.Medias.FirstOrDefault().MediaPath">
                                     }
                                     else
                                     {
-                                        <img class="card-img-top" src="~/Images/Defaultimage/defaultHiring.jpg">
-                                    }
-                                }
-                                   
+                                        <img class="card-img-top h-100" src="~/Images/Defaultimage/defaultHiring.jpg">
+                                    }   
                                 </a>
-                                <img src="~/Images/@service.Customer.ProfileImage" class="position-absolute bottom-0 start-0 img-thumbnail rounded-circle w-25" />
-                                </div>
+                                <a asp-action="Customer" asp-controller="account" asp-route-id="@service.CustomerId">
+                                    @if (@service.Customer.ProfilePicture == null)
+                                    {
+                                        <img src="~/Images/DefaultImage/UserDefaultImage.png" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light" />
+                                    }
+                                    else
+                                    {
+                                        <img src="data:image/*;base64,@Convert.ToBase64String(@service.Customer.ProfilePicture)" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light" />
+                                    }
+                                </a>
                                 <div class="card-body px-0">
                                      <p class="card-title h5 mb-3">@service.Title</p>
                                             <div>تبدأ من : <span>@service.Price $</span></div>
-                                                @{
-                                                    if (@service.IsCash)
-                                                        {
-                                                            <div>متاح التعامل بالكاش او الفيزا</div>
-                                                        }
-                                                    else
-                                                        {
-                                                            <div>متاح التعامل بالفيزا فقط </div>
-                                                        }
+                                                @if (@service.IsCash)
+                                                {
+                                                   <div>متاح التعامل بالكاش او الفيزا</div>
                                                 }
-                                        </div>
-                                    </div>
+                                                else
+                                                {
+                                                    <div>متاح التعامل بالفيزا فقط </div>
+                                                }
+                                                
+                                            </div>
                                 </div>
-                        }}
+                          </div>
+                              
+                        }
+                    }
                 </div>
-
             </div>
     </section>
         <div class="row bg-light">

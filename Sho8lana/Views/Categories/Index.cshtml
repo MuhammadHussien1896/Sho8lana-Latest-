@@ -116,24 +116,25 @@
             </div>
 <!-- ========================= Services Section ============================= -->
             <div class="col-10" >
-                <div class="card-deck row justify-content-around">
+                <div class="card-deck row justify-content-start">
             @{
                 foreach (var service in Model.services)
                 {
-                    <div class="card col-lg-3 col-md-4 col-sm-6 border-0 my-5 px-2 bg-light">
-                        <div class="position-relative">
+                    <div class="card col-lg-3 col-md-4 col-sm-6 border-0 mb-5 px-2 bg-light">
+                        <div class="position-relative h-50">
                             <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">
                                 @{
                                     if (@service.Medias.FirstOrDefault()!=null)
                                         {
-                                             <img class="card-img-top" src="~/Images/CategoriesImage/@service.Medias.FirstOrDefault().MediaPath">
+                                             <img class="card-img-top h-100" src="~/Images/services/@service.Medias.FirstOrDefault().MediaPath">
                                         }
                                     else
                                         {
-                                            <img class="card-img-top" src="~/Images/Defaultimage/defaultService.jpg">
+                                            <img class="card-img-top h-100" src="~/Images/Defaultimage/defaultService.jpg">
                                         }
                                 }
                             </a>
+                            <a asp-controller="Customer" asp-action="account" asp-route-id="@service.CustomerId">
                             @{
                                 if (@service.Customer.ProfilePicture == null)
                                 {
@@ -144,6 +145,7 @@
                                     <img src="data:image/*;base64,@Convert.ToBase64String(@service.Customer.ProfilePicture)" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light" />
                                 }
                             }
+                            </a>
                          </div>
                          <div class="card-body">
                             <p class="card-title mb-3 fw-bold">@service.Title</p>
@@ -173,7 +175,9 @@
                                             <div class="fw-bold">متاح التعامل بالفيزا فقط </div>
                                         }
                                     }
-                                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Where(c => c.IsDone).Count()</span></div>
+
+                                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Count(s=>s.IsDone==true)</span></div>
+
                                 <div class="fw-normal">تاريخ النشر :<span class="fw-bold">@service.PublishDate.ToString("MM/dd/yyyy")</span></div>
                             </div>
                          </div>

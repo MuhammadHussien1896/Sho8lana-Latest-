@@ -7,39 +7,37 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="p-0 mx-2">
-           <a class="nav-link scrollto" asp-controller="service" asp-action="create" >
-               Add Service
-           </a>
-      </li>
-
+        <a class="nav-link scrollto" asp-controller="service" asp-action="create" >
+            <i class="bi bi-plus-square fs-3" style="color:white" title="Add Service"></i>
+       </a>
+    </li>
     <li class="p-0 mx-2">
-           <a class="nav-link scrollto fa-layers position-relative"  asp-controller="customer" asp-action="CustomerNotifcations">
-               <i class="bi bi-bell-fill fa-2x fas fs-3 p-0" style="color:white" title="Notifications"></i>
-                   <span class="counter-lg counter rounded-circle d-none position-absolute top-0 end-0 bg-danger text-center" style="width:.8rem"></span>
 
-           </a> 
-       </li>
-       <li class="p-0 mx-2">
-           <a class="nav-link scrollto" asp-controller="customer" asp-action="customerrequests" >
-               <i class="bi bi-arrow-down-up fs-3" style="color: white;" title="Requests"></i>
-           </a>
-      </li>
-      <li class="p-0 mx-2">
-           <a class="nav-link scrollto" asp-controller="service" asp-action="displayMessages" >
-               <i class="bi bi-envelope-fill fs-3" style="color: white;" title="Messages"></i>
-           </a>
-      </li>
-       <li class="p-0 mx-2">
-           <a class="nav-link scrollto" asp-controller="customer" asp-action="CustomerContracts">
-               <i class="bi bi-briefcase fs-3" style="color: white;" title="Contracts"></i>
-           </a>
-       </li>
-       <li class="p-0 mx-2">
+        <a class="nav-link scrollto fa-layers position-relative"  asp-controller="customer" asp-action="CustomerNotifcations">
+            <i class="bi bi-bell-fill fa-2x fas fs-3 p-0" style="color:white" title="Notifications"></i>
+            <span class="counter-lg counter rounded-circle d-none position-absolute top-0 end-0 bg-danger text-center" style="width:.8rem"></span>
+        </a> 
+    </li>
+    <li class="p-0 mx-2">
+        <a class="nav-link scrollto" asp-controller="customer" asp-action="customerrequests" >
+            <i class="bi bi-arrow-down-up fs-3" style="color: white;" title="Requests"></i>
+        </a>
+    </li>
+    <li class="p-0 mx-2">
+        <a class="nav-link scrollto" asp-controller="service" asp-action="displayMessages" >
+            <i class="bi bi-envelope-fill fs-3" style="color: white;" title="Messages"></i>
+        </a>
+    </li>
+    <li class="p-0 mx-2">
+        <a class="nav-link scrollto" asp-controller="customer" asp-action="CustomerContracts">
+            <i class="bi bi-briefcase fs-3" style="color: white;" title="Contracts"></i>
+        </a>
+    </li>
+    <li class="p-0 mx-2">
            <a class="nav-link scrollto" asp-controller="customer" asp-action="getcustomerbalance">
                <i class="bi bi-currency-dollar fs-3" style="color: white;" title="Balance"></i>
            </a>
-       </li>
-
+    </l
 @*           @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
              {
                 <li class="p-0 mx-2">
@@ -47,22 +45,25 @@
          
                 </li>
             }*@
+    <li class="p-0 mx-2 dropdown">
 
-       <li class="p-0 mx-2">
-
-          <a class="nav-link scrollto" asp-controller="customer" asp-action="account" asp-route-id="@UserManager.GetUserId(User)" title="Manage">
-         @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
-             {<img class="avatar rounded-circle" alt="Profile" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" />}
-         else
-             {<img class="avatar rounded-circle" alt="Profile" src="~/Images/202022.jpg" />}
-               @User.Identity?.Name
+        <a class="nav-link scrollto" asp-controller="customer" asp-action="account" asp-route-id="@UserManager.GetUserId(User)" title="Manage">
+            @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+            {
+                <img class="avatar rounded-circle" alt="Profile" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" />
+            }
+            else
+            {
+                <img class="avatar rounded-circle" alt="Profile" src="~/Images/DefaultImage/UserDefaultImage.png" />
+            }
+                <span class="me-2 fw-bolder">@User.Identity?.Name</span>
           </a>
-       </li>
-       <li class="p-0 mx-2">
-           <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-               <button  type="submit" class="scrollto nav-link logoutbutton btn ">Logout</button>
-           </form>
-       </li>
+    </li>
+    <li class="p-0 mx-2">
+        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button  type="submit" class="scrollto nav-link logoutbutton btn ">Logout</button>
+        </form>
+    </li>
 }
 else
 {
@@ -74,7 +75,9 @@ else
         <a class="nav-link scrollto" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </li>
 }
-<script>
+@if(SignInManager.IsSignedIn(User))
+{
+    <script>
     $(document).ready(()=> {    
         $.ajax({  
             type: 'Get',  
@@ -86,8 +89,8 @@ else
                 }
             },  
             error: function (ex) {  
-                console.log(ex)
             }
     });  
  })
     </script> 
+}
