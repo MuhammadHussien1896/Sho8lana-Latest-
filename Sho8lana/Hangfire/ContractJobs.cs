@@ -43,6 +43,7 @@ namespace Sho8lana.Hangfire
             seller.PendingBalance -= balance;
             seller.Balance += balance;
             context.Customers.Update(seller);
+            await context.complete();
         }
         public async Task AddPendingBalance(string sellerId, float balance)
         {
