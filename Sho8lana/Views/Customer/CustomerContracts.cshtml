@@ -421,7 +421,7 @@
                         
                         @*<a class="btn btn-outline-info" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تقييم الخدمة</a>*@
                             <div class="row justify-content-start">
-                                @if(!contract.ContractRateDone)
+                                @if(Model.UserId == contract.BuyerId && !contract.ContractRateDone)
                                 {
                                     <button type="button"  class="btn btn-success col-3 mx-2" data-bs-toggle="modal" data-bs-target="#rate" onclick="rate('@contract.ContractId')">
                                       تقييم الخدمة

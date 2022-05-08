@@ -157,21 +157,25 @@ namespace Sho8lana.Controllers
         {
             var customerId = userManager.GetUserId(User);
             var service = await _context.Services.GetById(id);
+            if(id == null || service == null)
+            {
+                return NotFound();
+            }
             if (customerId != service.CustomerId)
             {
                 return LocalRedirect("~/Identity/Account/AccessDenied");
             }
             var categories = _context.Categories.GetAllSync();
-            if (id == null)
-            {
-                return NotFound();
-            }
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
 
             
-            if (service == null)
-            {
-                return NotFound();
-            }
+            //if (service == null)
+            //{
+            //    return NotFound();
+            //}
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
             return View(service);
         }

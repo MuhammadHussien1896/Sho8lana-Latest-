@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Sho8lana.Hangfire;
 using Sho8lana.Models;
 using Sho8lana.Unit_Of_Work;
 using Stripe;
@@ -87,12 +89,12 @@ namespace server.Controllers
             _context.Payments.Add(payment);
             Target.StartDate = DateTime.Now;
             Target.EndDate = Target.StartDate.AddDays(Target.DeliveryTime);
+            //hangfire job will run at the end of the contract
+            ContractJobs jobs = new ContractJobs(_context);
+            var jobId = BackgroundJob.Schedule(() =>jobs.EndContract(ContractId), TimeSpan.FromDays(Target.DeliveryTime));
+            Target.JobId = jobId;//adding job id to be able to delete the job earlier 
             _context.Contracts.Update(Target);
-            _context.Notifications.Add(new Notification
-            {
-                CustomerId = customerId,
-                Content = "تهانينا تم دفع سعر الخدمة بنجاح !"
-            });
+            jobs.AddNotification(customerId, "تهانينا تم دفع سعر الخدمة بنجاح !");
             await _context.complete();
             
             return RedirectToAction("customercontracts","customer");

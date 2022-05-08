@@ -308,18 +308,11 @@
                     <spna>الحالة / @(@Model.Customer.IsVerified?"موثق":"غير موثق")</spna>
                 </div>
                @{
-                    if(userManger.GetUserId(User)==@Model.CustomerId)
-                    {
-                       <a asp-controller="Customer" asp-action="account" class="col-1 fs-3 btn" style="font-weight:bolder">
-                            &gt;
-                       </a>
-                    }
-                    else
-                    {
-                       <a class="col-1 fs-3 btn" style="font-weight:bolder">
-                            &gt;
-                       </a>  
-                    }
+                    
+                    <a asp-controller="Customer" asp-action="account" asp-route-id="@Model.CustomerId" class="col-1 fs-3 btn" style="font-weight:bolder">
+                        &gt;
+                    </a>
+                    
                 }
             </div>
             @{
