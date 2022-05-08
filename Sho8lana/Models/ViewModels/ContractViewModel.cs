@@ -38,5 +38,8 @@ namespace Sho8lana.Models.ViewModels
         [Required(ErrorMessage = "رجاءً ادخل تعليقك على الخدمة")]
         [Display(Name = "التعليق على الخدمة")]
         public string ContractRateComment { get; set; }
+        [Required(ErrorMessage = "لا يمكنك ترك محتوى الشكوى فارغ")]
+        [Display(Name = "محتوى الشكوى")]
+        public string ComplainContent { get; set; }
     }
 }

@@ -429,6 +429,12 @@
                                 }
 
                                 <a class="btn btn-outline-info col-3 mx-2" asp-controller="service" asp-action="details" asp-route-id="@contract.ServiceId" >تفاصيل الخدمة</a>
+                                @if(Model.UserId == contract.BuyerId && contract.ComplainId == null)
+                                {
+                                    <button type="button"  class="btn btn-danger col-3 mx-2" data-bs-toggle="modal" data-bs-target="#complain" onclick="complain('@contract.ContractId')">
+                                      ارسال شكوى
+                                    </button>
+                                }
                                 
                                 <small class="col-4 me-auto">تاريخ انتهاء الخدمة : @contract.EndDate.ToShortDateString()</small>
                             </div>
@@ -436,7 +442,7 @@
 
                     </div>
                 }
-
+                <!--rate modal-->
                 <div class="modal fade" id="rate" tabindex="-1" aria-hidden="true">
                       <div class="modal-dialog">
                         <div class="modal-content">
@@ -470,7 +476,41 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">رجوع</button>
-                            <button type="submit" class="btn btn-success" >ارسال التقييم</button>
+                            <button type="submit" class="btn btn-success" >اضف التقييم</button>
+                          </div>
+                          </form>
+                        </div>
+                      </div>
+                </div>
+                <!--complain modal-->
+                <div class="modal fade" id="complain" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            
+                                <p class="modal-title h5" id="exampleModalLabel">ارسال شكوى</p>
+                                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                            
+                          </div>
+                          <form id="complainForm" asp-action="AddComplain" asp-controller="customer"  >
+                          <div class="modal-body">
+                              
+                            
+                            <div class="form-group my-2 row justify-content-center">
+                                <label asp-for="ComplainContent"></label>
+                                <textarea asp-for="ComplainContent" class="col-11 my-2" rows="4"></textarea>
+                                <span asp-validation-for="ComplainContent"></span>
+                            </div>
+                            <p class="row my-2 py-3 px-3 text-secondary">
+                                تتم مراجعة الشكوى عن طريق شخص مسئول من قبل الموقع لضمان الحقوق 
+                                 ويتم الرجوع للمحادثة بينك وبين البائع ، وقد تأخذ عملية المراجعة بحد اقصى اسبوع 
+                                 وبعد ذلك سيتم اشعارك بنتيجة الشكوى
+                            </p>
+ 
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">رجوع</button>
+                            <button type="submit" class="btn btn-success" >ارسال الشكوى</button>
                           </div>
                           </form>
                         </div>
@@ -482,6 +522,11 @@
                             $("#rateForm").append(' <input name="Id" value="'+id+'" hidden>');
                             @*document.getElementById("rateForm").setAttribute("asp-route-id",id);*@
                         }
+                    function complain(id){
+                        @*document.getElementById("rateForm").append(` < input asp-for="Id" value="${id}" >`);*@
+                        $("#complainForm").append(' <input name="Id" value="'+id+'" hidden>');
+                        @*document.getElementById("rateForm").setAttribute("asp-route-id",id);*@
+                    }
                 </script>
                 
                

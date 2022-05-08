@@ -340,6 +340,32 @@ namespace Sho8lana.Controllers
             return View(category);
         }
 
+        public async Task<IActionResult> ShowServiceMessages(int id)
+        {
+            var complain = await _context.Complains.GetById(id);
+            var contract = complain?.Contract;
+            if (contract == null)
+            {
+                return NotFound();
+            }
+            var messages = _context.ServiceMessages
+                .GetAllBy(m => ((m.CustomerId == contract.BuyerId && m.ReceiverId == contract.SellerId)
+                || (m.CustomerId == contract.SellerId && m.ReceiverId == contract.BuyerId))
+                && m.ServiceId == contract.ServiceId).Result.OrderByDescending(m => m.MessageDate);
+            var buyer = await _context.Customers.GetById(contract.BuyerId);
+            var seller = await _context.Customers.GetById(contract.SellerId);
+            ShowMessagesViewModel model = new ShowMessagesViewModel()
+            {
+                Messages    = messages.ToList(),
+                BuyerName   = buyer.FirstName +" "+ buyer.LastName,
+                SellerName  = seller.FirstName + " " + seller.LastName,
+                BuyerId     = contract.BuyerId,
+                SellerId    = contract.SellerId,
+                ServiceId   = contract.ServiceId
+            };
+
+            return View(model);
+        }
 
 
 
