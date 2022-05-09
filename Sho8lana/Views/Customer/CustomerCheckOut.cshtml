@@ -1,0 +1,149 @@
+﻿@model Sho8lana.Models.Contract
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="row justify-content-center">
+    <div class="col-5 border border-Secondery p-0 my-5">
+        <p dir="rtl" class="border-Secondery border-bottom p-3 bg-info fs-5">أنت الأن على وشك الدفع لخدمة <span class="fw-bold fs-5">@Model.Service.Title</span></p>
+                <!-- =======  service Details section  ======= -->
+        <div class="row justify-content-between align-items-stretch">
+            <div class="col-4 h-50">
+                @if (@Model.Service.Medias.FirstOrDefault()!=null)
+                 {
+                     <img class="  w-100" src="~/Images/services/@Model.Service.Medias.FirstOrDefault().MediaPath">
+                 }
+                 else
+                 {
+                     <img class="  w-100" src="~/Images/Defaultimage/defaultService.jpg">
+                 }
+            </div>
+            <div class="col-6 d-flex flex-column justify-content-around" dir="rtl">
+                <div class="w-100">
+                    <span> الخدمة / </span>
+                    <span class="fw-bold">@Model.Service.Title</span>
+                </div>
+                <div class="w-100">
+                    <span>السعر /</span>
+                    <span class="fw-bold">@Model.ContractPrice $</span>
+                </div>
+                <div class="w-100">
+                    <span>يوم تسليم الخدمة</span>
+                    <span class="fw-bold">@(DateTime.Now.AddDays(Model.DeliveryTime).ToShortDateString())</span>
+                </div>
+                <div class="w-100">
+                    <span>صاحب الخدمة /</span>
+                    <span ><a class="fw-bold fs-5 text-success" asp-action="account" asp-controller="customer" asp-route-id="@Model.SericeOwnerId">@Model.Service.Customer.FirstName @Model.Service.Customer.LastName</a></span>
+                </div>
+            </div>
+                    <!-- End Service Details section  -->
+                    <!-- =======  service Transaction section  ======= -->
+            <div class="row justify-content-between mt-5 mx-0 " dir="rtl">
+                <div class="col-5 d-flex flex-column align-items-center p-0">
+                    @if (@Model.CustomerId == @Model.BuyerId)
+                    {
+                        @if (@Model.Customer.ProfilePicture == null)
+                        {
+                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75"/>
+                            <p class="text-center fw-bold fs-5 mt-3">@Model.Customer.FirstName</p>
+                        }
+                        else
+                        {
+                            <img class="rounded-circle w-75" src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
+                            <p class="text-center fw-bold fs-5 mt-3">@Model.Customer.FirstName</p>
+                        }
+                    }
+                    else
+                    {
+                       @if (@Model.Service.Customer.ProfilePicture == null)
+                        {
+                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75"/>
+                            <p class="text-center fw-bold fs-5 mt-3">@Model.Service.Customer.FirstName</p>
+                        }
+                        else
+                        {
+                            <img class="rounded-circle w-75 " src="data:image/*;base64,@Convert.ToBase64String(@Model.Service.Customer.ProfilePicture)" />
+                            <p class="text-center fw-bold fs-5 mt-3">@Model.Service.Customer.FirstName</p>
+                        }
+                    }
+                </div>
+                <div class="col-2 d-flex align-items-center">
+                    <i class="bi bi-arrow-left fw-bold text-danger fs-1"></i>
+                </div>
+                <div class="col-5 d-flex flex-column align-items-center p-0">
+                   @if (@Model.CustomerId == @Model.BuyerId)
+                    {
+                        @if (@Model.Service.Customer.ProfilePicture == null)
+                        {
+                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75"/>
+                            <p class="text-center fw-bold fs-5 mt-3">@Model.Service.Customer.FirstName</p>
+                        }
+                        else
+                        {
+                            <img class="rounded-circle w-75" src="data:image/*;base64,@Convert.ToBase64String(@Model.Service.Customer.ProfilePicture)" />
+                            <p class="text-center fw-bold fs-5 mt-3">@Model.Service.Customer.FirstName</p>
+                        }
+                    }
+                    else
+                    {
+                       @if (@Model.Customer.ProfilePicture == null)
+                        {
+                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75"/>
+                            <p class="text-center fw-bold fs-5 mt-3">@Model.Customer.FirstName</p>
+                        }
+                        else
+                        {
+                            <img class="rounded-circle w-75" src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
+                            <p class="text-center fw-bold fs-5 mt-3">@Model.Customer.FirstName</p>
+                        }
+                    }
+                </div>
+            </div>
+              <!-- End Service Transaction section  -->
+            <div class="row d-flex flex-column align-content-center mx-0 my-5 px-0" dir="rtl">
+                <form class="col-6" asp-controller="Payment" asp-action="CreateCheckoutSession" asp-route-ContractId="@Model.ContractId" asp-route-customerId="@Model.BuyerId" method="post">
+                    <button type="submit" id="GatewayPayment"  class="btn-info btn w-100"> الدفع اونلاين</button
+                </form>
+                <button  data-bs-toggle="modal" data-bs-target="#staticBackdrop2" class="btn btn-success mt-3 col-6 px-2">
+                    الدفع بواسطة الرصيد المتاح
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade w-100" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+    <div class="modal-dialog" style="max-width:75%">
+        <div class="modal-content">
+            <div class="modal-header" dir="rtl">
+                <h5 class="modal-title" id="staticBackdropLabel2">إجراء الدفع</h5>
+                <button type="button" class="btn-close text-end mx-0" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body serviceName d-flex flex-column align-items-center justify-content-center">
+              <div class="col-6 text-center">
+                <p class="fw-bold h3 py-3">الرصيد القابل للسحب</p>
+                @if(@Model.CustomerId==@Model.BuyerId)
+                {
+                     <p class="fs-2 bg-success text-white rounded-pill py-5">@Model.Customer.Balance $</p>
+                }
+                else
+                {
+                     <p class="fs-2 bg-success text-white rounded-pill py-5">@Model.Service.Customer.Balance $</p>  
+                }
+                    <p class="text-secondery">الرصيد القابل للسحب هو الرصيد الذي يمكنك سحبه في أي وقت أو شراء به الخدمات من موقعنا</p>
+            </div>
+              <div class="col-6 text-center">
+                <p class="fw-bold h3 py-3">سعر الخدمة</p>
+                <p class="fs-2 bg-danger text-white rounded-pill py-5">@Model.ContractPrice $</p>    
+            </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">العودة</button>
+                <form asp-controller="customer" asp-action="customerPay" asp-route-buyerId=@Model.BuyerId asp-route-ContractId=@Model.ContractId>
+                    <button type="submit" class="btn btn-danger"> الدفع</button>
+                </form>
+                </div>
+             </div>
+         </div>
+    </div>

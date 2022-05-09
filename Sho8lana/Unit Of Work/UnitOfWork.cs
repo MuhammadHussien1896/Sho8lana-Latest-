@@ -23,6 +23,7 @@ namespace Sho8lana.Unit_Of_Work
             Notifications = new BaseRepository<Notification>(dbContext);
             OnlineUsers = new BaseRepository<OnlineUser>(dbContext);
             Payments = new BaseRepository<Payments>(dbContext);
+            BalanceCharges=new BaseRepository<BalanceCharge>(dbContext);
             
         }
         public IBaseRepository<Customer> Customers { get; private set; }
@@ -37,6 +38,7 @@ namespace Sho8lana.Unit_Of_Work
         public IBaseRepository<Notification> Notifications { get; private set; }
         public IBaseRepository<OnlineUser> OnlineUsers { get; private set; }
         public IBaseRepository<Payments> Payments { get; private set; }
+        public IBaseRepository<BalanceCharge> BalanceCharges { get; private set; }
 
         public async Task<int> complete()
         {

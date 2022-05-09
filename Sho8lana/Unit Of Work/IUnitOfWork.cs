@@ -17,6 +17,7 @@ namespace Sho8lana.Unit_Of_Work
         public IBaseRepository<Notification> Notifications { get; }
         public IBaseRepository<OnlineUser> OnlineUsers { get; }
         public IBaseRepository<Payments> Payments { get; }
+        public IBaseRepository<BalanceCharge> BalanceCharges { get; }
 
         Task<int> complete();
         

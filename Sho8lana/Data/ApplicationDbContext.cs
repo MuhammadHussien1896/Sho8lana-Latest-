@@ -18,6 +18,7 @@ namespace Sho8lana.Data
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<OnlineUser> OnlineUsers { get; set; }
         public virtual DbSet<Payments> Payments { get; set; }
+        public virtual DbSet<BalanceCharge> BalanceCharges { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

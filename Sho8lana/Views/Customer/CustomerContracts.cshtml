@@ -168,10 +168,10 @@
                         
                         @if(Model.UserId == contract.BuyerId)
                         {
+                        <a class="btn btn-primary" asp-controller="customer" asp-action="CustomerCheckOut" asp-route-contractId="@contract.ContractId">
+                          الإنتقال للدفع
+                        </a>
                             
-                                <form style="display:inline" asp-action="CreateCheckoutSession" asp-controller="payment" asp-route-CustomerId="@contract.CustomerId" asp-route-ContractId="@contract.ContractId" method="POST">
-                                    <button type="submit" class="btn-primary btn">الانتقال للدفع</button>
-                                </form>
                         }
                         else
                         {

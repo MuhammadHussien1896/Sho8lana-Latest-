@@ -24,8 +24,49 @@
         </div>
     </div>
     <div class="col-7 m-3">
-        <a class="btn btn-primary">شحن الرصيد</a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            شحن الرصيد
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">شحن رصيد</h5>
+                <button type="button" class="close btn btn-info" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" class="fw-bold fs-5">&times;</span>
+                </button>
+              </div>
+              <form style="display:inline" name="BalanceForm" onsubmit="return BalanceValidation()" asp-action="ChargingBalance" asp-controller="payment" asp-route-CustomerId="@Model.Id" method="POST">
+                <div class="modal-body">
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">الرصيد المراد شحنه</label>
+                          <input type="text" name="amount" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="الرصيد" />
+                          <label class="text-danger d-none balance-validation text-center m-auto w-100">من فضلك اكتب رقم صحيح</label>
+                          <small id="emailHelp" class="form-text text-muted">نحن لانقوم بتسجيل بياناتك الخاصة بأى طريقة</small>
+                       </div>
+              </div>
+              <div class="modal-footer">
+                        <button type="submit" class="btn-primary btn">الانتقال للدفع</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">قفل</button>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
         <a class="btn btn-success">استلام الرصيد</a>
     </div>
     
 </div>
+<script>
+    console.log(document.forms["BalanceForm"]["amount"].value)
+            function BalanceValidation(){
+            let x = document.forms["BalanceForm"]["amount"].value;
+                if (isNaN(x)||x=="") {
+                    console.log(x)
+                    document.querySelector(".balance-validation").classList.remove("d-none");
+                    return false;
+                }
+            }
+</script>
