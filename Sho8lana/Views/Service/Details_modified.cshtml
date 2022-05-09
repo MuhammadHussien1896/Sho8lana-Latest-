@@ -120,21 +120,9 @@
                             <span class="col-6 text-secondary">
                                 التقييم
                             </span>
-                            <span class="col-6">
-                        @{
-                            for (var j = 0; j < (int)5-Model.Rate/2; j++)
-                                {
-                                   <i class="fa fa-star ratinglow"></i>   
-                                }
-                        }
-                        @{
-                             for (var j = 0; j < (int)Model.Rate/2; j++)
-                                {
-                                   <i class="fa fa-star rating-color"></i>   
-                                }
-                        }   
-                            
-                        </span>
+                            <span class="col-6 p-0"> 
+                                 <div class="rateyo" data-rateyo-rating=@Model.Rate data-rateyo-star-width="20px" data-rateyo-read-Only=true></div>
+                            </span>
                     </div>
                     }
                     <div class="row my-2 justify-content-between">
@@ -200,15 +188,7 @@
                                     <p class="p-0 m-0">@comment.EndDate.Date.ToShortDateString()</p>
                                 </div>
                                 <div class="ratings me-0 col-3"> 
-                                    @for (var i = 0; i < (int)5-@comment.ContractRateStars/2; i++)
-                                    {
-                                        <i class="fa fa-star"></i>   
-                                    }
-                                    @for (var i = 0; i < (int)@comment.ContractRateStars/2; i++)
-                                    {
-                                        <i class="fa fa-star rating-color"></i> 
-                                    }
-                              
+                                    <div class="rateyo" data-rateyo-rating=@comment.ContractRateStars data-rateyo-star-width="25px" data-rateyo-read-Only=true></div>
                                 </div>
                             </div>
                             <div class="col-12 my-3 fs-5 fw-bold">
