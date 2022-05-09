@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sho8lana.Data;
 
@@ -11,9 +12,10 @@ using Sho8lana.Data;
 namespace Sho8lana.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220508024526_addComplainTable")]
+    partial class addComplainTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,33 +155,6 @@ namespace Sho8lana.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Sho8lana.Models.BalanceCharge", b =>
-                {
-                    b.Property<string>("PaymentId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PaymentType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StripCustId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("TotalAmount")
-                        .HasColumnType("int");
-
-                    b.HasKey("PaymentId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("BalanceCharges");
                 });
 
             modelBuilder.Entity("Sho8lana.Models.Category", b =>
@@ -736,15 +711,6 @@ namespace Sho8lana.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Sho8lana.Models.BalanceCharge", b =>
-                {
-                    b.HasOne("Sho8lana.Models.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
-
-                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Sho8lana.Models.City", b =>

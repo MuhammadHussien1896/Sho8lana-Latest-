@@ -32,5 +32,9 @@ namespace Sho8lana.Models
         [ForeignKey("Service")]
         public int ServiceId { get; set; }
         public virtual Service Service { get; set; }
+        [ForeignKey("Complain")]
+        public int? ComplainId { get; set; }
+        public virtual Complain Complain { get; set; }
+
     }
 }

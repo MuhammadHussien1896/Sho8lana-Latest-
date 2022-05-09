@@ -11,19 +11,20 @@ namespace Sho8lana.Unit_Of_Work
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
-            Customers = new BaseRepository<Customer>(dbContext);
-            Services = new ServiceRepository(dbContext);
-            Contracts = new BaseRepository<Contract>(dbContext);
-            ServiceMessages = new BaseRepository<ServiceMessage>(dbContext);
-            Medias = new BaseRepository<Media>(dbContext);
-            CustomerRequests = new BaseRepository<CustomerRequest>(dbContext);
-            Categories = new BaseRepository<Category>(dbContext);
-            Governorates = new BaseRepository<Governorate>(dbContext);
-            Cities = new BaseRepository<City>(dbContext);
-            Notifications = new BaseRepository<Notification>(dbContext);
-            OnlineUsers = new BaseRepository<OnlineUser>(dbContext);
-            Payments = new BaseRepository<Payments>(dbContext);
-            BalanceCharges=new BaseRepository<BalanceCharge>(dbContext);
+            Customers           = new BaseRepository<Customer>(dbContext);
+            Services            = new ServiceRepository(dbContext);
+            Contracts           = new BaseRepository<Contract>(dbContext);
+            ServiceMessages     = new BaseRepository<ServiceMessage>(dbContext);
+            Medias              = new BaseRepository<Media>(dbContext);
+            CustomerRequests    = new BaseRepository<CustomerRequest>(dbContext);
+            Categories          = new BaseRepository<Category>(dbContext);
+            Governorates        = new BaseRepository<Governorate>(dbContext);
+            Cities              = new BaseRepository<City>(dbContext);
+            Notifications       = new BaseRepository<Notification>(dbContext);
+            OnlineUsers         = new BaseRepository<OnlineUser>(dbContext);
+            Payments            = new BaseRepository<Payments>(dbContext);
+            Complains           = new BaseRepository<Complain>(dbContext);
+            BalanceCharges      = new BaseRepository<BalanceCharge>(dbContext);
             
         }
         public IBaseRepository<Customer> Customers { get; private set; }
@@ -39,6 +40,7 @@ namespace Sho8lana.Unit_Of_Work
         public IBaseRepository<OnlineUser> OnlineUsers { get; private set; }
         public IBaseRepository<Payments> Payments { get; private set; }
         public IBaseRepository<BalanceCharge> BalanceCharges { get; private set; }
+        public IBaseRepository<Complain> Complains { get; private set; }
 
         public async Task<int> complete()
         {

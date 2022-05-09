@@ -2,18 +2,16 @@
 
 @{
     ViewData["Title"] = "Show Categories";
-    Layout = "_AdminLayout";
+    Layout = "_AdminLayoutModified";
+
 
 }
-<div class="row col-sm-12 col-lg-9 mt-2">
+
 <div class="container">
-
-
-<a class="btn btn-primary mb-4 ml-8" asp-action="CreateCategory">
+    <a class="btn mb-4 ml-8 mt-3 myBtn" asp-action="CreateCategory">
     <i class="bi bi-plus"></i>
-    Add Category
+    إضافة قسم جديد
 </a>
-
 
 <div class=" mt-8">
     @if (!Model.Any())
@@ -25,11 +23,11 @@
     }
     else
     {
-        <div class="row">
+        <div class="row flex-column">
             @foreach (var item in Model)
             {
-              <div class="col-12">
-                  <div class="card mb-3" style="max-width: 540px;">
+              <div class="col-12 ">
+                  <div class="card col-6  mb-3" >
                       <div class="row g-0">
                         <div class="col-md-4">
                           <img src="~/Images/CategoriesImage/@item.CategoryImg" class="img-fluid rounded-start" alt="CategoryImg">

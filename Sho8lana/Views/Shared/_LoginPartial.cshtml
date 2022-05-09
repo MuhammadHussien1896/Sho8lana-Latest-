@@ -26,6 +26,7 @@
     <li class="p-0 mx-2">
         <a class="nav-link scrollto" asp-controller="service" asp-action="displayMessages" >
             <i class="bi bi-envelope-fill fs-3" style="color: white;" title="Messages"></i>
+            <span class="counter-lg counter2 rounded-circle d-none position-absolute top-0 end-0 bg-danger text-center" style="width:.8rem"></span>
         </a>
     </li>
     <li class="p-0 mx-2">
@@ -77,6 +78,29 @@ else
 }
 @if(SignInManager.IsSignedIn(User))
 {
+    @if (Context.Request.Path != Url.Action("chat", "Service"))
+    {
+        <script>
+            connection.on("receiveMessage",(message,senderId,date)=>{ 
+                if(senderId != '@UserManager.GetUserId(User)'){
+                  $.ajax({  
+                        type: 'Get',  
+                        url: '@Url.Action("UnReadMessages","JsonApi")',  
+                        dataType: "json",  
+                        success: (data)=> {
+                            if(data>0){
+                                $(".counter2").html(data).removeClass("d-none")   
+                            }
+                        },  
+                        error: function (ex) {  
+                        }
+                  });  
+                } 
+            });
+        </script>
+        
+    }
+    
     <script>
     $(document).ready(()=> {    
         $.ajax({  
@@ -90,7 +114,25 @@ else
             },  
             error: function (ex) {  
             }
-    });  
+    });
+    $.ajax({  
+            type: 'Get',  
+            url: '@Url.Action("UnReadMessages","JsonApi")',  
+            dataType: "json",  
+            success: (data)=> {
+                if(data>0){
+                    $(".counter2").html(data).removeClass("d-none")   
+                }
+            },  
+            error: function (ex) {  
+            }
+    });
+
+
+
+
+    
+    
  })
     </script> 
 }

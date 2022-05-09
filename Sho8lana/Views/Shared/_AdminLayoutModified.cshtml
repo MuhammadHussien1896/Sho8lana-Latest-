@@ -1,0 +1,72 @@
+﻿
+@{
+     ViewData["Title"] = "AdminPanel";
+    Layout = "_Layout";
+}
+ <link href="~/assets/css/adminStyle.css" rel="stylesheet">
+  <link href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+
+
+
+  <div class="wrapper hover_collapse">
+
+            <!-- Top bar -->
+            
+            
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar_inner">
+                    <ul>
+                        <li>
+                        <a asp-action="AdminPanel" a asp-controller="admin">
+                      <span class="icon"><i class="fa fa-qrcode"></i></span>
+                      <span class="text">Dashboard</span>
+                        </a>
+                        </li>
+                  
+                        <li>
+                        <a asp-controller="admin" asp-action="ReviewUsers">
+                      <span class="icon"><i class="fa-solid fa-users"></i></span>
+                      <span class="text">كل المستخدمين</span>
+                        </a>
+                        </li>
+                        <li>
+                        <a asp-controller="admin" asp-action="ReviewRolesToUser">
+                      <span class="icon"><i class="fa-solid fa-people-roof"></i></span>
+                      <span class="text">إدارة أدوار المستخدم</span>
+                        </a>
+                        </li>
+                        <li>
+                        <a asp-controller="Admin" asp-action="ReviewServices">
+                      <span class="icon"><i class="fa-brands fa-servicestack"></i></span>
+                      <span class="text">الخدمات المنتظرة</span>
+                        </a>
+                        </li>
+                        <li>
+                        <a asp-controller="Admin" asp-action="ShowCategories">
+                      <span class="icon"><i class="fa fa-list-alt"></i></span>
+                      <span class="text">كل الأقسام</span>
+                        </a>
+                        </li>
+                        <li>
+                        <a asp-controller="Admin" asp-action="CreateCategory">
+                      <span class="icon"><i class="fa fa-pen"></i></span>
+                      <span class="text">إضافة قسم جديد</span>
+                        </a>
+                        </li>
+                        <li>
+                        <a href="#">
+                      <span class="icon"><i class="fa fa-id-card"></i></span>
+                      <span class="text">الشكاوي</span>
+                        </a>
+                        </li>
+                    </ul>
+                  </div>
+                  
+            </div>
+            
+            @RenderBody()
+
+            </div>
+
+            <script src="~/assets/js/AdminScript.js"></script>

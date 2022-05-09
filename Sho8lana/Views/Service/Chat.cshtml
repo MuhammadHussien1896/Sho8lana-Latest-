@@ -5,7 +5,7 @@
 }
 <div class="row my-5 justify-content-around" dir="rtl">
     <!--=====Service Section=====-->
-    <div class="col-4 border-start px-5">
+    <div class="col-3 border-start px-5">
         <div class="row mt-4 mb-3 py-5 justify-content-around border border-Secondery">
             <p class="h5 text-center pb-5">الخدمة "@Model.ServiceTitle"</p>
             <a class="btn btn-outline-info col-6" asp-controller="service" asp-action="details" asp-route-id="@Model.ServiceId" >تفاصيل الخدمة</a>
@@ -22,7 +22,7 @@
         </div>
     </div>
     <!--=====Chat Section=====-->
-    <div class="col-7 mb-5">
+    <div class="col-8 mb-5">
         
         <div class="row px-0 justify-content-start">
         
@@ -41,7 +41,7 @@
             <input id="txtInput" type="text" class="col-9"  onkeypress="fire(event)"/>
             <button id="sendBtn" type="submit" class="btn btn-outline-success col-2 mx-2" onclick="send('@Model.ReceiverId', '@Model.ServiceId')">ارسال</button>
         </div>
-        <div id="chat"> 
+        <div id="chat" class="overflow-auto px-3" style="height:70vh"> 
         @foreach(var message in Model.Messages)
         {
         

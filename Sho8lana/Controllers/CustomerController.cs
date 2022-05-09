@@ -272,6 +272,24 @@ namespace Sho8lana.Controllers
             return RedirectToAction(nameof(CustomerContracts));
             
         }
+        [HttpPost]
+        public async Task<IActionResult> AddComplain(int Id,string ComplainContent)
+        {
+            if (ModelState.IsValid)
+            {
+                var contract = await context.Contracts.GetById(Id);
+                contract.Complain = context.Complains.Add(new Complain() 
+                { 
+                    ContractId = Id,
+                    ComplainContent = ComplainContent 
+                });
+                jobs.AddNotification(contract.BuyerId, $"تم إضافة الشكوى الخاصة بخدمة {contract.Service.Title}" +
+                    $" بنجاح وجاري العمل عليها وسيتم الرد خلال ثلاثة ايام عمل");
+                context.Contracts.Update(contract);
+                await context.complete();
+            }
+            return RedirectToAction(nameof(CustomerContracts));
+        }
         
         [HttpPost]
         public async Task<IActionResult> EditContractPrice(int Id,float Price,int DeliveryTime)

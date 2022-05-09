@@ -4,14 +4,15 @@
 @model UserRolesViewModel
 @{
     ViewData["Title"] = "Manage Role";
-    Layout = "_AdminLayout";
+    Layout = "_AdminLayoutModified";
+    
 }
-<div class="row col-sm-12 col-lg-9">
+<div class="row col-sm-12 col-lg-9 ms-5">
 <form method="post">
     <div class="card mt-4">
         <div class="card-header">
             <h2>@Model.UserName</h2>
-            Add/Remove Roles
+            <h4>إضافة/حذف  دور</h4>
         </div>
         <div class="card-body">
             <input type="hidden" asp-for="UserId" />
@@ -29,8 +30,8 @@
             <div asp-validation-summary="All" class="text-danger"></div>
         </div>
         <div class="card-footer">
-            <button type="submit" class="btn btn-primary"> Save</button>
-            <a asp-action="ReviewRolesToUser" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn myBtn"> حفظ</button>
+            <a asp-action="ReviewRolesToUser" class="btn btn-secondary">إلغاء</a>
 
         </div>
     </div>
