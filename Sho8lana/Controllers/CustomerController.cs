@@ -497,15 +497,10 @@ namespace Sho8lana.Controllers
             };
             context.Payments.Add(payment);
             contract.StartDate = DateTime.Now;
-            if (customerId == contract.BuyerId&&customerId!=contract.SericeOwnerId)
-            {
-                contract.Service.Customer.PendingBalance += contract.ContractPrice;
-               
-            }
-            else
-            {
-                contract.Customer.PendingBalance += contract.ContractPrice;
-            }
+            contract.EndDate = contract.StartDate.AddDays(contract.DeliveryTime);
+            //hangfire job will run at the end of the contract
+            var jobId = BackgroundJob.Schedule(() => jobs.EndContract(ContractId), TimeSpan.FromDays(contract.DeliveryTime));
+            contract.JobId = jobId;
             customer.Balance -= contract.ContractPrice;
             await context.complete();
             return RedirectToAction("CustomerContracts");
