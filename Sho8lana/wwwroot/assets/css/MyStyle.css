@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 body {
-    font-family: "Noto Kufi arabic";
+    font-family: "Noto Kufi arabic" !important;
 
 }
 @font-face{
@@ -290,4 +290,9 @@ i.material-icons {
 }
 .fontNoto{
     font-family:'Noto Kufi arabic' !important
+}
+
+.myBtn {
+    background: #8824dc;
+    color:white;
 }

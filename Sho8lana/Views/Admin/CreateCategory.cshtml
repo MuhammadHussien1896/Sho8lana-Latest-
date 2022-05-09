@@ -2,35 +2,36 @@
 
 @{
     ViewData["Title"] = "Create Category";
-    Layout = "_AdminLayout";
+    Layout = "_AdminLayoutModified";
+
 }
 
-<div class="row col-sm-12 col-lg-9 mt-2">
+<div class="row col-sm-12 col-lg-9 mt-2 ms-5">
 <div class="row container">
     <div class="col-md-4">
         <form asp-action="CreateCategory" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group mb-3">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label">الأسم</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="Description" class="control-label"></label>
+                <label asp-for="Description" class="control-label">الوصف</label>
                 <textarea asp-for="Description" class="form-control" rows="4" ></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="CategoryImg" class="control-label"></label>
+                <label asp-for="CategoryImg" class="control-label">الصورة</label>
                 <input asp-for="CategoryImg" type="file" value="Upload" class="form-control" accept="images/*" />
                 <span asp-validation-for="CategoryImg" class="text-danger"></span>
             </div>
 
             <div class="mb-3" >
-            <button type="submit" class="btn btn-primary mt-4">Add Category</button>
-            <a  asp-action="ShowCategories" class="btn btn-danger mt-4">Cancel</a>
+            <button type="submit" class="btn mt-4 myBtn">إضافة</button>
+            <a  asp-action="ShowCategories" class="btn btn-danger mt-4">إلغاء</a>
             </div>
         </form>
     </div>
