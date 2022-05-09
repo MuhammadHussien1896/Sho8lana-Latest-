@@ -33,7 +33,7 @@ namespace Sho8lana.Hangfire
                         $" الى حسابك بسبب عدم تسليم البائع الخدمة  '{contract.Service.Title}' في الوقت المحدد");
                     contract.IsCanceled = true;
                 }
-                context.Contracts.Update(contract);
+                //context.Contracts.Update(contract);
                 await context.complete();
             }
         }
@@ -42,21 +42,21 @@ namespace Sho8lana.Hangfire
             var seller = await context.Customers.GetById(sellerId);
             seller.PendingBalance -= balance;
             seller.Balance += balance;
-            context.Customers.Update(seller);
+            //context.Customers.Update(seller);
             await context.complete();
         }
         public async Task AddPendingBalance(string sellerId, float balance)
         {
             var seller = await context.Customers.GetById(sellerId);
             seller.PendingBalance += balance;
-            context.Customers.Update(seller);
+            //context.Customers.Update(seller);
 
         }
         public async Task AddBalance(string buyerId, float balance)
         {
             var buyer = await context.Customers.GetById(buyerId);
             buyer.Balance += balance;
-            context.Customers.Update(buyer);
+            //context.Customers.Update(buyer);
 
         }
         public void AddNotification(string customerId, string content)
@@ -83,7 +83,7 @@ namespace Sho8lana.Hangfire
                     var numOfAllStars = service.Contracts.Where(c => c.ContractRateDone).Sum(c => c.ContractRateStars)+newRate;
                     service.Rate = (float)numOfAllStars / numOfRatedContracts;
                 }
-                context.Services.Update(service);
+                //context.Services.Update(service);
             }
 
         }

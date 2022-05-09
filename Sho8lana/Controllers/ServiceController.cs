@@ -114,15 +114,16 @@ namespace Sho8lana.Controllers
                             };
                             //add image to medias table
                             _context.Medias.Add(media);
-                            await _context.complete();
+                            //await _context.complete();
 
                         }
                         i++;
                     }
+                    await _context.complete();
                     return RedirectToAction("Details",new {id = s.ServiceId});
                 }
                 ////////////////////////////////////////////////////////////
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
             }
             var categories = _context.Categories.GetAllSync();
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
