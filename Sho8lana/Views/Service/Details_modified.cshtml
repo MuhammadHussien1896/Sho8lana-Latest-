@@ -263,23 +263,20 @@
                 }
                 else 
                 {
-                    if (Model.IsFreelancer == true)
-                    {
-                        if (Model.IsCash == true)
-                        {
-                            <div class="row justify-content-around my-3">
-                                <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
-                            </div>
+                    @if (Model.IsCash == true)
+                     {
+                         <div class="row justify-content-around my-3">
+                            <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
+                         </div>
 
-                        }
-                        else
-                        {
-                            <div class="row justify-content-around my-3">
-                                <a asp-action="RequestService" asp-controller="Customer" asp-route-id=@Model.ServiceId class="btn btn-success col-5">ارسال طلب الي البائع</a>
-                                <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
-                            </div>
-                        } 
-                    }
+                     }
+                     else
+                     {
+                         <div class="row justify-content-around my-3">
+                            <a asp-action="RequestService" asp-controller="Customer" asp-route-id=@Model.ServiceId class="btn btn-success col-5">ارسال طلب الي البائع</a>
+                            <a class="btn btn-danger col-5">الابلاغ عن الخدمة</a>
+                         </div>
+                     }
                 }
             }
         </div>

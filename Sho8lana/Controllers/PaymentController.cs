@@ -84,7 +84,7 @@ namespace server.Controllers
                 StripCustId = customer.Id,
                 CreatedDate = DateTime.Now,
                 PaymentType = paymentIntent.PaymentMethodTypes.First(),
-                TotalAmount = (int)paymentIntent.Amount,
+                TotalAmount = (int)paymentIntent.Amount/100,
             };
             _context.Payments.Add(payment);
             Target.StartDate = DateTime.Now;
@@ -98,6 +98,79 @@ namespace server.Controllers
             await _context.complete();
             
             return RedirectToAction("customercontracts","customer");
+        }
+        [HttpPost("charge-checkout-session")]
+        public ActionResult ChargingBalance(string customerId,int amount)
+        {
+            var TargetCustomer =_context.Customers.GetById(customerId);
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+            {
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount =(long)amount*100,
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "شحن رصيد",
+                            },
+                        },
+                        Quantity=1
+                    },
+                },
+                Mode = "payment",
+                SuccessUrl = "https://localhost:7009/Charge/success?session_id={CHECKOUT_SESSION_ID}" + $"&&customerId={customerId}",
+                CancelUrl = "https://example.com/cancel",
+            };
+            var service = new SessionService();
+            Session session = service.Create(options);
+            _sessionId = session.Id;
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+        [HttpGet("/Charge/success")]
+        public async Task<IActionResult> ChargeSuccess([FromQuery] string session_id,string customerId)
+        {
+            var TargetCustomer = _context.Customers.GetById(customerId).Result;
+
+            var options = new SessionGetOptions();
+            options.AddExpand("payment_intent");
+
+            var sessionService = new SessionService();
+            Session session = sessionService.Get(session_id, options);
+
+            var customerService = new CustomerService();
+            var customer = customerService.Get(session.CustomerId);
+
+            PaymentIntent paymentIntent = session.PaymentIntent;
+
+            BalanceCharge charge = new BalanceCharge()
+            {
+                PaymentId = paymentIntent.Id,
+                CustomerId = customerId,
+                StripCustId = customer.Id,
+                CreatedDate = DateTime.Now,
+                PaymentType = paymentIntent.PaymentMethodTypes.First(),
+                TotalAmount = (int)paymentIntent.Amount,
+            };
+            _context.BalanceCharges.Add(charge);
+            TargetCustomer.Balance += (int)charge.TotalAmount / 100; 
+            _context.Customers.Update(TargetCustomer);
+            Notification notification = new Notification()
+            {
+                CustomerId = customerId,
+                Date = DateTime.Now,
+                IsRead = false,
+                Content = $"تم اضافة {charge.TotalAmount / 100}  دولار الي الرصيد بنجاح"
+
+            };
+            _context.Notifications.Add(notification);
+            await _context.complete();
+
+            return RedirectToAction("customercontracts", "customer");
         }
 
     }

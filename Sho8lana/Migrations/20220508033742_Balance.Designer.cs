@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sho8lana.Data;
 
@@ -11,9 +12,10 @@ using Sho8lana.Data;
 namespace Sho8lana.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220508033742_Balance")]
+    partial class Balance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,36 +232,6 @@ namespace Sho8lana.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("Sho8lana.Models.Complain", b =>
-                {
-                    b.Property<int>("ComplainId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComplainId"), 1L, 1);
-
-                    b.Property<string>("AdminReply")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ComplainContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ContractId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsSolved")
-                        .HasColumnType("bit");
-
-                    b.HasKey("ComplainId");
-
-                    b.HasIndex("ContractId");
-
-                    b.ToTable("Complains");
-                });
-
             modelBuilder.Entity("Sho8lana.Models.Contract", b =>
                 {
                     b.Property<int>("ContractId")
@@ -276,9 +248,6 @@ namespace Sho8lana.Migrations
 
                     b.Property<string>("BuyerId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ComplainId")
-                        .HasColumnType("int");
 
                     b.Property<float>("ContractPrice")
                         .HasColumnType("real");
@@ -329,8 +298,6 @@ namespace Sho8lana.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("ContractId");
-
-                    b.HasIndex("ComplainId");
 
                     b.HasIndex("CustomerId");
 
@@ -758,21 +725,8 @@ namespace Sho8lana.Migrations
                     b.Navigation("Governorate");
                 });
 
-            modelBuilder.Entity("Sho8lana.Models.Complain", b =>
-                {
-                    b.HasOne("Sho8lana.Models.Contract", "Contract")
-                        .WithMany()
-                        .HasForeignKey("ContractId");
-
-                    b.Navigation("Contract");
-                });
-
             modelBuilder.Entity("Sho8lana.Models.Contract", b =>
                 {
-                    b.HasOne("Sho8lana.Models.Complain", "Complain")
-                        .WithMany()
-                        .HasForeignKey("ComplainId");
-
                     b.HasOne("Sho8lana.Models.Customer", "Customer")
                         .WithMany("Contracts")
                         .HasForeignKey("CustomerId");
@@ -782,8 +736,6 @@ namespace Sho8lana.Migrations
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Complain");
 
                     b.Navigation("Customer");
 

@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Sho8lana.Hangfire;
@@ -448,6 +449,66 @@ namespace Sho8lana.Controllers
                 return NotFound();
             };
             return View(model);
+        }
+        [Authorize(Roles="User")]
+        public async Task<IActionResult> CustomerCheckout(int contractId)
+        {
+            var customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(s => s.Id == customerId);
+            var contract=await context.Contracts.GetBy(s=>s.ContractId == contractId);
+            if (contract.BuyerId != customerId)
+            {
+                return LocalRedirect("~/Identity/Account/AccessDenied");
+            }
+            else
+            {
+                return View(contract);
+            }
+
+        }
+        [Authorize(Roles = "User")]
+        [HttpPost]
+        public async Task<IActionResult> CustomerPay(string buyerId,int ContractId)
+        {
+            var customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(s => s.Id == customerId);
+            var contract = await context.Contracts.GetBy(s => s.ContractId == ContractId);
+            if (contract.BuyerId != customerId)
+            {
+                return LocalRedirect("~/Identity/Account/AccessDenied");
+            }
+            if (contract.StartDate != default)
+            {
+                return BadRequest();
+            }
+            if (customer.Balance - contract.ContractPrice < 0)
+            {
+                return BadRequest();
+            }
+            Payments payment = new Payments()
+            {
+                PaymentId = Guid.NewGuid().ToString(),
+                CustomerId = customerId,
+                ContractId = ContractId,
+                StripCustId = null,
+                CreatedDate = DateTime.Now,
+                PaymentType = "Balance",
+                TotalAmount =(int) contract.ContractPrice,
+            };
+            context.Payments.Add(payment);
+            contract.StartDate = DateTime.Now;
+            if (customerId == contract.BuyerId&&customerId!=contract.SericeOwnerId)
+            {
+                contract.Service.Customer.PendingBalance += contract.ContractPrice;
+               
+            }
+            else
+            {
+                contract.Customer.PendingBalance += contract.ContractPrice;
+            }
+            customer.Balance -= contract.ContractPrice;
+            await context.complete();
+            return RedirectToAction("CustomerContracts");
         }
 
     }

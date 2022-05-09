@@ -46,7 +46,7 @@
          
                 </li>
             }*@
-    <li class="p-0 mx-2 dropdown">
+    <li class="p-0 mx-2">
 
         <a class="nav-link scrollto" asp-controller="customer" asp-action="account" asp-route-id="@UserManager.GetUserId(User)" title="Manage">
             @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
