@@ -12,6 +12,7 @@ namespace Sho8lana.Models
         public string ComplainContent { get; set; }
         public string AdminReply { get; set; }
         public bool IsSolved { get; set; }
+        public bool IsReturned { get; set; }
         public DateTime Date { get; set; }
 
         //navigation properties

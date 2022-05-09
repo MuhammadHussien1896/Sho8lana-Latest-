@@ -383,10 +383,10 @@ namespace Sho8lana.Controllers
                 //return price from seller pending to buyer balance
                 seller.PendingBalance -= contract.ContractPrice;
                 buyer.Balance += contract.ContractPrice;
-                _context.Customers.UpdateList(new List<Customer>() { seller, buyer });
-
+                //_context.Customers.UpdateList(new List<Customer>() { seller, buyer });
+                contract.Complain.IsReturned = true;
                 await _context.complete();
-                return RedirectToAction("Index");
+                return RedirectToAction("ShowComplains");
             }
             else
             {
