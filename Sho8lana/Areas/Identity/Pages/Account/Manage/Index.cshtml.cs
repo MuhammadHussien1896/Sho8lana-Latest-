@@ -92,7 +92,8 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
                 FirstName=user.FirstName,
                 LastName=user.LastName,
                 PhoneNumber = phoneNumber,
-                ProfilePicture=user.ProfilePicture
+                ProfilePicture=user.ProfilePicture,
+                AboutMe=user.AboutMe
             };
         }
 
