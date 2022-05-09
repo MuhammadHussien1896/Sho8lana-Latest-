@@ -339,8 +339,8 @@ namespace Sho8lana.Controllers
             }
             return View(category);
         }
-
-        public async Task<IActionResult> ShowServiceMessages(int id)
+        
+        public async Task<IActionResult> ShowServiceMessages(int id)//complain id
         {
             var complain = await _context.Complains.GetById(id);
             var contract = complain?.Contract;
@@ -365,6 +365,35 @@ namespace Sho8lana.Controllers
             };
 
             return View(model);
+        }
+        public async Task<IActionResult> ReturnPriceToBuyer(int id)//contract id
+        {
+            var contract = await _context.Contracts.GetById(id);
+            var buyer = await _context.Customers.GetById(contract?.BuyerId);
+            var seller = await _context.Customers.GetById(contract?.SellerId);
+            if(contract == null || buyer == null || seller == null)
+            {
+                return NotFound();
+            }
+            //compare between now and contract end date + 14 (for seller pending balance)
+            var dateCompare = DateTime.Compare(DateTime.Now, contract.EndDate.AddDays(14));
+            //if now is earlier we are ok to return the contract price
+            if(dateCompare < 0)
+            {
+                //return price from seller pending to buyer balance
+                seller.PendingBalance -= contract.ContractPrice;
+                buyer.Balance += contract.ContractPrice;
+                _context.Customers.UpdateList(new List<Customer>() { seller, buyer });
+
+                await _context.complete();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return Content("To late :(");
+            }
+            
+            
         }
 
 
