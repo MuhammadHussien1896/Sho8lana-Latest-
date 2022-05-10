@@ -396,8 +396,82 @@ namespace Sho8lana.Controllers
             
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ShowComplains()
+        {
+            var Complains=await _context.Complains.GetAllBy(c=>c.IsSolved==false);
+            return View(Complains);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> ReplayAdminToComplaint(int id,string message=null)
+        {
 
+           
 
+            var complaint = await _context.Complains.GetById(id);
+            string userAdminId = _userManager.GetUserId(User);
+            var userAdmin=await _context.Customers.GetById(userAdminId);
+
+            if (complaint == null) { return NotFound(); }
+            else
+            {
+                try
+                {
+                    complaint.AdminReply = message == null ? $"تم مراجعة الشكوي بواسطة {userAdmin.UserName} " : message+$"لقك تم الرد بواسطة {userAdmin.UserName}وتم الرد ب : ";
+                    var userid = complaint.Contract.CustomerId;
+                    var user = await _context.Customers.GetById(userid);
+                    await _context.complete();
+                    //// add Notifi
+                    
+                    user.IsVerified = true;
+                    Notification notification = new Notification()
+                    {
+                        CustomerId = user.Id,
+                        Content = message == null ? "تم مراجعة الشكوى وسوف نقوم بالاجراء اللازم تجاه تلك العملية " : message,
+                        Date = DateTime.Now,
+                    };
+                    _context.Notifications.Add(notification);
+                    await _context.complete();
+
+                    return RedirectToAction(nameof(ShowComplains));
+                }
+                catch
+                {
+                    
+                    return View();
+
+                }
+            }
+        }
+
+        public async Task<IActionResult> ReviewComplaintAndSolved(int id)
+        {
+            var complaint = await _context.Complains.GetById(id);
+            if (complaint == null) { return NotFound(); }
+            try {
+
+                complaint.IsSolved = true; await _context.complete();
+                var userid = complaint.Contract.CustomerId;
+                var user = await _context.Customers.GetById(userid);
+                user.IsVerified = true;
+                Notification notification = new Notification()
+                {
+                    CustomerId = user.Id,
+                    Content = $" إذا كان لديك اي شكوى اخرى يرجى الاتصال بالدعم الفنى لموقع شغلانة  {complaint.Contract.Service.Title} تهانينا لقد تم مراجعة الشكوى المقدمة منكم بخصوص الخدمة  ",
+                    Date = DateTime.Now,
+                };
+                _context.Notifications.Add(notification);
+                await _context.complete();
+
+                return RedirectToAction(nameof(ShowComplains));
+
+            } catch
+            {
+                    return View();
+
+            }
+        }
     }
 }
 
