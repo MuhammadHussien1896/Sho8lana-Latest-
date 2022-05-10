@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Hangfire;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Sho8lana.Hangfire;
@@ -13,12 +15,16 @@ namespace server.Controllers
     public class PaymentController : Controller
     {
         private readonly IUnitOfWork _context;
+        private readonly UserManager<Sho8lana.Models.Customer> userManager;
+        private readonly ContractJobs jobs;
         string _sessionId;
-        public PaymentController(IUnitOfWork context)
+        public PaymentController(IUnitOfWork context, UserManager<Sho8lana.Models.Customer> userManager)
         {
             StripeConfiguration.ApiKey = "sk_test_51KtYXkEZF7e3vou0wl1X7ldWcbh4MUH7TdxiJfz3Ce4b4KYuqC2S7rSPHeZ8z8YMjdWjIARMCV2K2XvrrQn2GDzW00nB9Lf7gf";
             
             _context = context;
+            this.userManager = userManager;
+            this.jobs = new ContractJobs(context);
         }
         public IActionResult index()
         {
@@ -28,7 +34,7 @@ namespace server.Controllers
         [HttpPost("create-checkout-session")]
         public ActionResult CreateCheckoutSession(int ContractId, string customerId)
         {
-            var Target=_context.Contracts.GetById(ContractId).Result;
+            var Target=_context.Contracts.GetEagerLodingAsync(c=> c.ContractId == ContractId,new string[] { "Service" }).Result;
             var TargetCustomer=_context.Customers.GetById(customerId).Result;
             var options = new SessionCreateOptions
             {
@@ -90,10 +96,10 @@ namespace server.Controllers
             Target.StartDate = DateTime.Now;
             Target.EndDate = Target.StartDate.AddDays(Target.DeliveryTime);
             //hangfire job will run at the end of the contract
-            ContractJobs jobs = new ContractJobs(_context);
+            
             var jobId = BackgroundJob.Schedule(() =>jobs.EndContract(ContractId), TimeSpan.FromDays(Target.DeliveryTime));
             Target.JobId = jobId;//adding job id to be able to delete the job earlier 
-            _context.Contracts.Update(Target);
+            //_context.Contracts.Update(Target);
             jobs.AddNotification(customerId, "تهانينا تم دفع سعر الخدمة بنجاح !");
             await _context.complete();
             
@@ -158,7 +164,7 @@ namespace server.Controllers
             };
             _context.BalanceCharges.Add(charge);
             TargetCustomer.Balance += (int)charge.TotalAmount / 100; 
-            _context.Customers.Update(TargetCustomer);
+            //_context.Customers.Update(TargetCustomer);
             Notification notification = new Notification()
             {
                 CustomerId = customerId,
@@ -171,6 +177,63 @@ namespace server.Controllers
             await _context.complete();
 
             return RedirectToAction("customercontracts", "customer");
+        }
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> CustomerCheckout(int contractId)
+        {
+            var customerId = userManager.GetUserId(User);
+            var customer = await _context.Customers.GetBy(s => s.Id == customerId);
+            var contract = await _context.Contracts
+                                    .GetEagerLodingAsync(s => s.ContractId == contractId
+                                    , new string[] { "Customer", "Service.Customer", "Service.Medias" });
+            if (contract.BuyerId != customerId)
+            {
+                return LocalRedirect("~/Identity/Account/AccessDenied");
+            }
+            else
+            {
+                return View(contract);
+            }
+
+        }
+        [Authorize(Roles = "User")]
+        [HttpPost]
+        public async Task<IActionResult> CustomerPay(string buyerId, int ContractId)
+        {
+            var customerId = userManager.GetUserId(User);
+            var customer = await _context.Customers.GetBy(s => s.Id == customerId);
+            var contract = await _context.Contracts.GetBy(s => s.ContractId == ContractId);
+            if (contract.BuyerId != customerId)
+            {
+                return LocalRedirect("~/Identity/Account/AccessDenied");
+            }
+            if (contract.StartDate != default)
+            {
+                return BadRequest();
+            }
+            if (customer.Balance - contract.ContractPrice < 0)
+            {
+                return BadRequest();
+            }
+            Payments payment = new Payments()
+            {
+                PaymentId = Guid.NewGuid().ToString(),
+                CustomerId = customerId,
+                ContractId = ContractId,
+                StripCustId = null,
+                CreatedDate = DateTime.Now,
+                PaymentType = "Balance",
+                TotalAmount = (int)contract.ContractPrice,
+            };
+            _context.Payments.Add(payment);
+            contract.StartDate = DateTime.Now;
+            contract.EndDate = contract.StartDate.AddDays(contract.DeliveryTime);
+            //hangfire job will run at the end of the contract
+            var jobId = BackgroundJob.Schedule(() => jobs.EndContract(ContractId), TimeSpan.FromDays(contract.DeliveryTime));
+            contract.JobId = jobId;
+            customer.Balance -= contract.ContractPrice;
+            await _context.complete();
+            return RedirectToAction("CustomerContracts");
         }
 
     }

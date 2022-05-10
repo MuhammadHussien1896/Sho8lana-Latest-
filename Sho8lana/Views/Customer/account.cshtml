@@ -1,6 +1,6 @@
 ﻿@inject UserManager<Customer> userManger;
 @using Microsoft.AspNetCore.Identity
-@model Sho8lana.Models.Customer
+@model AccountViewModel
 
 @{
     ViewData["Title"] = "Account";
@@ -10,27 +10,27 @@
 <div class="row my-5" dir="rtl">
     <div class="col-12">
         <div class="text-center">
-           @if (@Model.ProfilePicture ==null)
+           @if (@Model.Customer.ProfilePicture ==null)
                 {
                     <img class="rounded-circle mx-auto d-block" style="width:148px; height:148px;" src="~/Images/DefaultImage/UserDefaultImage.png" />
                 }
             else
                 {
                     
-                    <img class="rounded-circle mx-auto d-block" style="width:148px; height:148px;" src="data:image/*;base64,@Convert.ToBase64String(@Model.ProfilePicture)" />
+                    <img class="rounded-circle mx-auto d-block" style="width:148px; height:148px;" src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
                   
                 }
 
-            @if (@Model.IsVerified==true)
+            @if (@Model.Customer.IsVerified==true)
                  {
                      <img class="verification-badge" src="https://khamsat.hsoubcdn.com/assets/images/verification-badge-f5965383075555aa8eee4d3e33aff856645f43585e7ac1fa56eed14203f46e00.svg" title="هوية موثقة" />
                      @*<i class="bi bi-check-square-fill " style="color:green" title="هوية موثقة"></i>*@
                  } 
-            <h1>@Model.FirstName @Model.LastName</h1>
+            <h1>@Model.Customer.FirstName @Model.Customer.LastName</h1>
 
         </div>
         <div class="col-12 d-flex justify-content-center align-items-center">
-            @if (userManger.GetUserId(User) == @Model.Id)
+            @if (userManger.GetUserId(User) == @Model.Customer.Id)
             {
                <a href="/identity/Account/manage" class="btn btn-success float-left m-auto">تعديل الملف الشخصي</a>
             }
@@ -45,7 +45,7 @@
            <div class="row my-5 justify-content-center border border-Secondery ">
            <h3 class="h4 my-3 fw-bold">نبذة عني</h3>
            <hr />
-           <h4>@Model.AboutMe</h4>
+           <h4>@Model.Customer.AboutMe</h4>
          </div>
 
 
@@ -119,7 +119,7 @@
           </span>
      
         <span class="col-6">
-            @Model.Country/@Model.City/@Model.Area
+            @Model.Customer.Country/@Model.Customer.City/@Model.Customer.Area
         </span>
           
     
@@ -130,7 +130,7 @@
           </span>
      
         <span class="col-6">
-            @Model.RegisterationDate
+            @Model.Customer.RegisterationDate
         </span>
       </div>
                <div class="row my-2 justify-content-between">
@@ -154,7 +154,7 @@
            <hr />
          <div class="row my-2 justify-content-between">
        <span class="col-6 text-secondary">
-                   @if (Model.EmailConfirmed == true)
+                   @if (Model.Customer.EmailConfirmed == true)
                     {
                         
                         <span >
@@ -172,7 +172,7 @@
           </span>
 
          <span class="col-6 text-secondary">
-           @if (Model.PhoneNumber != null)
+           @if (Model.Customer.PhoneNumber != null)
             {
                 <span >
                     <i class="bi bi-check-square-fill " style="color:green"></i>
@@ -190,7 +190,7 @@
       </div>
                <div class="row my-2 justify-content-between">
                  <span class="col-6 text-secondary">
-           @if (Model.NationalIdPicture!=null)
+           @if (Model.Customer.NationalIdPicture!=null)
             {
                 <span >
                     <i class="bi bi-check-square-fill " style="color:green"></i>

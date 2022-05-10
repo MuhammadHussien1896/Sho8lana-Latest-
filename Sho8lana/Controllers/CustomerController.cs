@@ -16,7 +16,7 @@ namespace Sho8lana.Controllers
         private readonly IUnitOfWork context;
         private readonly UserManager<Customer> userManager;
         private readonly ContractJobs jobs;
-        private readonly HubConnection connection;
+        //private readonly HubConnection connection;
 
         public CustomerController(IUnitOfWork context,UserManager<Customer> userManager)
         {
@@ -35,8 +35,10 @@ namespace Sho8lana.Controllers
         {
             string customerId = userManager.GetUserId(User);
             var customer = await context.Customers.GetBy(c => c.Id == id);
-            if(customer == null) { return NotFound(); }
-            return View(customer);
+            if (customer == null) { return NotFound(); }
+            var services = await context.Services.GetAllEagerLodingAsync(s => s.CustomerId == customerId, new string[] { "Medias", "Contracts" });
+            AccountViewModel model = new AccountViewModel() { Customer = customer,Services = services };
+            return View(model);
             
 
         }
@@ -64,15 +66,17 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> CustomerRequests()
         {
             string customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(c => c.Id == customerId);
+            var customer = await context.Customers.GetEagerLodingAsync(c => c.Id == customerId);
             if (customer != null)
             {
-                var incomingRequests = await context.CustomerRequests.GetAllBy(r => r.Service.CustomerId == customer.Id);
-                var outgoingRequests = customer.CustomerRequests.ToList();
+                var incomingRequests = await context.CustomerRequests
+                                        .GetAllEagerLodingAsync(r => r.Service.CustomerId == customer.Id
+                                        ,new string[] {"Service","Customer"});
+                var outgoingRequests = await context.CustomerRequests.GetAllEagerLodingAsync(r => r.CustomerId == customerId, new string[] { "Service.Customer" });
                 CustomerRequestViewModel model = new CustomerRequestViewModel()
                 {
                     IncomingRequests = incomingRequests.ToList(),
-                    OutgoingRequests = outgoingRequests
+                    OutgoingRequests = outgoingRequests.ToList()
                 };
                 return View(model);
             }
@@ -85,7 +89,7 @@ namespace Sho8lana.Controllers
         {
             string customerId = userManager.GetUserId(User);
             var customer = await context.Customers.GetBy(c => c.Id == customerId);
-            var customerRequest = await context.CustomerRequests.GetById(id);
+            var customerRequest = await context.CustomerRequests.GetEagerLodingAsync(r => r.RequestId == id,new string[] { "Service" });
             if(customerRequest == null || customer == null)
             {
                 return NotFound();
@@ -97,10 +101,10 @@ namespace Sho8lana.Controllers
             var contract = AddContract(customerRequest);
 
             //add notification to the customer who sent the request to the service
-            var content = $"{customer.FirstName} {customer.LastName} قد قبل طلبك للخدمة '{contract.Service.Title}' !" +
+            var content = $"{customer.FirstName} {customer.LastName} قد قبل طلبك للخدمة '{customerRequest.Service.Title}' !" +
                 $"رجاءً تفقد العقود المنتظرة لبدء العمل";
             jobs.AddNotification(contract.CustomerId,
-                $"{customer.FirstName} {customer.LastName} قد قبل طلبك للخدمة '{contract.Service.Title}' !" +
+                $"{customer.FirstName} {customer.LastName} قد قبل طلبك للخدمة '{customerRequest.Service.Title}' !" +
                 $"رجاءً تفقد العقود المنتظرة لبدء العمل");
             
             
@@ -120,8 +124,8 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> DeleteRequest(int id)
         {
             string customerId = userManager.GetUserId(User);
-            var customerRequest = await context.CustomerRequests.GetById(id);
-            if(customerRequest != null)
+            var customerRequest = await context.CustomerRequests.GetEagerLodingAsync(r => r.RequestId == id, new string[] { "Service" });
+            if (customerRequest != null)
             {
                 if(customerRequest.CustomerId == customerId || customerRequest.Service.CustomerId == customerId)
                 {
@@ -155,7 +159,8 @@ namespace Sho8lana.Controllers
 
                 
                 var contracts = await context.Contracts
-                                                .GetAllBy(c => c.CustomerId == customerId || c.SericeOwnerId == customerId);
+                                                .GetAllEagerLodingAsync(c => c.CustomerId == customerId || c.SericeOwnerId == customerId
+                                                ,new string[] {"Customer","Service.Customer"});
                 ContractViewModel model = new ContractViewModel()
                 {
                     PendingContracts            = contracts.Where(c => c.IsDone == false && c.StartDate == default && !(c.BuyerAccepted && c.SellerAccepted)).ToList(),
@@ -186,7 +191,7 @@ namespace Sho8lana.Controllers
                 {
                     contract.SellerAccepted = true;
                 }
-                context.Contracts.Update(contract);
+                //context.Contracts.Update(contract);
                 await context.complete();
                 return RedirectToAction(nameof(CustomerContracts));
             }
@@ -198,29 +203,29 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> ContractBuyerSellerDone(int id)
         {
             string customerId = userManager.GetUserId(User);
-            var contract = await context.Contracts.GetById(id);
+            var contract = await context.Contracts.GetEagerLodingAsync(c => c.ContractId == id,new string[] { "Service" });
             if (contract != null)
             {
                 if (contract.BuyerId == customerId)
                 {
                     //fire job before it's time
-                    BackgroundJob.Requeue(contract.JobId);
+                    //BackgroundJob.Requeue(contract.JobId);
                     contract.EndDate = DateTime.Now;
-                    //contract.IsDone = true;
+                    contract.IsDone = true;
 
-                    //BackgroundJob.Delete(contract.JobId);
+                    BackgroundJob.Delete(contract.JobId);
                     //after deleting the previos job we create a new job to transfere the price after 14 days to balance
-                    //var jobId = BackgroundJob.Schedule(() => 
-                    // jobs.AddBalanceFromPending(contract.SellerId,contract.ContractPrice)
-                    //  , TimeSpan.FromDays(14));
+                    var jobId = BackgroundJob.Schedule(() =>
+                     jobs.AddBalanceFromPending(contract.SellerId, contract.ContractPrice)
+                      , TimeSpan.FromDays(14));
 
-                    //contract.JobId = jobId;
-                    // contract price goes to seller now
-                    //await jobs.AddPendingBalance(contract.SellerId, contract.ContractPrice);
-                    //var buyer = await context.Customers.GetById(customerId);
-                    //string content = $"تهانينا ، لقد استلم '{buyer.FirstName} {buyer.LastName}' الخدمة '{contract.Service.Title}'." +
-                    //    $"وتم تحويل سعر الخدمة الى حسابك ";
-                    //jobs.AddNotification(contract.SellerId, content);
+                    contract.JobId = jobId;
+                    //contract price goes to seller now
+                    await jobs.AddPendingBalance(contract.SellerId, contract.ContractPrice);
+                    var buyer = await context.Customers.GetById(customerId);
+                    string content = $"تهانينا ، لقد استلم '{buyer.FirstName} {buyer.LastName}' الخدمة '{contract.Service.Title}'." +
+                        $"وتم تحويل سعر الخدمة الى حسابك ";
+                    jobs.AddNotification(contract.SellerId, content);
                     //buyer can rate the service now
                 }
                 else
@@ -229,7 +234,7 @@ namespace Sho8lana.Controllers
                     jobs.AddNotification(contract.BuyerId, "لقد أتم البائع الخدمة !اذا تم تسليم الخدمة لك اذهب للعقود الجارية ثم اضغط تم الاستلام.");
                 }
                 
-                context.Contracts.Update(contract);
+                //context.Contracts.Update(contract);
                 await context.complete();
                 return RedirectToAction(nameof(CustomerContracts));
             }
@@ -241,7 +246,7 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> ContractBuyerSellerCancel(int id)
         {
             string customerId = userManager.GetUserId(User);
-            var contract = await context.Contracts.GetById(id);
+            var contract = await context.Contracts.GetEagerLodingAsync(c => c.ContractId == id, new string[] { "Service" });
             if (contract != null)
             {
                 if (contract.SellerId == customerId)
@@ -263,7 +268,7 @@ namespace Sho8lana.Controllers
                     //by the end date a function runs to determine who will take the price
                 }
 
-                context.Contracts.Update(contract);
+                //context.Contracts.Update(contract);
                 await context.complete();
                 return RedirectToAction(nameof(CustomerContracts));
             }
@@ -278,11 +283,11 @@ namespace Sho8lana.Controllers
         {
             if (ModelState.IsValid)
             {
-                var contract = await context.Contracts.GetById(Id);
+                var contract = await context.Contracts.GetEagerLodingAsync(c => c.ContractId == Id, new string[] { "Service" });
                 contract.ContractRateStars = ContractRateStars;
                 contract.ContractRateComment = ContractRateComment;
                 contract.ContractRateDone = true;
-                context.Contracts.Update(contract);
+                //context.Contracts.Update(contract);
                 jobs.AddNotification(contract.BuyerId, $"تم إضافة تقييمك لخدمة '{contract.Service.Title}' بنجاح");
                 await jobs.CalculateOverallRate(contract.ServiceId, contract.ContractRateStars);
                 await context.complete();
@@ -295,7 +300,7 @@ namespace Sho8lana.Controllers
         {
             if (ModelState.IsValid)
             {
-                var contract = await context.Contracts.GetById(Id);
+                var contract = await context.Contracts.GetEagerLodingAsync(c => c.ContractId == Id, new string[] { "Service" });
                 contract.Complain = context.Complains.Add(new Complain() 
                 { 
                     ContractId = Id,
@@ -303,7 +308,7 @@ namespace Sho8lana.Controllers
                 });
                 jobs.AddNotification(contract.BuyerId, $"تم إضافة الشكوى الخاصة بخدمة {contract.Service.Title}" +
                     $" بنجاح وجاري العمل عليها وسيتم الرد خلال ثلاثة ايام عمل");
-                context.Contracts.Update(contract);
+                //context.Contracts.Update(contract);
                 await context.complete();
             }
             return RedirectToAction(nameof(CustomerContracts));
@@ -317,7 +322,7 @@ namespace Sho8lana.Controllers
                 var contract = await context.Contracts.GetById(Id);
                 contract.ContractPrice = Price;
                 contract.DeliveryTime = DeliveryTime;
-                context.Contracts.Update(contract);
+                //context.Contracts.Update(contract);
                 await context.complete();
                 return RedirectToAction(nameof(AcceptContract),new {Id });
             }
@@ -329,7 +334,7 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> DeleteContract(int id)
         {
             string customerId = userManager.GetUserId(User);
-            var contract = await context.Contracts.GetById(id);
+            var contract = await context.Contracts.GetEagerLodingAsync(c => c.ContractId == id, new string[] { "Service" });
             if (contract != null)
             {
                 if (contract.CustomerId == customerId || contract.Service.CustomerId == customerId)
@@ -365,7 +370,7 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> RequestService(int id)
         {
             string customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(c => c.Id == customerId);
+            var customer = await context.Customers.GetEagerLodingAsync(c => c.Id == customerId,new string[] { "CustomerRequests" });
             if (customer != null)
             {
                 if (customer.CustomerRequests.FirstOrDefault(r => r.ServiceId == id) != null)
@@ -385,8 +390,8 @@ namespace Sho8lana.Controllers
                     {
                         CustomerRequest customerRequest = new CustomerRequest()
                         {
-                            Customer = customer,
-                            Service = RequestedService
+                            CustomerId = customerId,
+                            ServiceId = id
                         };
                         context.CustomerRequests.Add(customerRequest);
 
@@ -473,61 +478,7 @@ namespace Sho8lana.Controllers
             };
             return View(model);
         }
-        [Authorize(Roles="User")]
-        public async Task<IActionResult> CustomerCheckout(int contractId)
-        {
-            var customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(s => s.Id == customerId);
-            var contract=await context.Contracts.GetBy(s=>s.ContractId == contractId);
-            if (contract.BuyerId != customerId)
-            {
-                return LocalRedirect("~/Identity/Account/AccessDenied");
-            }
-            else
-            {
-                return View(contract);
-            }
-
-        }
-        [Authorize(Roles = "User")]
-        [HttpPost]
-        public async Task<IActionResult> CustomerPay(string buyerId,int ContractId)
-        {
-            var customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(s => s.Id == customerId);
-            var contract = await context.Contracts.GetBy(s => s.ContractId == ContractId);
-            if (contract.BuyerId != customerId)
-            {
-                return LocalRedirect("~/Identity/Account/AccessDenied");
-            }
-            if (contract.StartDate != default)
-            {
-                return BadRequest();
-            }
-            if (customer.Balance - contract.ContractPrice < 0)
-            {
-                return BadRequest();
-            }
-            Payments payment = new Payments()
-            {
-                PaymentId = Guid.NewGuid().ToString(),
-                CustomerId = customerId,
-                ContractId = ContractId,
-                StripCustId = null,
-                CreatedDate = DateTime.Now,
-                PaymentType = "Balance",
-                TotalAmount =(int) contract.ContractPrice,
-            };
-            context.Payments.Add(payment);
-            contract.StartDate = DateTime.Now;
-            contract.EndDate = contract.StartDate.AddDays(contract.DeliveryTime);
-            //hangfire job will run at the end of the contract
-            var jobId = BackgroundJob.Schedule(() => jobs.EndContract(ContractId), TimeSpan.FromDays(contract.DeliveryTime));
-            contract.JobId = jobId;
-            customer.Balance -= contract.ContractPrice;
-            await context.complete();
-            return RedirectToAction("CustomerContracts");
-        }
+        
 
     }
 }

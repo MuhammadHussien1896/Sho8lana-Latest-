@@ -24,7 +24,7 @@
     <!--=====Chat Section=====-->
     <div class="col-8 mb-5">
         
-        <div class="row px-0 justify-content-start">
+        <div class="row px-0 justify-content-start mb-3 border-bottom border-secondery pb-3">
         
             @if (Model.IsReceiverOnline)
             {
@@ -37,11 +37,8 @@
             }
         </div>
     
-        <div class="row justify-content-start mb-3 border-bottom border-secondery pb-3">
-            <input id="txtInput" type="text" class="col-9"  onkeypress="fire(event)"/>
-            <button id="sendBtn" type="submit" class="btn btn-outline-success col-2 mx-2" onclick="send('@Model.ReceiverId', '@Model.ServiceId')">ارسال</button>
-        </div>
-        <div id="chat" class="overflow-auto px-3" style="height:70vh"> 
+        
+        <div id="chat" class="overflow-auto px-3" style="height:65vh"> 
         @foreach(var message in Model.Messages)
         {
         
@@ -82,21 +79,27 @@
           
         }
         </div> 
+        <div class="row justify-content-start mt-3 border-top border-secondery pt-3">
+            <input id="txtInput" type="text" class="col-9"  onkeypress="fire(event)"/>
+            <button id="sendBtn" type="submit" class="btn btn-outline-success col-2 mx-2" onclick="send('@Model.ReceiverId', '@Model.ServiceId')">ارسال</button>
+        </div>
     </div>
     
 </div>
 
 <script>
     $(function(){
+        var chat = document.getElementById("chat");
+        chat.scrollTop = chat.scrollHeight;
         connection.on("receiveMessage",(message,senderId,date)=>{ 
             //$('#mylist').prepend('<li>'+ name +' : '+ message + '<br/><small>'+ date +'</small></li>');
             if(senderId == '@Model.SenderId'){
-                $('#chat').prepend(`<div class="row justify-content-start mt-3">
+                $('#chat').append(`<div class="row justify-content-start mt-3">
                 <div class="col-7  rounded text-white py-3" style="background-color:#8227DA">${message}</div>
                 <small class="col-2 text-end" style="direction:ltr">${date}</small>
                 </div>`);
             }else{
-                $('#chat').prepend(`<div class="row justify-content-start mt-3" style="direction:ltr">
+                $('#chat').append(`<div class="row justify-content-start mt-3" style="direction:ltr">
                 <div style="direction:rtl" class="col-7 rounded bg-light py-3 border border-secondary">${message}</div>
                 <small class="col-2">${date}</small>
                 </div>`);
@@ -107,10 +110,13 @@
         
     });
     var message = document.getElementById("txtInput");
+    
+    
     function send(receiverId,serviceId){
         if(message.value){
             connection.invoke("SendMessage",message.value,receiverId,parseInt(serviceId)).then(()=>{
                 message.value = "";
+                chat.scrollTop = chat.scrollHeight;
             });
         }else{
             alert("Message is Empty !");

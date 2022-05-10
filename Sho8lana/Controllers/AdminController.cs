@@ -146,7 +146,9 @@ namespace Sho8lana.Controllers
 
         public async Task<IActionResult> ReviewServices()
         {
-            var services = _context.Services.GetAllBy(a => a.IsAccepted == false&&a.IsRejected==false).Result;
+            var services = _context.Services
+                .GetAllEagerLodingAsync(a => a.IsAccepted == false&&a.IsRejected==false
+                ,new string[] {"Category","Customer"}).Result;
 
             return View(services);
         }
@@ -342,7 +344,7 @@ namespace Sho8lana.Controllers
         
         public async Task<IActionResult> ShowServiceMessages(int id)//complain id
         {
-            var complain = await _context.Complains.GetById(id);
+            var complain = await _context.Complains.GetEagerLodingAsync(c => c.ContractId == id,new string[] {"Contract"});
             var contract = complain?.Contract;
             if (contract == null)
             {
@@ -368,7 +370,7 @@ namespace Sho8lana.Controllers
         }
         public async Task<IActionResult> ReturnPriceToBuyer(int id)//contract id
         {
-            var contract = await _context.Contracts.GetById(id);
+            var contract = await _context.Contracts.GetEagerLodingAsync(c => c.ContractId == id,new string[] { "Complain" });
             var buyer = await _context.Customers.GetById(contract?.BuyerId);
             var seller = await _context.Customers.GetById(contract?.SellerId);
             if(contract == null || buyer == null || seller == null)
