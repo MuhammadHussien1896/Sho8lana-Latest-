@@ -1,0 +1,119 @@
+﻿@model IEnumerable<Sho8lana.Models.Complain>
+
+@{
+    ViewData["Title"] = "ShowComplains";
+}
+
+<div class="container mt-4">
+    @foreach (var item in Model)
+    {
+
+        <article class="postcard light blue">
+            <a class="postcard__img_link" asp-action="Details" asp-controller="Service" asp-route-id="@item.Contract.ServiceId">
+                <img class="postcard__img" src="~/Images/CategoriesImage/@item.Contract.Service.Category.CategoryImg" alt="Image Title" title="الذهاب الى الخدمة " />
+            </a>
+            <div class="postcard__text t-dark mx-4" style=" text-align:right">
+                <h1 class="postcard__title blue"> إسم الخدمة : <a asp-action="Details" asp-controller="Service" asp-route-id="@item.Contract.ServiceId" title="الذهاب الى الخدمة ">@item.Contract.Service.Title</a> </h1>
+
+                @*<div class="postcard__bar" style=" text-align:right"></div>*@
+
+                <h3> : تفاصيل الخدمة   </h3>
+                <div class="postcard__preview-txt" style=" text-align:right">
+                    <div class="postcard__subtitle small" >
+                        <time datetime="2020-05-25 12:00:00">
+                         <i class="fas fa-calendar-alt mr-2"></i>@item.Contract.StartDate   <p style="display:inline-block">موعد بدأ الخدمة </p>  <br/>
+                           <i class="fas fa-calendar-alt mr-2"></i>@item.Contract.EndDate <p style="display:inline-block">موعد إنتهاء الخدمة </p> 
+                        </time>
+                    </div >
+                    <p>@item.Contract.ContractPrice: سعر الخدمة </p>
+                    <div>
+                        @*@if (@item.Contract.IsCanceled) {*@
+                        <div>
+                            <p>لقد تم إلغاء ذلك الإاتفاق </p>
+                        </div>
+                        @*}*@
+                    </div>
+                    @*///////form //*@
+                    <hr />
+                    
+                    <div style=" text-align:right">
+                        <h3>: محتوى الشكوى  </h3>
+                        <p>@item.ComplainContent</p>
+                    </div>
+                    @*/////end form ////*@
+                </div>
+                <hr />
+                <h3> العمليات المتاحة على تلك الشكوى   </h3>
+
+                <ul style=" text-align:right">
+                    <form>
+                        <div class="mb-3 d-flex justify-content-end">
+                            @if (!@item.IsReturned)
+                            {
+                                <input type="submit" value="إعادة المال" asp-action="ReturnPriceToBuyer" asp-route-id="@item.ComplainId" class="btn btn-outline-danger btn-lg mx-2" />
+                            }
+                            <input type="submit" value="عرض الرسائل" asp-action="ShowServiceMessages" asp-route-id="@item.ComplainId" class="btn btn-outline-primary btn-lg mx-2" />
+                            <button type="button" class="btn btn-outline-success btn-lg mx-2" data-bs-toggle="modal" data-bs-target="#complain" onclick="complain('@item.ComplainId')">
+                                الرد على شكوى
+                            </button>
+                        </div>
+                            <input type="submit" value="تم الحل" asp-action="ReviewComplaintAndSolved" asp-route-id="@item.ComplainId" class="btn btn-outline-primary btn-lg mx-2" />
+                        <p style="display:inline-block">إذا تم حل تلك الشكوى يرجى الضغط على تم </p>
+
+
+                    </form>
+                </ul>
+                <div class="postcard__subtitle small" style=" text-align:right">
+                    <time datetime="2020-05-25 12:00:00">
+                    <i class="fas fa-calendar-alt mr-2"></i>@item.Date   <p style="display:inline-block">: لقد تم إرسال الشكوى بتاريخ  </p>  
+                    </time>
+                </div>
+            </div>
+        </article>
+
+
+
+
+
+    }
+</div>
+<div class="modal fade" id="complain" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <p class="modal-title h5" id="exampleModalLabel">ارسال شكوى</p>
+                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+            <form id="complainForm" asp-action="ReplayAdminToComplaint" asp-controller="Admin">
+                <div class="modal-body">
+
+
+                    <div class="form-group my-2 row justify-content-center">
+                        <label>نص الرسالة</label>
+                        <textarea name="message" class="col-11 my-2" rows="4"></textarea>
+
+                    </div>
+                    <p class="row my-2 py-3 px-3 text-secondary">
+                        يجب مراجعة الرسائل بين الطرفين قبل إارسال الرد وإرسال نتيجة المراجعة وتبدأ بجمل إإفتتتاحية ك  : تم مراجعة تلك العملية
+                    </p>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">رجوع</button>
+                    <button type="submit" class="btn btn-success">ارسال الرد</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function complain(id){
+    @*document.getElementById("rateForm").append(` < input asp-for="Id" value="${id}" >`);*@
+        $("#complainForm").append(' <input name="Id" value="'+id+'" hidden>');
+    @*document.getElementById("rateForm").setAttribute("asp-route-id",id);*@
+    }
+</script>
