@@ -493,7 +493,7 @@ namespace Sho8lana.Controllers
                 StripCustId = null,
                 CreatedDate = DateTime.Now,
                 PaymentType = "Balance",
-                TotalAmount =(int) contract.ContractPrice,
+                TotalAmount =(int) contract.ContractPrice*100,
             };
             context.Payments.Add(payment);
             contract.StartDate = DateTime.Now;
@@ -504,6 +504,27 @@ namespace Sho8lana.Controllers
             customer.Balance -= contract.ContractPrice;
             await context.complete();
             return RedirectToAction("CustomerContracts");
+        }
+        public async Task<IActionResult> BalanceDetails()
+        {
+            var customerId = userManager.GetUserId(User);
+            var customer = await context.Customers.GetBy(s => s.Id == customerId);
+            if (customer == null)
+            {
+                return LocalRedirect("~/Identity/Account/AccessDenied");
+            }
+            var boughtservices =( await context.Payments.GetAllBy(s => s.Contract.BuyerId == customerId && s.Contract.SericeOwnerId != customerId)).OrderByDescending(s => s.CreatedDate);
+            var soldservices = (await context.Payments.GetAllBy(s => s.Contract.SellerId == customerId && s.Contract.SericeOwnerId == customerId&&s.Contract.IsDone==true)).OrderByDescending(s => s.CreatedDate);
+            var charges = (await context.BalanceCharges.GetAllBy(s => s.CustomerId == customerId)).OrderByDescending(s => s.CreatedDate);
+            var orders = (await context.Payments.GetAllBy(s => s.CustomerId == customerId&&s.Contract.SericeOwnerId==customerId)).OrderByDescending(s=>s.CreatedDate);
+            var model = new CustomerBalanceDetailsViewModel()
+            {
+                balanceCharges=charges,
+                boughtServices=boughtservices,
+                orders=orders,
+                payedServices=soldservices
+            };
+            return View(model);
         }
 
     }
