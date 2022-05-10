@@ -68,7 +68,7 @@ namespace Sho8lana.Controllers
         [HttpPost]
         public async Task <IActionResult> UploadImage(IFormFile Pic,int ServiceId,int updateNo)
         {
-            var service=await context.Services.GetById(ServiceId);
+            var service=await context.Services.GetEagerLodingAsync(s => s.ServiceId == ServiceId,new string[] { "Medias" });
             var name = service.ServiceId + "-" + service.Title + "-" + Guid.NewGuid()+ ".jpg";
             if (updateNo < service.Medias.Count)
             {

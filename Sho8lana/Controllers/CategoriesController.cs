@@ -19,7 +19,8 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> Index(int id,int pg=1)
         {
 
-            var services = await _context.Services.GetAllBy(s => s.IsFreelancer && s.IsAccepted && s.CategoryId == id);
+            var services = await _context.Services
+                .GetAllEagerLodingAsync(s => s.IsFreelancer && s.IsAccepted && s.CategoryId == id,new string[] {"Medias", "Contracts", "Customer"});
             var categories = await _context.Categories.GetAll();
 
             //////paging section
@@ -50,17 +51,17 @@ namespace Sho8lana.Controllers
             if (text == null)
             {
                 services = await _context.Services
-                                 .GetAllBy(s => s.IsAccepted
+                                 .GetAllEagerLodingAsync(s => s.IsAccepted
                                   && s.IsFreelancer == Convert.ToBoolean(type)
-                                  && s.Rate <= (Rate??10) && s.Price <= (Price??int.MaxValue));
+                                  && s.Rate <= (Rate??10) && s.Price <= (Price??int.MaxValue), new string[] { "Medias", "Contract", "Customer" });
             }
             else
             {
                                 services = await _context.Services
-                                 .GetAllBy(s => s.IsAccepted
+                                 .GetAllEagerLodingAsync(s => s.IsAccepted
                                   && s.IsFreelancer == Convert.ToBoolean(type)
                                   && s.Rate <= (Rate ?? 10) && s.Price <= (Price ?? int.MaxValue)
-                                  && (s.Description.Contains(text)||s.Title.Contains(text)));
+                                  && (s.Description.Contains(text)||s.Title.Contains(text)), new string[] { "Medias", "Contract", "Customer" });
 
             }
             if (!(CatId is null)) services = services.Where(s => s.CategoryId == CatId);
@@ -96,7 +97,9 @@ namespace Sho8lana.Controllers
         }
         public async Task<IActionResult> Hiring(int id, int pg = 1)
         {
-            var services = await _context.Services.GetAllBy(s => s.IsFreelancer==false && s.IsAccepted && s.CategoryId == id);
+            var services = await _context.Services
+                                    .GetAllEagerLodingAsync(s => s.IsFreelancer==false && s.IsAccepted && s.CategoryId == id
+                                    , new string[] { "Medias", "Contract", "Customer" });
             var categories = await _context.Categories.GetAll();
             ////paging section
             const int PageSize = 16;
