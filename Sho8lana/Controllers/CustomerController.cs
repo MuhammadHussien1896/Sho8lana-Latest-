@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR.Client;
 using Sho8lana.Hangfire;
 using Sho8lana.Models;
 using Sho8lana.Models.ViewModels;
@@ -15,12 +16,20 @@ namespace Sho8lana.Controllers
         private readonly IUnitOfWork context;
         private readonly UserManager<Customer> userManager;
         private readonly ContractJobs jobs;
+        private readonly HubConnection connection;
 
         public CustomerController(IUnitOfWork context,UserManager<Customer> userManager)
         {
             this.context = context;
             this.userManager = userManager;
             this.jobs = new ContractJobs(context);
+            //connection = new HubConnectionBuilder()
+            //                    .WithUrl("https://localhost:7009/chatHub", options =>
+            //                    {
+            //                        options.UseDefaultCredentials = true;
+            //                    })
+            //                    .Build();
+            
         }
         public async Task<IActionResult> account(string id)
         {
@@ -86,16 +95,25 @@ namespace Sho8lana.Controllers
                 return BadRequest();
             }
             var contract = AddContract(customerRequest);
-            
+
             //add notification to the customer who sent the request to the service
+            var content = $"{customer.FirstName} {customer.LastName} قد قبل طلبك للخدمة '{contract.Service.Title}' !" +
+                $"رجاءً تفقد العقود المنتظرة لبدء العمل";
             jobs.AddNotification(contract.CustomerId,
                 $"{customer.FirstName} {customer.LastName} قد قبل طلبك للخدمة '{contract.Service.Title}' !" +
                 $"رجاءً تفقد العقود المنتظرة لبدء العمل");
+            
+            
             //delete customer request after accepting and become a contract
             await context.CustomerRequests.Delete(id);
             //saving changes in database
             await context.complete();
-            
+            //if (connection.State == HubConnectionState.Disconnected)
+            //{
+            //    await connection.StartAsync();
+            //}
+            //await connection.InvokeAsync("SendNotification", contract.CustomerId, content);
+
             return RedirectToAction(nameof(CustomerContracts));
         }
 
@@ -378,11 +396,16 @@ namespace Sho8lana.Controllers
                         //    Content = $"You have a new request from" +
                         //    $" {customer.FirstName} {customer.LastName} about your service : {RequestedService.Title} "
                         //});
-                        AddNotification(RequestedService.CustomerId,
-                            $"لديك طلب جديد من" +
-                            $" {customer.FirstName} {customer.LastName} عن خدمة : {RequestedService.Title} ");
+                        var content = $"لديك طلب جديد من" +
+                            $" {customer.FirstName} {customer.LastName} عن خدمة : {RequestedService.Title} ";
+                        AddNotification(RequestedService.CustomerId, content);
 
                         await context.complete();
+                        //if (connection.State == HubConnectionState.Disconnected)
+                        //{
+                        //    await connection.StartAsync();
+                        //}
+                        //await connection.InvokeAsync("SendNotification", RequestedService.CustomerId, content);
                         return RedirectToAction(nameof(CustomerRequests));
                     }
                     else
