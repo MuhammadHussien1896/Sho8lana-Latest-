@@ -505,10 +505,10 @@ namespace Sho8lana.Controllers
             {
                 return LocalRedirect("~/Identity/Account/AccessDenied");
             }
-            var boughtservices = (await context.Payments.GetAllEagerLodingAsync(s => s.Contract.BuyerId == customerId && s.Contract.SericeOwnerId != customerId,new string[] { "Contract", "Contract.Service", "Customer" })).OrderByDescending(s => s.CreatedDate);
-            var soldservices = (await context.Payments.GetAllEagerLodingAsync(s => s.Contract.SellerId == customerId && s.Contract.SericeOwnerId == customerId && s.Contract.IsDone == true, new string[] { "Contract", "Contract.Service", "Customer" })).OrderByDescending(s => s.CreatedDate);
+            var boughtservices = (await context.Payments.GetAllEagerLodingAsync(s => s.Contract.BuyerId == customerId && s.Contract.SericeOwnerId != customerId,new string[] {  "Contract.Service.Customer", "Customer" })).OrderByDescending(s => s.CreatedDate);
+            var soldservices = (await context.Payments.GetAllEagerLodingAsync(s => s.Contract.SellerId == customerId && s.Contract.SericeOwnerId == customerId && s.Contract.IsDone == true, new string[] { "Contract.Service.Customer", "Customer" })).OrderByDescending(s => s.CreatedDate);
             var charges = (await context.BalanceCharges.GetAllEagerLodingAsync(s => s.CustomerId == customerId, new string[] { "Customer" })).OrderByDescending(s => s.CreatedDate);
-            var orders = (await context.Payments.GetAllEagerLodingAsync(s => s.CustomerId == customerId && s.Contract.SericeOwnerId == customerId, new string[] { "Contract", "Contract.Service", "Customer" })).OrderByDescending(s => s.CreatedDate);
+            var orders = (await context.Payments.GetAllEagerLodingAsync(s => s.CustomerId == customerId && s.Contract.SericeOwnerId == customerId, new string[] {  "Contract.Customer", "Customer" })).OrderByDescending(s => s.CreatedDate);
             var model = new CustomerBalanceDetailsViewModel()
             {
                 balanceCharges = charges,
