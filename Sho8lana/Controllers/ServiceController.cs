@@ -46,7 +46,9 @@ namespace Sho8lana.Controllers
             {
                 return NotFound();
             }
-            var service = await _context.Services.GetEagerLodingAsync(s => s.ServiceId == id,new string[] { "Category" });
+            var service = await _context.Services
+                .GetEagerLodingAsync(s => s.ServiceId == id
+                ,new string[] { "Category","Medias","Category", "Contracts.Customer","Customer" });
 
             if(service == null)
             {
@@ -289,7 +291,7 @@ namespace Sho8lana.Controllers
             }
             var allMessages = _context.ServiceMessages
                                 .GetAllEagerLodingAsync(m => m.CustomerId == id || m.ReceiverId == id
-                                ,new string[] {"Customer","Service"}).Result
+                                ,new string[] {"Customer","Service.Customer"}).Result
                                 .OrderByDescending(m => m.MessageDate)
                                 .GroupBy(m => m.ServiceId);
             var latestMessages = new List<ServiceMessage>();

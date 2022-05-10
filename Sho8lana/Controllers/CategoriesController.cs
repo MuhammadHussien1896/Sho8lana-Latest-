@@ -20,7 +20,7 @@ namespace Sho8lana.Controllers
         {
 
             var services = await _context.Services
-                .GetAllEagerLodingAsync(s => s.IsFreelancer && s.IsAccepted && s.CategoryId == id,new string[] {"Medias","Contract","Customer"});
+                .GetAllEagerLodingAsync(s => s.IsFreelancer && s.IsAccepted && s.CategoryId == id,new string[] {"Medias", "Contracts", "Customer"});
             var categories = await _context.Categories.GetAll();
 
             //////paging section
