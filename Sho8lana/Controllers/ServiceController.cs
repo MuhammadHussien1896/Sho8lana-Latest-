@@ -46,7 +46,7 @@ namespace Sho8lana.Controllers
             {
                 return NotFound();
             }
-            var service = await _context.Services.GetById(id);
+            var service = await _context.Services.GetEagerLodingAsync(s => s.ServiceId == id,new string[] { "Category" });
 
             if(service == null)
             {
@@ -136,7 +136,7 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customerId = userManager.GetUserId(User);
-            var service = await _context.Services.GetById(id);
+            var service = await _context.Services.GetEagerLodingAsync(s => s.ServiceId == id,new string[] { "CustomerRequests", "Contracts" });
             if (customerId != service.CustomerId)
             {
                 return LocalRedirect("~/Identity/Account/AccessDenied");
@@ -145,7 +145,7 @@ namespace Sho8lana.Controllers
             
             if(service.CustomerRequests.Count > 0 || service.Contracts.Count > 0)
             {
-                return RedirectToAction(nameof(Details),new { id = id});
+                return RedirectToAction(nameof(Details),new {id});
             }
             _context.Services.Delete(service);
             await _context.complete();
@@ -288,7 +288,9 @@ namespace Sho8lana.Controllers
                 return NotFound();
             }
             var allMessages = _context.ServiceMessages
-                                .GetAllBy(m => m.CustomerId == id || m.ReceiverId == id).Result.OrderByDescending(m => m.MessageDate)
+                                .GetAllEagerLodingAsync(m => m.CustomerId == id || m.ReceiverId == id
+                                ,new string[] {"Customer","Service"}).Result
+                                .OrderByDescending(m => m.MessageDate)
                                 .GroupBy(m => m.ServiceId);
             var latestMessages = new List<ServiceMessage>();
             foreach (var item in allMessages)
@@ -309,7 +311,7 @@ namespace Sho8lana.Controllers
             var chatMessages = _context.ServiceMessages
                 .GetAllBy(m => ((m.CustomerId == userId && m.ReceiverId == receiverId) 
                 || (m.CustomerId == receiverId && m.ReceiverId == userId))
-                && m.ServiceId == id).Result.OrderByDescending(m => m.MessageDate);
+                && m.ServiceId == id).Result;
             var receiverName = $"{receiver.FirstName} {receiver.LastName}";
             var onlineReceiver = await _context.OnlineUsers.GetBy(u => u.UserId == receiverId);
             ChatViewModel model = new ChatViewModel()
@@ -327,7 +329,7 @@ namespace Sho8lana.Controllers
             {
                 messsage.IsRead = true;
             }
-            _context.ServiceMessages.UpdateList(unreadMessages.ToList());
+            //_context.ServiceMessages.UpdateList(unreadMessages.ToList());
             await _context.complete();
             return View(model);
             

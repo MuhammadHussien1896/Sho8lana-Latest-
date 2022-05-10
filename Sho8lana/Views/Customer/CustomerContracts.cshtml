@@ -168,7 +168,7 @@
                         
                         @if(Model.UserId == contract.BuyerId)
                         {
-                        <a class="btn btn-primary" asp-controller="customer" asp-action="CustomerCheckOut" asp-route-contractId="@contract.ContractId">
+                        <a class="btn btn-primary" asp-controller="payment" asp-action="CustomerCheckOut" asp-route-contractId="@contract.ContractId">
                           الإنتقال للدفع
                         </a>
                             

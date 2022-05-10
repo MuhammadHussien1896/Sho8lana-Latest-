@@ -14,7 +14,8 @@ namespace Sho8lana.Hangfire
         }
         public async Task EndContract(int contractId)
         {
-            var contract = await context.Contracts.GetById(contractId);
+            //var contract = await context.Contracts.GetById(contractId);
+            var contract = await context.Contracts.GetEagerLodingAsync(c => c.ContractId == contractId, new string[] { "Service" });
             if (!contract.IsDone && !contract.IsCanceled)
             {
                 if (contract.SellerIsDone)
