@@ -53,7 +53,7 @@ namespace Sho8lana.Controllers
                 services = await _context.Services
                                  .GetAllEagerLodingAsync(s => s.IsAccepted
                                   && s.IsFreelancer == Convert.ToBoolean(type)
-                                  && s.Rate <= (Rate??10) && s.Price <= (Price??int.MaxValue), new string[] { "Medias", "Contract", "Customer" });
+                                  && s.Rate <= (Rate??10) && s.Price <= (Price??int.MaxValue), new string[] { "Medias", "Contracts", "Customer" });
             }
             else
             {
@@ -61,7 +61,7 @@ namespace Sho8lana.Controllers
                                  .GetAllEagerLodingAsync(s => s.IsAccepted
                                   && s.IsFreelancer == Convert.ToBoolean(type)
                                   && s.Rate <= (Rate ?? 10) && s.Price <= (Price ?? int.MaxValue)
-                                  && (s.Description.Contains(text)||s.Title.Contains(text)), new string[] { "Medias", "Contract", "Customer" });
+                                  && (s.Description.Contains(text)||s.Title.Contains(text)), new string[] { "Medias", "Contracts", "Customer" });
 
             }
             if (!(CatId is null)) services = services.Where(s => s.CategoryId == CatId);

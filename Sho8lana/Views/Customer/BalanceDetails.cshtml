@@ -74,7 +74,6 @@
             <table class="table table-bordered table-hover table-striped text-center table-responsive mt-3" dir="rtl">
           <thead class="myBtn">
               <tr>
-                  <th scope="col">الاسم</th>
                   <th scope="col">تاريخ العملية</th>
                   <th scope="col">طريقة الدفع</th>
                   <th scope="col">المبلغ</th>
@@ -87,7 +86,6 @@
               @foreach (var item in @Model.payedServices)
               {
               <tr>
-                  <th scope="row">@item.Contract.Service.Customer.FirstName</th>
                   <td>@item.CreatedDate</td>
                   <td>@item.PaymentType</td>
                   <td>@(item.TotalAmount/100)</td>
