@@ -233,7 +233,7 @@ namespace server.Controllers
             contract.JobId = jobId;
             customer.Balance -= contract.ContractPrice;
             await _context.complete();
-            return RedirectToAction("CustomerContracts");
+            return RedirectToAction("CustomerContracts","customer");
         }
 
     }
