@@ -1,4 +1,6 @@
 ﻿using Hangfire;
+using Microsoft.AspNetCore.SignalR;
+using Sho8lana.Hubs;
 using Sho8lana.Models;
 using Sho8lana.Unit_Of_Work;
 
@@ -7,10 +9,11 @@ namespace Sho8lana.Hangfire
     public class ContractJobs
     {
         private readonly IUnitOfWork context;
-
-        public ContractJobs(IUnitOfWork context)
+        private readonly IHubContext<ChatHub> hubContext;
+        public ContractJobs(IUnitOfWork context, IHubContext<ChatHub> hubContext)
         {
             this.context = context;
+            this.hubContext = hubContext;
         }
         public async Task EndContract(int contractId)
         {
@@ -22,7 +25,7 @@ namespace Sho8lana.Hangfire
                 {
                     await AddPendingBalance(contract.SellerId, contract.ContractPrice);
                     var jobId = BackgroundJob.Schedule(() => AddBalanceFromPending(contract.SellerId, contract.ContractPrice),TimeSpan.FromDays(14));
-                    AddNotification(contract.SellerId, $"تهانينا لقد تم تحويل {contract.ContractPrice}$" +
+                    await AddNotification(contract.SellerId, $"تهانينا لقد تم تحويل {contract.ContractPrice}$" +
                         $" الى حسابك لإتمامك خدمة '{contract.Service.Title}'");
                     contract.JobId = jobId;
                     contract.IsDone = true;
@@ -30,7 +33,7 @@ namespace Sho8lana.Hangfire
                 else
                 {
                     await AddBalance(contract.BuyerId, contract.ContractPrice);
-                    AddNotification(contract.SellerId, $"تم ارجاع {contract.ContractPrice}$" +
+                    await AddNotification(contract.SellerId, $"تم ارجاع {contract.ContractPrice}$" +
                         $" الى حسابك بسبب عدم تسليم البائع الخدمة  '{contract.Service.Title}' في الوقت المحدد");
                     contract.IsCanceled = true;
                 }
@@ -60,7 +63,7 @@ namespace Sho8lana.Hangfire
             //context.Customers.Update(buyer);
 
         }
-        public void AddNotification(string customerId, string content)
+        public async Task AddNotification(string customerId, string content)
         {
             Notification notification = new Notification()
             {
@@ -68,6 +71,19 @@ namespace Sho8lana.Hangfire
                 Content = content
             };
             context.Notifications.Add(notification);
+            await SendNotification(customerId, content);
+        }
+        public async Task SendNotification(string receiverId, string content)
+        {
+            var receiverConnectionIds = context.OnlineUsers.GetAllBy(u => u.UserId == receiverId).Result.Select(u => u.ConnectionId);
+            if (receiverConnectionIds != null)
+            {
+                foreach (var receiverConnectionId in receiverConnectionIds)
+                {
+                    await hubContext.Clients.Client(receiverConnectionId).SendAsync("ReceiveNotification", content);
+
+                }
+            }
         }
         public async Task CalculateOverallRate(int serviceId, int newRate)
         {
