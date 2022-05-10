@@ -344,7 +344,7 @@ namespace Sho8lana.Controllers
         
         public async Task<IActionResult> ShowServiceMessages(int id)//complain id
         {
-            var complain = await _context.Complains.GetEagerLodingAsync(c => c.ContractId == id,new string[] {"Contract"});
+            var complain = await _context.Complains.GetEagerLodingAsync(c => c.ComplainId == id,new string[] {"Contract"});
             var contract = complain?.Contract;
             if (contract == null)
             {
@@ -370,7 +370,7 @@ namespace Sho8lana.Controllers
         }
         public async Task<IActionResult> ReturnPriceToBuyer(int id)//contract id
         {
-            var contract = await _context.Contracts.GetEagerLodingAsync(c => c.ContractId == id,new string[] { "Complain" });
+            var contract = await _context.Contracts.GetEagerLodingAsync(c => c.ComplainId == id,new string[] { "Complain" });
             var buyer = await _context.Customers.GetById(contract?.BuyerId);
             var seller = await _context.Customers.GetById(contract?.SellerId);
             if(contract == null || buyer == null || seller == null)
@@ -401,17 +401,16 @@ namespace Sho8lana.Controllers
         [HttpGet]
         public async Task<IActionResult> ShowComplains()
         {
-            var Complains=await _context.Complains.GetAllBy(c=>c.IsSolved==false);
+            var Complains=await _context.Complains.GetAllEagerLodingAsync(c=>c.IsSolved==false,new string[] {"Contract.Service.Category"});
             return View(Complains);
         }
         
-        [HttpPost]
         public async Task<IActionResult> ReplayAdminToComplaint(int id,string message=null)
         {
 
            
 
-            var complaint = await _context.Complains.GetById(id);
+            var complaint = await _context.Complains.GetEagerLodingAsync(c => c.ComplainId == id, new string[] { "Contract" });
             string userAdminId = _userManager.GetUserId(User);
             var userAdmin=await _context.Customers.GetById(userAdminId);
 
@@ -449,7 +448,7 @@ namespace Sho8lana.Controllers
 
         public async Task<IActionResult> ReviewComplaintAndSolved(int id)
         {
-            var complaint = await _context.Complains.GetById(id);
+            var complaint = await _context.Complains.GetEagerLodingAsync(c => c.ComplainId == id,new string[] {"Contract.Service"});
             if (complaint == null) { return NotFound(); }
             try {
 
