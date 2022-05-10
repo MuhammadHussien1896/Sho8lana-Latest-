@@ -28,6 +28,8 @@ namespace Sho8lana.Hubs
                 ServiceId = serviceId,
             };
             var date = DateTime.Now.ToShortTimeString();
+            context.ServiceMessages.Add(serviceMessage);
+            await context.complete();
             var receiverConnectionIds = context.OnlineUsers.GetAllBy(u => u.UserId == receiverId).Result.Select(u => u.ConnectionId);
             if(receiverConnectionIds != null)
             {
@@ -38,9 +40,20 @@ namespace Sho8lana.Hubs
                 }
             }
             await Clients.Client(Context.ConnectionId).SendAsync("ReceiveMessage", message, senderId, date);
-            context.ServiceMessages.Add(serviceMessage);
-            await context.complete();
+            
 
+        }
+        public async Task SendNotification(string receiverId, string content)
+        {
+            var receiverConnectionIds = context.OnlineUsers.GetAllBy(u => u.UserId == receiverId).Result.Select(u => u.ConnectionId);
+            if (receiverConnectionIds != null)
+            {
+                foreach (var receiverConnectionId in receiverConnectionIds)
+                {
+                    await Clients.Client(receiverConnectionId).SendAsync("ReceiveNotification", content);
+
+                }
+            }
         }
         public override async Task OnConnectedAsync()
         {
