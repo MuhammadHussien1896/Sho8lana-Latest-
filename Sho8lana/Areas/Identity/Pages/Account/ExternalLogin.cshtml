@@ -4,17 +4,144 @@
     ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
+@*<h1>@ViewData["Title"]</h1>
 <h2 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h2>
 <hr />
-
-<p id="external-login-description" class="text-info">
+*@
+@*<p id="external-login-description" class="text-info">
     You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
     Please enter an email address for this site below and click the Register button to finish
     logging in.
-</p>
+</p>*@
 
 <div class="row">
+    
+    <div class="container register">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt="" />
+                <h3>Welcome</h3>
+                <p>Lorem</p>
+                
+                <a  asp-area="Identity" asp-page="/Account/Login">Login</a>
+                <br />
+            </div>
+            <div class="col-md-9 register-right">
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Customer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Freelancer</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="register-heading row">
+                    <p id="external-login-description " class="text-info ">نرجو تكملة البيانات التالية <strong>@Model.ProviderDisplayName</strong> لقد تمت المصادقة بنجاح مع </p>
+                    </div>    
+                    <form id="registerForm" asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="row register-form">
+                                <div class="col-md-6">
+                                    <div class="form-group  mt-4">
+                                        <input type="text" asp-for="Input.FirstName" class="form-control" placeholder="First Name *" value="" />
+                                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group  mt-4">
+                                        <input type="text" asp-for="Input.LastName" class="form-control" placeholder="Last Name *" value="" />
+                                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="form-group  mt-4">
+                                        <input type="password" asp-for="Input.Password" class="form-control" placeholder="Password *" value="" />
+                                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="form-group  mt-4">
+                                        <input type="password" asp-for="Input.ConfirmPassword" class="form-control" placeholder="Confirm Password *" value="" />
+                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="form-group  mt-4">
+                                        <div class="maxl">
+                                            <label class="radio inline">
+                                                <input type="radio" asp-for="Input.Gender" value="male" checked>
+                                                <span> Male </span>
+                                            </label>
+                                            <label class="radio inline">
+                                                <input type="radio" asp-for="Input.Gender" value="female">
+                                                <span>Female </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group  mt-4">
+                                        <input type="email" asp-for="Input.Email" class="form-control" placeholder="Your Email *"  autocomplete="email"/>
+                                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="form-group  mt-4">
+                                        <input type="text" asp-for="Input.PhoneNumber" minlength="11" maxlength="11" n class="form-control" placeholder="Your Phone *" value="" />
+                                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="form-floating  mt-4">
+                                        <textarea asp-for="Input.AboutMe" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                                        <label for="floatingTextarea2">About me</label>
+                                        <span asp-validation-for="Input.AboutMe" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                                @*Address*@
+                                <div class="row mt-4">
+                                    <div class="col-md-4">
+
+                                        <select asp-for="Input.Country" class="form-select">
+                                            <option value="Egypt"> مصر</option>
+                                        </select>
+                                        <span asp-validation-for="Input.Country" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select asp-for="Input.City" id="selCity" class="form-select" id="city">
+                                             @foreach (var item in Model.govern)
+                                                {
+                                                <option value="@item.Governorate_name_en">@item.Governorate_name_ar</option>
+                                                }
+                                        </select>
+                                        <span asp-validation-for="Input.City" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="col-md-4 ">
+
+                                        <select asp-for="Input.Area" id="SelArea" class="form-select">
+                                              @foreach (var item in Model.cities)
+                                                {
+                                                <option value="@item.city_name_en">@item.city_name_ar</option>
+                                                }
+                                        </select>
+                                        <span asp-validation-for="Input.Area" class="text-danger"></span>
+
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                            <button id="registerSubmit" type="submit" class=" btnRegister">Register</button>
+                        </form>
+                        @*endregister*@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@*<div class="row">
     <div class="col-md-4">
         <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -26,8 +153,30 @@
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
-</div>
+</div>*@
 
+   <script>
+    $("#selCity").on("change", function() {
+    var governorateId = $(this).val();
+        $("#SelArea").empty();
+    $.ajax({  
+            type: 'Get',  
+            url: '@Url.Action("OnGetSubCities","JsonApi")',
+            data:{GovernorateName:governorateId},
+            dataType: "json",  
+            success: (data)=> {
+                console.log(governorateId);
+                console.log(data);
+                    for(var i = 0; i < data.length; i++){
+                        $("#SelArea").append(`<option value="${data[i].city_name_en}">${data[i].city_name_ar}</option>`)
+                    }
+            },
+            error: function (ex) {  
+                console.log(ex)
+            }
+    })
+    })
+    </script>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
