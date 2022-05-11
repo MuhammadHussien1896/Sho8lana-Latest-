@@ -46,22 +46,26 @@
                 <h3> العمليات المتاحة على تلك الشكوى   </h3>
 
                 <ul style=" text-align:right">
-                    <form>
+                   @* <form>*@
                         <div class="mb-3 d-flex justify-content-end">
                             @if (!@item.IsReturned)
                             {
-                                <input type="submit" value="إعادة المال" asp-action="ReturnPriceToBuyer" asp-route-id="@item.ComplainId" class="btn btn-outline-danger btn-lg mx-2" />
+                               <a asp-action="ReturnPriceToBuyer" asp-route-id="@item.ComplainId" class="btn btn-outline-danger btn-lg mx-2">اعادة المال</a>
+                                @*<a type="submit" asp-action="ReturnPriceToBuyer" asp-route-id="@item.ComplainId" class="btn btn-outline-danger btn-lg mx-2" /></a>*@
                             }
-                            <input type="submit" value="عرض الرسائل" asp-action="ShowServiceMessages" asp-route-id="@item.ComplainId" class="btn btn-outline-primary btn-lg mx-2" />
+                             <a asp-action="ShowServiceMessages" asp-route-id="@item.ComplainId" class="btn btn-outline-primary btn-lg mx-2">عرض الرسائل</a>
+
+                            @*<input type="submit" value="عرض الرسائل" asp-action="ShowServiceMessages" asp-route-id="@item.ComplainId" class="btn btn-outline-primary btn-lg mx-2" />*@
                             <button type="button" class="btn btn-outline-success btn-lg mx-2" data-bs-toggle="modal" data-bs-target="#complain" onclick="complain('@item.ComplainId')">
                                 الرد على شكوى
                             </button>
                         </div>
-                            <input type="submit" value="تم الحل" asp-action="ReviewComplaintAndSolved" asp-route-id="@item.ComplainId" class="btn btn-outline-primary btn-lg mx-2" />
+                             <a asp-action="ReviewComplaintAndSolved" asp-route-id="@item.ComplainId" class="btn btn-outline-primary btn-lg mx-2">تم الحل</a>
+                            @*<input type="submit" value="تم الحل" asp-action="ReviewComplaintAndSolved" asp-route-id="@item.ComplainId" class="btn btn-outline-primary btn-lg mx-2" />*@
                         <p style="display:inline-block">إذا تم حل تلك الشكوى يرجى الضغط على تم </p>
 
 
-                    </form>
+                    @*</form>*@
                 </ul>
                 <div class="postcard__subtitle small" style=" text-align:right">
                     <time datetime="2020-05-25 12:00:00">

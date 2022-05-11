@@ -3,8 +3,10 @@ using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using Sho8lana.Hangfire;
+using Sho8lana.Hubs;
 using Sho8lana.Models;
 using Sho8lana.Unit_Of_Work;
 using Stripe;
@@ -18,13 +20,13 @@ namespace server.Controllers
         private readonly UserManager<Sho8lana.Models.Customer> userManager;
         private readonly ContractJobs jobs;
         string _sessionId;
-        public PaymentController(IUnitOfWork context, UserManager<Sho8lana.Models.Customer> userManager)
+        public PaymentController(IUnitOfWork context, UserManager<Sho8lana.Models.Customer> userManager, IHubContext<ChatHub> hubContext)
         {
             StripeConfiguration.ApiKey = "sk_test_51KtYXkEZF7e3vou0wl1X7ldWcbh4MUH7TdxiJfz3Ce4b4KYuqC2S7rSPHeZ8z8YMjdWjIARMCV2K2XvrrQn2GDzW00nB9Lf7gf";
             
             _context = context;
             this.userManager = userManager;
-            this.jobs = new ContractJobs(context);
+            this.jobs = new ContractJobs(context,hubContext);
         }
         public IActionResult index()
         {
@@ -100,7 +102,7 @@ namespace server.Controllers
             var jobId = BackgroundJob.Schedule(() =>jobs.EndContract(ContractId), TimeSpan.FromDays(Target.DeliveryTime));
             Target.JobId = jobId;//adding job id to be able to delete the job earlier 
             //_context.Contracts.Update(Target);
-            jobs.AddNotification(customerId, "تهانينا تم دفع سعر الخدمة بنجاح !");
+            await jobs.AddNotification(customerId, "تهانينا تم دفع سعر الخدمة بنجاح !");
             await _context.complete();
             
             return RedirectToAction("customercontracts","customer");
