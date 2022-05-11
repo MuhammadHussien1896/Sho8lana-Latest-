@@ -426,7 +426,7 @@ namespace Sho8lana.Controllers
             {
                 CustomerId = customerRequest.CustomerId,
                 ServiceId = customerRequest.ServiceId,
-                SericeOwnerId = customerRequest.Service.CustomerId
+                SericeOwnerId = customerRequest.Service.CustomerId,
             };
             if (customerRequest.Service.IsFreelancer)
             {
@@ -458,45 +458,45 @@ namespace Sho8lana.Controllers
             };
             return View(model);
         }
-        [Authorize(Roles = "User")]
-        [HttpPost]
-        public async Task<IActionResult> CustomerPay(string buyerId, int ContractId)
-        {
-            var customerId = userManager.GetUserId(User);
-            var customer = await context.Customers.GetBy(s => s.Id == customerId);
-            var contract = await context.Contracts.GetBy(s => s.ContractId == ContractId);
-            if (contract.BuyerId != customerId)
-            {
-                return LocalRedirect("~/Identity/Account/AccessDenied");
-            }
-            if (contract.StartDate != default)
-            {
-                return BadRequest();
-            }
-            if (customer.Balance - contract.ContractPrice < 0)
-            {
-                return BadRequest();
-            }
-            Payments payment = new Payments()
-            {
-                PaymentId = Guid.NewGuid().ToString(),
-                CustomerId = customerId,
-                ContractId = ContractId,
-                StripCustId = null,
-                CreatedDate = DateTime.Now,
-                PaymentType = "Balance",
-                TotalAmount = (int)contract.ContractPrice * 100,
-            };
-            context.Payments.Add(payment);
-            contract.StartDate = DateTime.Now;
-            contract.EndDate = contract.StartDate.AddDays(contract.DeliveryTime);
-            //hangfire job will run at the end of the contract
-            var jobId = BackgroundJob.Schedule(() => jobs.EndContract(ContractId), TimeSpan.FromDays(contract.DeliveryTime));
-            contract.JobId = jobId;
-            customer.Balance -= contract.ContractPrice;
-            await context.complete();
-            return RedirectToAction("CustomerContracts");
-        }
+        //[Authorize(Roles = "User")]
+        //[HttpPost]
+        //public async Task<IActionResult> CustomerPay(string buyerId, int ContractId)
+        //{
+        //    var customerId = userManager.GetUserId(User);
+        //    var customer = await context.Customers.GetBy(s => s.Id == customerId);
+        //    var contract = await context.Contracts.GetBy(s => s.ContractId == ContractId);
+        //    if (contract.BuyerId != customerId)
+        //    {
+        //        return LocalRedirect("~/Identity/Account/AccessDenied");
+        //    }
+        //    if (contract.StartDate != default)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    if (customer.Balance - contract.ContractPrice < 0)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    Payments payment = new Payments()
+        //    {
+        //        PaymentId = Guid.NewGuid().ToString(),
+        //        CustomerId = customerId,
+        //        ContractId = ContractId,
+        //        StripCustId = null,
+        //        CreatedDate = DateTime.Now,
+        //        PaymentType = "Balance",
+        //        TotalAmount = (int)contract.ContractPrice * 100,
+        //    };
+        //    context.Payments.Add(payment);
+        //    contract.StartDate = DateTime.Now;
+        //    contract.EndDate = contract.StartDate.AddDays(contract.DeliveryTime);
+        //    //hangfire job will run at the end of the contract
+        //    var jobId = BackgroundJob.Schedule(() => jobs.EndContract(ContractId), TimeSpan.FromDays(contract.DeliveryTime));
+        //    contract.JobId = jobId;
+        //    customer.Balance -= contract.ContractPrice;
+        //    await context.complete();
+        //    return RedirectToAction("CustomerContracts");
+        //}
         public async Task<IActionResult> BalanceDetails()
         {
             var customerId = userManager.GetUserId(User);
