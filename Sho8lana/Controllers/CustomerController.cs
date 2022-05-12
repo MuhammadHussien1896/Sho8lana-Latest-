@@ -504,7 +504,7 @@ namespace Sho8lana.Controllers
             {
                 return LocalRedirect("~/Identity/Account/AccessDenied");
             }
-            var payments = await context.Payments.GetAllEagerLodingAsync(s => s.CustomerId == customerId || s.Contract.CustomerId == customerId, new string[] { "Contract", "Contract.Service", "Customer" });
+            var payments = await context.Payments.GetAllEagerLodingAsync(s => s.CustomerId == customerId || s.Contract.Service.CustomerId == customerId, new string[] { "Contract", "Contract.Service.Customer","Contract.Service", "Customer" });
             var boughtservices = payments.Where(s => s.Contract.BuyerId == customerId && s.Contract.SericeOwnerId != customerId).OrderByDescending(s => s.CreatedDate);
             var soldservices = payments.Where(s => s.Contract.SellerId == customerId && s.Contract.SericeOwnerId == customerId && s.Contract.IsDone == true).OrderByDescending(s => s.CreatedDate);
             var orders = payments.Where(s => s.CustomerId == customerId && s.Contract.SericeOwnerId == customerId).OrderByDescending(s => s.CreatedDate);
