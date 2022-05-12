@@ -7,11 +7,12 @@
 
 }
 
-<div class="container">
-    <a class="btn mb-4 ml-8 mt-3 myBtn" asp-action="CreateCategory">
+<div class="row justify-content-around">
+    <div class="row col-lg-7">
+    <a class="btn col-lg-3 mb-4 ml-8 mt-3 myBtn" asp-action="CreateCategory">
     <i class="bi bi-plus"></i>
     إضافة قسم جديد
-</a>
+    </a>
 
 <div class=" mt-8">
     @if (!Model.Any())
@@ -27,7 +28,7 @@
             @foreach (var item in Model)
             {
               <div class="col-12 ">
-                  <div class="card col-6  mb-3" >
+                  <div class="card mb-3" >
                       <div class="row g-0">
                         <div class="col-md-4">
                           <img src="~/Images/CategoriesImage/@item.CategoryImg" class="img-fluid rounded-start" alt="CategoryImg">
