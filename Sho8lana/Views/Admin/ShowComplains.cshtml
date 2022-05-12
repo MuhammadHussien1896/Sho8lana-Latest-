@@ -4,7 +4,7 @@
     ViewData["Title"] = "ShowComplains";
 }
 
-<div class="container mt-4">
+<div class="container mt-4" style="direction:rtl">
     @foreach (var item in Model)
     {
 
@@ -12,14 +12,24 @@
             <a class="postcard__img_link" asp-action="Details" asp-controller="Service" asp-route-id="@item.Contract.ServiceId">
                 <img class="postcard__img" src="~/Images/CategoriesImage/@item.Contract.Service.Category.CategoryImg" alt="Image Title" title="الذهاب الى الخدمة " />
             </a>
-            <div class="postcard__text t-dark mx-4" style=" text-align:right">
+            <div class="postcard__text t-dark mx-4">
                 <h1 class="postcard__title blue"> إسم الخدمة : <a asp-action="Details" asp-controller="Service" asp-route-id="@item.Contract.ServiceId" title="الذهاب الى الخدمة ">@item.Contract.Service.Title</a> </h1>
 
                 @*<div class="postcard__bar" style=" text-align:right"></div>*@
 
                 <h3> : تفاصيل الخدمة   </h3>
-                <div class="postcard__preview-txt" style=" text-align:right">
+                <div class="postcard__preview-txt">
                     <div class="postcard__subtitle small" >
+                        @if(item.Contract.BuyerId == item.Contract.CustomerId)
+                        {
+                            <p>اسم المشتري (صاحب الشكوى) : @item.Contract.Customer.FirstName @item.Contract.Customer.LastName</p>
+                            <p>اسم البائع : @item.Contract.Service.Customer.FirstName @item.Contract.Service.Customer.LastName</p>
+                        }
+                        else
+                        {
+                            <p>اسم المشتري (صاحب الشكوى) : @item.Contract.Service.Customer.FirstName @item.Contract.Service.Customer.LastName</p>
+                            <p>اسم البائع : @item.Contract.Customer.FirstName @item.Contract.Customer.LastName</p>
+                        }
                         <time datetime="2020-05-25 12:00:00">
                          <i class="fas fa-calendar-alt mr-2"></i>@item.Contract.StartDate   <p style="display:inline-block">موعد بدأ الخدمة </p>  <br/>
                            <i class="fas fa-calendar-alt mr-2"></i>@item.Contract.EndDate <p style="display:inline-block">موعد إنتهاء الخدمة </p> 
@@ -27,16 +37,23 @@
                     </div >
                     <p>@item.Contract.ContractPrice: سعر الخدمة </p>
                     <div>
-                        @*@if (@item.Contract.IsCanceled) {*@
-                        <div>
-                            <p>لقد تم إلغاء ذلك الإاتفاق </p>
-                        </div>
-                        @*}*@
+                        <p>حالة المشتري :</p>
+                        @if (@item.Contract.BuyerCanceled) {
+                            <div>
+                                <p>أرسل المشتري طلب الغاء </p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                            <p>لم يرسل المشتري طلب الغاء </p>
+                            </div>
+                        }
                     </div>
                     @*///////form //*@
                     <hr />
                     
-                    <div style=" text-align:right">
+                    <div>
                         <h3>: محتوى الشكوى  </h3>
                         <p>@item.ComplainContent</p>
                     </div>
@@ -45,7 +62,7 @@
                 <hr />
                 <h3> العمليات المتاحة على تلك الشكوى   </h3>
 
-                <ul style=" text-align:right">
+                <ul>
                    @* <form>*@
                         <div class="mb-3 d-flex justify-content-end">
                             @if (!@item.IsReturned)
