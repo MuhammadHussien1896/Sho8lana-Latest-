@@ -35,11 +35,11 @@ namespace Sho8lana.Hubs
             {
                 foreach (var receiverConnectionId in receiverConnectionIds)
                 {
-                    await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", message, senderId,date);
+                    await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", message, senderId, senderName, date);
                     
                 }
             }
-            await Clients.Client(Context.ConnectionId).SendAsync("ReceiveMessage", message, senderId, date);
+            await Clients.Client(Context.ConnectionId).SendAsync("ReceiveMessage", message, senderId,senderName, date);
             
 
         }

@@ -46,6 +46,7 @@ namespace Sho8lana.Hangfire
             var seller = await context.Customers.GetById(sellerId);
             seller.PendingBalance -= balance;
             seller.Balance += balance;
+            await AddNotification(sellerId, $"تهانينا لقد تم تحويل {balance}$ من رصيدك المعلق لرصيدك القابل للسحب");
             //context.Customers.Update(seller);
             await context.complete();
         }

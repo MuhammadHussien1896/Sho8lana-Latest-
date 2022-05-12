@@ -98,9 +98,7 @@ namespace Sho8lana.Controllers
             //add notification to the customer who sent the request to the service
             var content = $"{customer.FirstName} {customer.LastName} قد قبل طلبك للخدمة '{customerRequest.Service.Title}' !" +
                 $"رجاءً تفقد العقود المنتظرة لبدء العمل";
-            await jobs.AddNotification(contract.CustomerId,
-                $"{customer.FirstName} {customer.LastName} قد قبل طلبك للخدمة '{customerRequest.Service.Title}' !" +
-                $"رجاءً تفقد العقود المنتظرة لبدء العمل");
+            await jobs.AddNotification(contract.CustomerId,content);
             
             
             //delete customer request after accepting and become a contract
@@ -312,6 +310,7 @@ namespace Sho8lana.Controllers
                 contract.ContractPrice = Price;
                 contract.DeliveryTime = DeliveryTime;
                 //context.Contracts.Update(contract);
+                await jobs.AddNotification(contract.CustomerId, "لقد تم تحديد سعر الخدمة ومدة التنفيذ ، من فضلك اذهب للعقود للموافقة على السعر ومدة التنفيذ");
                 await context.complete();
                 return RedirectToAction(nameof(AcceptContract),new {Id });
             }
@@ -410,15 +409,15 @@ namespace Sho8lana.Controllers
             }
         }
 
-        private void AddNotification(string customerId,string content)
-        {
-            Notification notification = new Notification()
-            {
-                CustomerId = customerId,
-                Content = content
-            };
-            context.Notifications.Add(notification);
-        }
+        //private void AddNotification(string customerId,string content)
+        //{
+        //    Notification notification = new Notification()
+        //    {
+        //        CustomerId = customerId,
+        //        Content = content
+        //    };
+        //    context.Notifications.Add(notification);
+        //}
         private Contract AddContract(CustomerRequest customerRequest)
         {
             //converting request to a pending contract

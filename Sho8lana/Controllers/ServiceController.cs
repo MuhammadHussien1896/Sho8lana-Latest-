@@ -12,6 +12,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Sho8lana.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using Sho8lana.Hangfire;
+using Sho8lana.Hubs;
 
 namespace Sho8lana.Controllers
 {
@@ -22,11 +25,13 @@ namespace Sho8lana.Controllers
 
         private readonly IUnitOfWork _context ;
         private readonly UserManager<Customer> userManager;
+        private readonly ContractJobs jobs;
 
-        public ServiceController(IUnitOfWork context,UserManager<Customer> userManager)
+        public ServiceController(IUnitOfWork context,UserManager<Customer> userManager,IHubContext<ChatHub> hubContext)
         {
             _context = context;
             this.userManager = userManager;
+            jobs = new ContractJobs(context, hubContext);
         }
 
         /*
@@ -208,14 +213,15 @@ namespace Sho8lana.Controllers
                 {
                     service.IsAccepted = false;
                     _context.Services.Update(service);
-                    Notification notification = new Notification
-                    {
-                        Content = $"تم تعديل خدمة {service.Title} وهى الان في مرحلة المراجعة ",
-                        Date = DateTime.Now,
-                        IsRead = false,
-                        CustomerId = service.CustomerId,
-                    };
-                     _context.Notifications.Add(notification);
+                    await jobs.AddNotification(service.CustomerId, $"تم تعديل خدمة {service.Title} وهى الان في مرحلة المراجعة ");
+                    //Notification notification = new Notification
+                    //{
+                    //    Content = $"تم تعديل خدمة {service.Title} وهى الان في مرحلة المراجعة ",
+                    //    Date = DateTime.Now,
+                    //    IsRead = false,
+                    //    CustomerId = service.CustomerId,
+                    //};
+                     //_context.Notifications.Add(notification);
                     await _context.complete();
 
                     //var allImages = _context.Medias.GetAllBy(m=>m.ServiceId==service.ServiceId);
