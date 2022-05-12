@@ -18,6 +18,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Sho8lana.Models;
+using Sho8lana.Unit_Of_Work;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net.Mail;
 
 namespace Sho8lana.Areas.Identity.Pages.Account
 {
@@ -30,13 +33,15 @@ namespace Sho8lana.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<Customer> _emailStore;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ExternalLoginModel(
             SignInManager<Customer> signInManager,
             UserManager<Customer> userManager,
             IUserStore<Customer> userStore,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork unitOfWork)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -44,6 +49,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -72,21 +78,71 @@ namespace Sho8lana.Areas.Identity.Pages.Account
         [TempData]
         public string ErrorMessage { get; set; }
 
+        public List<Governorate> govern { get; set; }
+        public List<City> cities { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int GovernorateId { get; set; }
+        public int SelArea { get; set; }
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+
+            [Required, StringLength(15, MinimumLength = 3, ErrorMessage = "Firstname must be between 3-15 characters")]
+            [RegularExpression("[a-zA-z]+")]
+            public string FirstName { get; set; }
+            [Required, StringLength(15, MinimumLength = 3, ErrorMessage = "Lastname must be between 3-15 characters")]
+            [RegularExpression("[a-zA-z]+")]
+            public string LastName { get; set; }
+
+
+            [Required]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [DataType(DataType.Password)]
+            [Display(Name = "Password")]
+            public string Password { get; set; }
+
+
+            [DataType(DataType.Password)]
+            [Display(Name = "Confirm password")]
+            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            public string ConfirmPassword { get; set; }
+
             [Required]
             [EmailAddress]
+            [Display(Name = "Email")]
             public string Email { get; set; }
+
+            [Required]
+
+            [RegularExpression("^01[0-2,5]{1}[0-9]{8}$")]
+            [Display(Name = "PhoneNumber")]
+            public string PhoneNumber { get; set; }
+            public string? AboutMe { get; set; }
+            [Required, MaxLength(6)]
+
+            public string Gender { get; set; }
+            // Address
+            [Required]
+            public string Country { get; set; }
+            [Required]
+            public string City { get; set; }
+            [Required]
+            public string Area { get; set; }
+
+            public string ProfileImage { get; set; }
+            //image
+            public string NationalIdImage { get; set; }
+
+
+
         }
-        
+
+
         public IActionResult OnGet() => RedirectToPage("./Login");
 
         public IActionResult OnPost(string provider, string returnUrl = null)
@@ -94,11 +150,16 @@ namespace Sho8lana.Areas.Identity.Pages.Account
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            cities = _unitOfWork.Cities.GetAll().Result;
+            govern = _unitOfWork.Governorates.GetAll().Result;
+            ViewData["CityId"] = _unitOfWork.Governorates.GetAll().Result.Select(c => new SelectListItem { Value = c.GovernorateId.ToString(), Text = c.Governorate_name_ar }).ToList();
+
             return new ChallengeResult(provider, properties);
         }
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
+
             returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
             {
@@ -135,6 +196,10 @@ namespace Sho8lana.Areas.Identity.Pages.Account
                         Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                     };
                 }
+                cities = _unitOfWork.Cities.GetAll().Result;
+                govern = _unitOfWork.Governorates.GetAll().Result;
+                ViewData["CityId"] = _unitOfWork.Governorates.GetAll().Result.Select(c => new SelectListItem { Value = c.GovernorateId.ToString(), Text = c.Governorate_name_ar }).ToList();
+
                 return Page();
             }
         }
@@ -152,7 +217,23 @@ namespace Sho8lana.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
+                //var user = CreateUser();
+
+                var user = new Customer()
+                {
+                    UserName = new MailAddress(Input.Email).User,
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    PasswordHash = Input.Password,
+                    Gender = Input.Gender,
+                    Email = Input.Email,
+                    PhoneNumber = Input.PhoneNumber,
+                    AboutMe = Input.AboutMe,
+                    Country = Input.Country,
+                    City = Input.City,
+                    Area = Input.Area
+
+                };
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -160,6 +241,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    // add login provider in AspUserLogin Table
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
