@@ -1,0 +1,362 @@
+﻿@model ServicesCategoriesViewModel
+@{
+    ViewData["Title"] = "Services";
+    //pagination pager = new pagination();
+    //int pageNo = 0;
+    //if (ViewBag.pager != null)
+    //{
+    //    pager = ViewBag.pager;
+    //    pageNo = pager.CurrentPage;
+    //}
+    //var trustedSeller = (TempData["Trusted"]?.ToString());
+    //int rate;
+    //int Price;
+    //int.TryParse((TempData["Rate"]?.ToString()), out rate);
+    //var res = int.TryParse((TempData["Price"]?.ToString()), out Price);
+    //Price = (res == false ? int.MaxValue : Price);
+    //trustedSeller = (trustedSeller == null ? "false" : "true");
+    //CatId = (CatId == null ? 0 : CatId);
+    var text = ViewBag.Text;
+    var CatId =ViewBag.Id;
+}
+<section id="services" class="services section-bg pt-3 row" style="direction:rtl">
+    <div class="col-12 d-flex justify-content-around" data-aos="fade-up">
+        <div class="section-title">
+            <h2>خدماتنا</h2>
+            <p> أحصل على أفضل الخدمات بأفضل الأسعار</p>
+        </div>
+    </div>
+    <div class="col-12 my-5 d-flex justify-content-center">
+        <form asp-action="index" asp-controller="Categories" asp-route-type="Hiring"  asp-route-id="@CatId">
+            <input type="checkbox" checked data-toggle="toggle" data-on="خدمات" data-off="طلبات" data-onstyle="success" data-offstyle="primary" id="checkbox">
+        </form>            
+    </div>
+    <!-- ========================= Search Form Section ============================= -->
+    <div class="col-2" style="direction:rtl">
+        <div class="d-flex flex-column flex-shrink-0 mb-5 icon-box iconbox-blue w-100" style="width: 280px;direction:rtl">
+            <a href="/" class="d-flex align-items-center justify-content-center link-dark text-decoration-none">
+                <span class="fs-4">خدماتنا</span>
+            </a>
+            <form asp-action="search" id="SearchForm" method="get">
+                <input type="hidden" value="services" name="type" />
+                <input type="Text" value="@text" name="text" class="form-control my-3" placeholder="أكتب ماتريد البحث عنه">
+                <select class="form-select text-center selectCategories" name="CatId" size="8" aria-label="size 3 select example">
+                    @foreach (var item in Model.categories)
+                    {
+                        <option value="@item.CategoryId" class="CategoryOptions">@item.Name</option>
+                    }
+
+                </select>
+                <div style="direction:rtl">
+                    <div class="my-3">
+                        الترتيب حسب التقييم 
+                    </div>
+                    @for (var i = 5; i > 0; i--)
+                    {
+                        <div class="form-check d-flex col-12">
+                            <input class="form-check-input ms-0 float-none" type="radio" name="Rate" id="gridRadios1" value="@i">
+                            <label class="form-check-label fw-bold ratings" for="gridRadios1">
+                                <div class="rateyo" data-rateyo-rating=@i data-rateyo-star-width="25px" data-rateyo-read-Only=true></div>
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="my-3" >الترتيب حسب السعر</div>
+                <select class="my-3 form-select PriceSelect"   name="Price" >
+                    <option value="negogation">غير محدد</option>
+                    <option value="5">5$</option>
+                    <option value="10">10$</option>
+                    <option value="15">15$</option>
+                    <option value="20">20$</option>
+                    <option value="@int.MaxValue">غير محدود</option>
+                </select>
+                <div class=row>
+                    <div class="form-check col-12 my-3">
+                        <input class="form-check-input ms-0 float-none trustseller" type="checkbox" name="Truste" value="true" id="flexCheckDefault">
+                        <label class="form-check-label fw-bold" for="flexCheckDefault">
+                            بائع موثوق           
+                        </label>
+                    </div>
+                </div>
+                <input class="btn btn-primary" type="submit" />
+            </form>
+        </div>
+    </div>
+    <!---------------------------- End Of Search Form Seaction ----------------------------------------->
+    <!-- ========================= Services Section ============================= -->
+    <div class="col-10 " >
+        <div class="card-deck row justify-content-start services-section">
+          @*  @foreach (var service in Model.services)
+            {
+                <div class="card col-lg-3 col-md-4 col-sm-6 border-0 mb-5 px-2 bg-light">
+                    <div class="position-relative h-50">
+                        <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">
+                            @if (@service.Medias.FirstOrDefault() != null)
+                            {
+                                <img class="card-img-top h-100" src="~/Images/services/@service.Medias.FirstOrDefault().MediaPath">
+                            }
+                            else
+                            {
+                                <img class="card-img-top h-100" src="~/Images/Defaultimage/defaultService.jpg">
+                            }   
+                        </a>
+                        <a asp-controller="Customer" asp-action="account" asp-route-id="@service.CustomerId">
+                            @if (@service.Customer.ProfilePicture == null)
+                            {
+                                <img src="~/Images/DefaultImage/UserDefaultImage.png" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light" />
+                            }
+                            else
+                            {
+                                <img src="data:image/*;base64,@Convert.ToBase64String(@service.Customer.ProfilePicture)" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light" />
+                            }
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-title mb-3 fw-bold">@service.Title</p>
+                        <div style="text-align:start;direction:rtl">
+                            <div class="d-flex justify-content-between align-items-center my-2">
+                                <div class="ratings me-0">
+                                    <div class="rateyo" data-rateyo-rating=@service.Rate data-rateyo-star-width="25px" data-rateyo-read-Only=true></div>
+                                </div>
+                            </div>
+                            <div class="fw-normal">تبدأ من : <span class="fw-bold">@service.Price $</span></div>
+                            @if (@service.IsCash)
+                            {
+                                <div class="fw-bold">متاح التعامل بالكاش فقط</div>
+                            }
+                            else
+                            {
+                                <div class="fw-bold">متاح التعامل بالفيزا فقط </div>
+                            }
+                            <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Count(s=>s.IsDone==true)</span></div>
+                            <div class="fw-normal">تاريخ النشر :<span class="fw-bold">@service.PublishDate.ToString("MM/dd/yyyy")</span></div>
+                        </div>
+                    </div>
+                </div>
+            }*@
+        </div>
+    </div>
+    </div>
+</section>
+<!---------------------------- End Of Services Seaction ----------------------------------------->
+<!-- ========================= Paging Section ============================= -->
+   <div class="row bg-light">
+              <ul class="pagination justify-content-center"> </ul>
+@*
+    @if (pager.TotalPages > 0)
+    {
+        <ul class="pagination justify-content-center">
+            @if (pager.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Categories" asp-action="index" asp-route-id="@ViewBag.Id" asp-route-pg="1">
+                        First
+                    </a>
+                </li> 
+                <li>
+                    <a class="page-link" asp-controller="Categories" asp-action="index" asp-route-id="@ViewBag.Id" asp-route-pg="@pager.CurrentPage-1">
+                        Previous
+                    </a>
+                </li>
+            }
+            @for (var i = 1; i <= pager.EndPage; i++)
+            {
+                <li class="page-item @(i==pager.CurrentPage?"active":" ")">
+                    <a class="page-link" asp-controller="Categories" asp-action="index" asp-route-id="@ViewBag.Id" asp-route-pg="@i">
+                        @i
+                    </a>
+                </li>
+            }
+            @if (pager.CurrentPage < pager.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Categories" asp-action="index" asp-route-id="@ViewBag.Id" asp-route-pg="@pager.CurrentPage+1">
+                        Next
+                    </a>
+                </li> 
+                <li>
+                    <a class="page-link" asp-controller="Categories" asp-action="index" asp-route-id="@ViewBag.Id" asp-route-pg="@pager.TotalPages">
+                        Last
+                    </a>
+                </li>
+            }
+
+        </ul>
+    }*@
+    </div>
+<!---------------------------- End Paging Seaction ----------------------------------------->
+    <script>
+      @*//let radios=document.querySelectorAll(`[name="Rate"]`);
+        //for(let i=0;i<=radios.length;i++){
+        //    if(@rate==0){
+        //       }
+        //       else if(@rate==radios[i].value)
+        //       {
+        //           radios[i].checked=true;
+        //           break;
+        //       }
+        //};
+        //document.querySelector(".trustseller").checked=@trustedSeller;
+        //document.querySelector(".PriceSelect").value=@Price;*@
+
+        $(".selectCategories").val(@CatId);
+        let text="@(text==null)"
+        let ele= document.getElementById("checkbox");
+        ele.onchange=()=>{setTimeout(()=>{ele.form.submit()
+           },500)};
+        $(document).ready(()=>{
+            console.log($(text)=="True");
+            if($(text)=="True"){
+              loadData(1)
+            }
+            else{
+
+              getDataFromSearch()
+            }
+
+        })
+        /////Search Function
+        function getDataFromSearch(pageNo=1){
+            $.ajax({
+                type:"Get",
+                url:'@Url.Action("Search","JsonApi")',
+                dataType: "json",
+                data:$("#SearchForm").serialize()+`&pg=${pageNo}`,
+                success: (data)=> {
+                    drawData(data.model);
+                    DrawPages(data.pager,getDataFromSearch)
+                },
+                error: function (ex) {
+                    console.log(ex)
+                }
+                })
+        }
+        ////// apending data 
+        function drawData(data){
+            $(".services-section").html("");
+            $(data).each((i,item)=>{
+                $(".services-section").append(
+                    `<div class="card col-lg-3 col-md-4 col-sm-6 border-0 mb-5 px-2 bg-light">
+                        <div class="position-relative h-50">
+                            <a class="serviceImageHeader${i}" role="button" ></a>
+                            <a class="customerProfileImage${i}" role="button" ></a>
+                        </div>
+                        <div class="card-body">
+                             <p class="card-title mb-3 fw-bold">${item.title}</p>
+                             <div style="text-align:start;direction:rtl">
+                                <div class="d-flex justify-content-between align-items-center my-2">
+                                    <div class="ratings me-0">
+                                        <div class="rateyo" data-rateyo-rating=${item.rate} data-rateyo-star-width="20px" data-rateyo-read-Only=true></div>
+                                     </div>
+                                </div>
+                                <div class="fw-bold IsCash${i}"> </div>
+                                <div class="fw-normal">تبدأ من : <span class="fw-bold">${item.price} $</span></div>
+                                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">${item.buyersCount}</span></div>
+                                <div class="fw-normal">تاريخ النشر :<span class="fw-bold">${item.createdDate}</span></div>
+                             </div>
+                        </div>
+                    </div>`
+                )
+            $(`.serviceImageHeader${i}`).on("click",()=>{
+                window.location.href=`/Service/Details/${item.serviceId}`
+            })
+            $(`.customerProfileImage${i}`).on("click",()=>{
+                window.location.href=`/customer/account/${item.customerId}`
+            })
+            if((item.serviceHeader)==null){
+                $(`.serviceImageHeader${i}`).append(
+                    `<img src="/Images/DefaultImage/defaultService.jpg" class="card-img-top h-100"/>`
+                )
+            }
+            else{
+                $(`.serviceImageHeader${i}`).append(
+                    `<img src="/Images/services/${item.serviceHeader}" class="card-img-top h-100"/>`
+                )
+            }
+            if((item.customerImage)==null){
+                $(`.customerProfileImage${i}`).append(
+                    `<img src="/Images/DefaultImage/UserDefaultImage.png" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light"/>`
+                )
+            }
+            else{
+                $(`.customerProfileImage${i}`).append(
+                    `<img src="data:image/png;base64,${item.customerImage}" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light"/>`
+                )
+            }
+            if(item.isCash==true){
+                $(`.IsCash${i}`).append(
+                    `<span> متاح التعامل بالكاش فقط</span>`
+                )
+            }
+            else{
+                $(`.IsCash${i}`).append(
+                    `<span> متاح التعامل بالفيزا فقط</span>`
+                )
+            }})
+           $(".rateyo").rateYo();
+            
+    }
+    ////appending pages
+    function DrawPages(pages,dataSource){
+        let pageNo="";
+        let First_previous="";
+        let Next_Last="";
+        $(".pagination").html("")
+        if (pages.currentPage > 1)
+        {
+            First_previous=
+                `<li class="page-item">
+                    <a class="page-link" value="1" role="button">First</a>
+                </li> 
+                <li>
+                    <a class="page-link" role="button" value="${pages.currentPage-1}">Previous
+                    </a>
+                </li>`
+            }
+        if (pages.currentPage < pages.totalPages)
+        {
+            Next_Last=
+                `<li class="page-item">
+                    <a class="page-link" role="button" value="${pages.currentPage+1}">Next</a>
+                </li> 
+                <li>
+                    <a class="page-link" role="button" value="${pages.totalPages}">Last</a>
+                </li>`
+        }
+        for (var i = 1; i <= pages.endPage; i++)
+        {
+            pageNo+=
+                `<li class="page-item ${i==pages.currentPage?"active":" "}">
+                    <a class="page-link" role="button" value="${i}">${i}</a>
+                </li>`
+        }
+        $(".pagination").append(First_previous,pageNo,Next_Last)
+        $(".page-link").on("click",(e)=>{
+            dataSource($(e.target).attr("value"));
+        })
+    }
+    /////loading data
+    function loadData(pageno){
+
+        var catId=Number(@(ViewBag.Id))==0?null:@(ViewBag.Id)
+        console.log("");
+        $.ajax({
+            type:"Get",
+            url:'@Url.Action("index","JsonApi")',
+            dataType: "json",
+            data:{id:catId,type:"services",pg:pageno},
+            success: (data)=> {
+                drawData(data.model);
+                DrawPages(data.pager,loadData);
+               
+            },
+            error: function (ex) {
+                  console.log(ex)
+            }
+        })
+    }
+    $("#SearchForm").on("submit",(e)=>{
+        e.preventDefault();
+        getDataFromSearch();
+    })
+    </script>
