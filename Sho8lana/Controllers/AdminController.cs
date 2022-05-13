@@ -320,7 +320,7 @@ namespace Sho8lana.Controllers
 
         }
 
-        public async Task<IActionResult> CreateCategory()
+        public IActionResult CreateCategory()
         {
             //var categories = await _context.Categories.GetAll();
             return View();
@@ -434,11 +434,12 @@ namespace Sho8lana.Controllers
                 {
                     complaint.AdminReply = message == null ? $"تم مراجعة الشكوي بواسطة {userAdmin.UserName} " : message+$"لقك تم الرد بواسطة {userAdmin.UserName}وتم الرد ب : ";
                     var userid = complaint.Contract.BuyerId;
+                    var user = _context.Customers.GetById(userid);
                     //// add Notifi
                     await jobs.AddNotification(userid, message ?? "تم مراجعة الشكوى وسوف نقوم بالاجراء اللازم تجاه تلك العملية ");
                     //Notification notification = new Notification()
                     //{
-                    //    CustomerId = userid,
+                    //    CustomerId = user.id,
                     //    Content = message == null ? "تم مراجعة الشكوى وسوف نقوم بالاجراء اللازم تجاه تلك العملية " : message,
                     //    Date = DateTime.Now,
                     //};
