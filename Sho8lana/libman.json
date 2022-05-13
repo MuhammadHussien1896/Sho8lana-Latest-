@@ -11,6 +11,14 @@
         "dist/browser/signalr.min.js",
         "dist/browser/signalr.min.js.map"
       ]
+    },
+    {
+      "library": "toastr@2.1.4",
+      "destination": "wwwroot/lib/toastr/",
+      "files": [
+        "build/toastr.min.css",
+        "build/toastr.min.js"
+      ]
     }
   ]
 }

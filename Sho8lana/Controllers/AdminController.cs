@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Sho8lana.Hangfire;
+using Sho8lana.Hubs;
 using Sho8lana.Models;
 using Sho8lana.Models.ViewModels;
 using Sho8lana.Paging;
@@ -16,12 +19,14 @@ namespace Sho8lana.Controllers
 
         private readonly UserManager<Customer> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-       
-        public AdminController(IUnitOfWork context, UserManager<Customer> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly ContractJobs jobs;
+
+        public AdminController(IUnitOfWork context, UserManager<Customer> userManager, RoleManager<IdentityRole> roleManager, IHubContext<ChatHub> hubContext)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            jobs = new ContractJobs(context, hubContext);
         }
         
         
@@ -188,14 +193,15 @@ namespace Sho8lana.Controllers
                     ///
 
 
-                    user.IsVerified = true;
-                    Notification notification = new Notification()
-                    {
-                        CustomerId = user.Id,
-                        Content = "تهانينا تمت  مراجعت الخدمة واضافتها بنجاح  ",
-                        Date = DateTime.Now,
-                    };
-                    _context.Notifications.Add(notification);
+                    //user.IsVerified = true;
+                    await jobs.AddNotification(user.Id, "تهانينا تمت  مراجعت الخدمة واضافتها بنجاح  ");
+                    //Notification notification = new Notification()
+                    //{
+                    //    CustomerId = user.Id,
+                    //    Content = "تهانينا تمت  مراجعت الخدمة واضافتها بنجاح  ",
+                    //    Date = DateTime.Now,
+                    //};
+                    //_context.Notifications.Add(notification);
                     await _context.complete();
                     return RedirectToAction(nameof(ReviewServices));
                 }
@@ -226,14 +232,15 @@ namespace Sho8lana.Controllers
                     await _context.complete();
                     //// add Notifi
                     if (messagenotfi == null) { messagenotfi = "هذة الخدمة لا تطابق السياسة الخاصة بموقع شغلانة نرجو تعديل تلك الخدمة مرة اخرى "; }
-                    user.IsVerified = true;
-                    Notification notification = new Notification()
-                    {
-                        CustomerId = user.Id,
-                        Content = messagenotfi,
-                        Date = DateTime.Now,
-                    };
-                    _context.Notifications.Add(notification);
+                    //user.IsVerified = true;
+                    await jobs.AddNotification(user.Id, messagenotfi);
+                    //Notification notification = new Notification()
+                    //{
+                    //    CustomerId = user.Id,
+                    //    Content = messagenotfi,
+                    //    Date = DateTime.Now,
+                    //};
+                    //_context.Notifications.Add(notification);
                     await _context.complete();
 
                     return RedirectToAction(nameof(ReviewServices));
@@ -258,13 +265,14 @@ namespace Sho8lana.Controllers
             else
             {
                 user.IsVerified = true;
-                Notification notification = new Notification()
-                {
-                    CustomerId = user.Id,
-                    Content = "تهانينا , لقد تم التحقق من هويتك الشخصية ",
-                    Date = DateTime.Now,
-                };
-                _context.Notifications.Add(notification);
+                await jobs.AddNotification(user.Id, "تهانينا , لقد تم التحقق من هويتك الشخصية ");
+                //Notification notification = new Notification()
+                //{
+                //    CustomerId = user.Id,
+                //    Content = "تهانينا , لقد تم التحقق من هويتك الشخصية ",
+                //    Date = DateTime.Now,
+                //};
+                //_context.Notifications.Add(notification);
                 await _context.complete();
 
                 return RedirectToAction("ReviewUsers");
@@ -279,13 +287,14 @@ namespace Sho8lana.Controllers
             else
             {
                 user.IsVerified = false;
-                Notification notification = new Notification()
-                {
-                    CustomerId = user.Id,
-                    Content = "معذرة , لقد تم تعذر التحقق من هويتك الشخصية , حاول مرة اخري",
-                    Date = DateTime.Now,
-                };
-                _context.Notifications.Add(notification);
+                await jobs.AddNotification(user.Id, "معذرة , لقد تم تعذر التحقق من هويتك الشخصية , حاول مرة اخري");
+                //Notification notification = new Notification()
+                //{
+                //    CustomerId = user.Id,
+                //    Content = "معذرة , لقد تم تعذر التحقق من هويتك الشخصية , حاول مرة اخري",
+                //    Date = DateTime.Now,
+                //};
+                //_context.Notifications.Add(notification);
                 await _context.complete();
 
                 return RedirectToAction("ReviewUsers");
@@ -313,24 +322,24 @@ namespace Sho8lana.Controllers
 
         public async Task<IActionResult> CreateCategory()
         {
-            var categories = await _context.Categories.GetAll();
+            //var categories = await _context.Categories.GetAll();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCategory([Bind("Name,Description")] Category category, IFormFile CategoryImg)
+        public async Task<IActionResult> CreateCategory(CreateCategoryViewModel category)
         {
             if (ModelState.IsValid)
             {
-                using (FileStream fs = new FileStream("./wwwroot/Images/CategoriesImage/"+ CategoryImg.FileName, FileMode.Create))
+                using (FileStream fs = new FileStream("./wwwroot/Images/CategoriesImage/"+ category.CategoryImg.FileName, FileMode.Create))
                 {
-                    CategoryImg.CopyTo(fs);
+                    category.CategoryImg.CopyTo(fs);
                     Category category1 = new Category()
                     {
                         Name = category.Name,
                         Description = category.Description,
-                        CategoryImg = CategoryImg.FileName
+                        CategoryImg = category.CategoryImg.FileName
                     };
 
                     _context.Categories.Add(category1);
@@ -353,7 +362,7 @@ namespace Sho8lana.Controllers
             var messages = _context.ServiceMessages
                 .GetAllBy(m => ((m.CustomerId == contract.BuyerId && m.ReceiverId == contract.SellerId)
                 || (m.CustomerId == contract.SellerId && m.ReceiverId == contract.BuyerId))
-                && m.ServiceId == contract.ServiceId).Result.OrderByDescending(m => m.MessageDate);
+                && m.ServiceId == contract.ServiceId).Result;
             var buyer = await _context.Customers.GetById(contract.BuyerId);
             var seller = await _context.Customers.GetById(contract.SellerId);
             ShowMessagesViewModel model = new ShowMessagesViewModel()
@@ -370,7 +379,7 @@ namespace Sho8lana.Controllers
         }
         public async Task<IActionResult> ReturnPriceToBuyer(int id)//contract id
         {
-            var contract = await _context.Contracts.GetEagerLodingAsync(c => c.ComplainId == id,new string[] { "Complain" });
+            var contract = await _context.Contracts.GetEagerLodingAsync(c => c.ComplainId == id,new string[] { "Complain","Service" });
             var buyer = await _context.Customers.GetById(contract?.BuyerId);
             var seller = await _context.Customers.GetById(contract?.SellerId);
             if(contract == null || buyer == null || seller == null)
@@ -387,6 +396,10 @@ namespace Sho8lana.Controllers
                 buyer.Balance += contract.ContractPrice;
                 //_context.Customers.UpdateList(new List<Customer>() { seller, buyer });
                 contract.Complain.IsReturned = true;
+                await jobs.AddNotification(contract.BuyerId
+                    , $" لقد تمت مراجعة الشكوى التي قدمتها وتبين أحقيتك بها ، وتم ارجاع سعر الخدمة {contract.ContractPrice}$ لك ");
+                await jobs.AddNotification(contract.SellerId, $"تم ارجاع سعر الخدمة '{contract.Service.Title}' للبائع نظرا لإرسال شكوى بخصوص الخدمة" +
+                    $"وتبين أحقيته في استرجاع سعر الخدمة");
                 await _context.complete();
                 return RedirectToAction("ShowComplains");
             }
@@ -401,7 +414,7 @@ namespace Sho8lana.Controllers
         [HttpGet]
         public async Task<IActionResult> ShowComplains()
         {
-            var Complains=await _context.Complains.GetAllEagerLodingAsync(c=>c.IsSolved==false,new string[] {"Contract.Service.Category"});
+            var Complains=await _context.Complains.GetAllEagerLodingAsync(c=>c.IsSolved==false,new string[] {"Contract.Service.Category","Contract.Customer", "Contract.Service.Customer" });
             return View(Complains);
         }
         
@@ -420,19 +433,16 @@ namespace Sho8lana.Controllers
                 try
                 {
                     complaint.AdminReply = message == null ? $"تم مراجعة الشكوي بواسطة {userAdmin.UserName} " : message+$"لقك تم الرد بواسطة {userAdmin.UserName}وتم الرد ب : ";
-                    var userid = complaint.Contract.CustomerId;
-                    var user = await _context.Customers.GetById(userid);
-                    await _context.complete();
+                    var userid = complaint.Contract.BuyerId;
                     //// add Notifi
-                    
-                    user.IsVerified = true;
-                    Notification notification = new Notification()
-                    {
-                        CustomerId = user.Id,
-                        Content = message == null ? "تم مراجعة الشكوى وسوف نقوم بالاجراء اللازم تجاه تلك العملية " : message,
-                        Date = DateTime.Now,
-                    };
-                    _context.Notifications.Add(notification);
+                    await jobs.AddNotification(userid, message ?? "تم مراجعة الشكوى وسوف نقوم بالاجراء اللازم تجاه تلك العملية ");
+                    //Notification notification = new Notification()
+                    //{
+                    //    CustomerId = userid,
+                    //    Content = message == null ? "تم مراجعة الشكوى وسوف نقوم بالاجراء اللازم تجاه تلك العملية " : message,
+                    //    Date = DateTime.Now,
+                    //};
+                    //_context.Notifications.Add(notification);
                     await _context.complete();
 
                     return RedirectToAction(nameof(ShowComplains));
@@ -452,17 +462,17 @@ namespace Sho8lana.Controllers
             if (complaint == null) { return NotFound(); }
             try {
 
-                complaint.IsSolved = true; await _context.complete();
-                var userid = complaint.Contract.CustomerId;
-                var user = await _context.Customers.GetById(userid);
-                user.IsVerified = true;
-                Notification notification = new Notification()
-                {
-                    CustomerId = user.Id,
-                    Content = $" إذا كان لديك اي شكوى اخرى يرجى الاتصال بالدعم الفنى لموقع شغلانة  {complaint.Contract.Service.Title} تهانينا لقد تم مراجعة الشكوى المقدمة منكم بخصوص الخدمة  ",
-                    Date = DateTime.Now,
-                };
-                _context.Notifications.Add(notification);
+                complaint.IsSolved = true;
+                var userid = complaint.Contract.BuyerId;
+                await jobs.AddNotification(userid
+                    , $" إذا كان لديك اي شكوى اخرى يرجى الاتصال بالدعم الفنى لموقع شغلانة  {complaint.Contract.Service.Title} تهانينا لقد تم مراجعة الشكوى المقدمة منكم بخصوص الخدمة  ");
+                //Notification notification = new Notification()
+                //{
+                //    CustomerId = user.Id,
+                //    Content = $" إذا كان لديك اي شكوى اخرى يرجى الاتصال بالدعم الفنى لموقع شغلانة  {complaint.Contract.Service.Title} تهانينا لقد تم مراجعة الشكوى المقدمة منكم بخصوص الخدمة  ",
+                //    Date = DateTime.Now,
+                //};
+                //_context.Notifications.Add(notification);
                 await _context.complete();
 
                 return RedirectToAction(nameof(ShowComplains));

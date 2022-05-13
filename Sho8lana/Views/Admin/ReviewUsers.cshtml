@@ -10,20 +10,20 @@
         pageNo = pager.CurrentPage;
     }
 }
-
-<div class="row col-sm-10 col-lg-9 my-5 h-100 ms-5 ">
+<div class="container" style="direction:rtl">
+<div class="row col-sm-10 col-lg-12 my-5 h-100 ms-5 " >
     <ul class="nav nav-tabs justify-content-center m-auto col-10" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active Verfied customerPanel " id="home-tab" asp-action="ReviewUsers">Verfied Customers</a>
+        <a class="nav-link active Verfied customerPanel " id="home-tab" asp-action="ReviewUsers">المستخدمين الموثقين</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link customerPanel Unverfied" id="profile-tab" asp-action="ReviewUsers" asp-route-type="Unverfied">Unverfied Customers</a>
+        <a class="nav-link customerPanel Unverfied" id="profile-tab" asp-action="ReviewUsers" asp-route-type="Unverfied">المستخدمين الغير موثقين</a>
       </li>
       <li class="nav-item">
-          <a class="nav-link customerPanel Rest" id="contact-tab" asp-action="ReviewUsers" asp-route-type="Rest">Customers</a>
+          <a class="nav-link customerPanel Rest" id="contact-tab" asp-action="ReviewUsers" asp-route-type="Rest">باقي المستخدمين</a>
       </li>
     </ul>
-    <div class="tab-content  col-9 m-auto mt-4 overflow-scroll" id="myTabContent">
+    <div class="tab-content  col-9 m-auto mt-4 overflow-auto" id="myTabContent">
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
          <table class="table table-striped table-responsive align-middle  mt-4 w-100 table-bordered text-center ">
             <thead style="background:#8824dc;" class="text-white">
@@ -88,7 +88,7 @@
                     
                     <td>
                         @if(ViewBag.Type=="Unverfied"){
-                            <a asp-action="VerifingPage" asp-route-id="@item.Id" class="btn btn-danger w-75" > Verify</a> 
+                            <a asp-action="VerifingPage" asp-route-id="@item.Id" class="btn btn-danger" > توثيق</a> 
                         }
                         else{
                             <a asp-controller="customer" asp-action="account" asp-route-id="@item.Id" class="btn w-100 myBtn"  >المزيد ...</a> 
@@ -144,6 +144,7 @@
                 </ul>
             }
             </div>
+</div>
 
 <script>
     $(".customerPanel").each(function (i,item){

@@ -296,3 +296,8 @@ i.material-icons {
     background: #8824dc;
     color:white;
 }
+
+
+.toast-top-right {
+    top: 20vh;
+}

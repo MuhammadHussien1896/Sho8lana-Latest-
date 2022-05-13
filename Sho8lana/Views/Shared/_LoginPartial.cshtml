@@ -81,8 +81,9 @@ else
     @if (Context.Request.Path != Url.Action("chat", "Service"))
     {
         <script>
-            connection.on("receiveMessage",(message,senderId,date)=>{ 
+            connection.on("receiveMessage",(message,senderId,senderName,date)=>{ 
                 if(senderId != '@UserManager.GetUserId(User)'){
+                    toastr.info(message,senderName);
                   $.ajax({  
                         type: 'Get',  
                         url: '@Url.Action("UnReadMessages","JsonApi")',  
@@ -102,7 +103,21 @@ else
     }
     
     <script>
-    $(document).ready(()=> {    
+    $(document).ready(()=> {
+        toastr.options = {
+          "closeButton": true,
+          "newestOnTop": true,
+          "positionClass": "toast-top-right",
+          "showDuration": "300",
+          "hideDuration": "2000",
+          "timeOut": "5000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        }
+        @*toastr.info("done!");*@
         $.ajax({  
             type: 'Get',  
             url: '@Url.Action("UnReadNotifcation","JsonApi")',  
@@ -129,7 +144,7 @@ else
     });
 
     connection.on("receiveNotification",(content)=>{
-                 alert(content);
+                 toastr.info(content,"Notification :");
                   $.ajax({  
                         type: 'Get',  
                         url: '@Url.Action("UnReadNotifcation","JsonApi")',  

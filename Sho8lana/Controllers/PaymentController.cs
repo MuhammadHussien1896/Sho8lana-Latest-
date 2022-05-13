@@ -165,17 +165,18 @@ namespace server.Controllers
                 TotalAmount = (int)paymentIntent.Amount,
             };
             _context.BalanceCharges.Add(charge);
-            TargetCustomer.Balance += (int)charge.TotalAmount / 100; 
+            TargetCustomer.Balance += (int)charge.TotalAmount / 100;
             //_context.Customers.Update(TargetCustomer);
-            Notification notification = new Notification()
-            {
-                CustomerId = customerId,
-                Date = DateTime.Now,
-                IsRead = false,
-                Content = $"تم اضافة {charge.TotalAmount / 100}  دولار الي الرصيد بنجاح"
+            await jobs.AddNotification(customerId, $"تم اضافة {charge.TotalAmount / 100}  دولار الي الرصيد بنجاح");
+            //Notification notification = new Notification()
+            //{
+            //    CustomerId = customerId,
+            //    Date = DateTime.Now,
+            //    IsRead = false,
+            //    Content = $"تم اضافة {charge.TotalAmount / 100}  دولار الي الرصيد بنجاح"
 
-            };
-            _context.Notifications.Add(notification);
+            //};
+            //_context.Notifications.Add(notification);
             await _context.complete();
 
             return RedirectToAction("customercontracts", "customer");
@@ -234,6 +235,7 @@ namespace server.Controllers
             var jobId = BackgroundJob.Schedule(() => jobs.EndContract(ContractId), TimeSpan.FromDays(contract.DeliveryTime));
             contract.JobId = jobId;
             customer.Balance -= contract.ContractPrice;
+            await jobs.AddNotification(customerId, $"تم دفع {contract.ContractPrice}$ من رصيدك بنجاح");
             await _context.complete();
             return RedirectToAction("CustomerContracts","customer");
         }
