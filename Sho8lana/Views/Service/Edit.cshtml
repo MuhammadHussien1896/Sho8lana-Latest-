@@ -119,11 +119,20 @@
        /////Preview and Updating Section
         let cover='<div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>'
         document.querySelector(".box").innerHTML+=cover;
-           //upload Image Function
-        function upload(file,i){
-
-
-            }
+            $(document).ready(()=>{
+                let serviceId=Number("@(Model.ServiceId)")
+               $.ajax({
+                    type: "Get",
+                    url: '@Url.Action("GetImages","JsonApi")',
+                    data:{serviceId:serviceId},
+                    success: (data)=> {
+                        drawData(data)
+                        },
+                     error: function (ex) {
+                        console.log(ex);
+                    }
+                })
+           })
             $(document).on("change",".image-upload",(e)=>{
                 let serviceId=Number("@(Model.ServiceId)")
                 let file = e.currentTarget.files[0];

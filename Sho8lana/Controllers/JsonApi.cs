@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Sho8lana.Models;
+using Sho8lana.Models.ViewModels;
 using Sho8lana.Paging;
 using Sho8lana.Unit_Of_Work;
 using System.IO;
@@ -133,5 +134,110 @@ namespace Sho8lana.Controllers
             });
             return Json(medias);
         }
+        [HttpGet]
+        public async Task<IActionResult> Search(string text, string type, string Truste, int? CatId, int? Rate, int? Price, int pg = 1)
+        {
+            IEnumerable<Service> services = new List<Service>();
+            if (text == null)
+            {
+                services = await context.Services
+                                 .GetAllEagerLodingAsync(s => s.IsAccepted
+                                  && s.IsFreelancer == (type=="services"?true:false)
+                                  && s.Rate <= (Rate ?? 10) && s.Price <= (Price ?? int.MaxValue), new string[] { "Medias", "Contracts", "Customer" });
+            }
+            else
+            {
+                services = await context.Services
+                 .GetAllEagerLodingAsync(s => s.IsAccepted
+                  && s.IsFreelancer == (type == "services" ? true : false)
+                  && s.Rate <= (Rate ?? 10) && s.Price <= (Price ?? int.MaxValue)
+                  && (s.Description.Contains(text) || s.Title.Contains(text)), new string[] { "Medias", "Contracts", "Customer" });
+
+            }
+            if (!(CatId is null))
+                services = services.Where(s => s.CategoryId == CatId);
+
+            if (!(Truste is null))
+                services = services.Where(s => s.Customer.IsVerified == Convert.ToBoolean(Truste));
+
+            if (Rate == null && Price == null)
+                services = services.OrderByDescending(s => s.Rate);
+
+            else if (Rate == null)
+                services = services.OrderByDescending(s => s.Price);
+
+            else
+                services = services.OrderByDescending(s => s.Rate).OrderByDescending(s => s.Price);
+
+            if (services == null)
+                return NotFound();
+
+            //////paging section
+            const int PageSize = 1;
+            int RecsCount = services.Count();
+            var pager = new pagination(RecsCount, pg, PageSize);
+            int rescPage = (pg - 1) * PageSize;
+            var data = services.Skip(rescPage).Take(pager.PageSize).ToList();
+            //////
+
+            var model = data.Select(s => new ServiceDisplay{
+                Title = s.Title,
+                ServiceId = s.ServiceId,
+                ServiceHeader = s.Medias.FirstOrDefault()?.MediaPath,
+                Rate = s.Rate,
+                Price = s.Price,
+                IsFreelance = s.IsFreelancer,
+                IsCash = s.IsCash,
+                CustomerImage = s.Customer.ProfilePicture,
+                CreatedDate = s.PublishDate.ToShortDateString(),
+                customerId=s.CustomerId,
+                BuyersCount = s.Contracts.Where(s => s.IsDone == true).Count()
+            }).ToList();
+            var Viewmodel = new { model = model, pager = pager };
+            return Json(Viewmodel);
+        }
+        public async Task<IActionResult> Index(int? id, string type, int pg = 1)
+        {
+            IEnumerable<Service> services = new List<Service>();
+            if (id == null)
+                services = await context.Services
+                 .GetAllEagerLodingAsync(s => s.IsFreelancer == (type == "services" ? true : false) 
+                                      && s.IsAccepted, new string[] { "Medias", "Contracts", "Customer" });
+            
+            else
+                services = await context.Services
+                 .GetAllEagerLodingAsync(s => s.IsFreelancer == (type == "services" ? true : false)
+                                      && s.IsAccepted && s.CategoryId == id, new string[] { "Medias", "Contracts", "Customer" });
+            
+            if(services==null)
+                return NotFound();
+
+            //////paging section
+            const int PageSize = 1;
+            int RecsCount = services.Count();
+            var pager = new pagination(RecsCount, pg, PageSize);
+            int rescPage = (pg - 1) * PageSize;
+            var data = services.OrderByDescending(s => s.Rate).Skip(rescPage).Take(pager.PageSize).ToList();
+            //////
+            
+            var model = data.Select(s => new ServiceDisplay
+            {
+                Title = s.Title,
+                ServiceId = s.ServiceId,
+                ServiceHeader = s.Medias.FirstOrDefault()?.MediaPath,
+                Rate = s.Rate,
+                Price = s.Price,
+                IsFreelance = s.IsFreelancer,
+                IsCash = s.IsCash,
+                CustomerImage = s.Customer.ProfilePicture,
+                CreatedDate = s.PublishDate.ToShortDateString(),
+                customerId = s.CustomerId,
+                BuyersCount = s.Contracts.Where(s => s.IsDone == true).Count(),
+            }).ToList();
+            var Viewmodel = new {model=model,pager=pager};
+            return Json(Viewmodel);
+
+        }
+
     }
 }

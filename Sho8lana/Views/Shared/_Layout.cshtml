@@ -114,10 +114,10 @@
               </div>*@
 </header>
               <div class="input-group w-100 position-sticky" id="PopoverContent" style="display:none;top:9.7vh;z-index:99;background:linear-gradient(45deg, rgba(86, 58, 250, 0.9) 0%, rgba(116, 15, 214, 0.9) 100%), url(../img/hero-bg.jpg) center center no-repeat;;" dir="rtl">
-                <form asp-action="Search" asp-controller="Categories" name="SearchForm" onsubmit="return validation()" method="Get" class="w-50 m-auto d-flex justify-content-center">
-                      <select class="form-select fw-bold text-center" style="width:25%">
-                          <option>خدمات</option>
-                          <option>طلبات</option>
+                <form asp-action="Index" asp-controller="Categories" name="headerSearchForm" onsubmit="return validation()" method="Get" class="w-50 m-auto d-flex justify-content-center">
+                      <select name="type" class="form-select fw-bold text-center" style="width:25%">
+                          <option value="services">خدمات</option>
+                          <option value="Hiring">طلبات</option>
                       </select>
                       <input type="text" name="text" class="form-control searchbar" style="width:75%" placeholder="أكتب ماتريد البحث عنه">
                       <label class="text-info d-none text-validation text-center m-auto w-100" style="padding-right:6rem">من فضلك اكتب كلمات للبحث عنها</label>
@@ -227,7 +227,7 @@
     <script src="~/assets/js/main.js"></script>
     <script>
         function validation(){
-            let x = document.forms["SearchForm"]["text"].value;
+            let x = document.forms["headerSearchForm"]["text"].value;
                 if (x == "") {
                     document.querySelector(".text-validation").classList.remove("d-none");
                     return false;

@@ -91,7 +91,7 @@
 
                 <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
                     <div class="icon-box iconbox-blue">
-                        <a asp-controller="Categories" asp-action="index" asp-route-id="@category.CategoryId">
+                        <a asp-controller="Categories" asp-action="index" asp-route-id="@category.CategoryId" asp-route-type="services">
                             <img class="w-100 "src="~/Images/CategoriesImage/@category.CategoryImg">
                             <h4>@category.Name</h4>
                         </a>
