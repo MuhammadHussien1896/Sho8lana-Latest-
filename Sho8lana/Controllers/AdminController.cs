@@ -322,24 +322,24 @@ namespace Sho8lana.Controllers
 
         public async Task<IActionResult> CreateCategory()
         {
-            var categories = await _context.Categories.GetAll();
+            //var categories = await _context.Categories.GetAll();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCategory([Bind("Name,Description")] Category category, IFormFile CategoryImg)
+        public async Task<IActionResult> CreateCategory(CreateCategoryViewModel category)
         {
             if (ModelState.IsValid)
             {
-                using (FileStream fs = new FileStream("./wwwroot/Images/CategoriesImage/"+ CategoryImg.FileName, FileMode.Create))
+                using (FileStream fs = new FileStream("./wwwroot/Images/CategoriesImage/"+ category.CategoryImg.FileName, FileMode.Create))
                 {
-                    CategoryImg.CopyTo(fs);
+                    category.CategoryImg.CopyTo(fs);
                     Category category1 = new Category()
                     {
                         Name = category.Name,
                         Description = category.Description,
-                        CategoryImg = CategoryImg.FileName
+                        CategoryImg = category.CategoryImg.FileName
                     };
 
                     _context.Categories.Add(category1);
@@ -362,7 +362,7 @@ namespace Sho8lana.Controllers
             var messages = _context.ServiceMessages
                 .GetAllBy(m => ((m.CustomerId == contract.BuyerId && m.ReceiverId == contract.SellerId)
                 || (m.CustomerId == contract.SellerId && m.ReceiverId == contract.BuyerId))
-                && m.ServiceId == contract.ServiceId).Result.OrderByDescending(m => m.MessageDate);
+                && m.ServiceId == contract.ServiceId).Result;
             var buyer = await _context.Customers.GetById(contract.BuyerId);
             var seller = await _context.Customers.GetById(contract.SellerId);
             ShowMessagesViewModel model = new ShowMessagesViewModel()
