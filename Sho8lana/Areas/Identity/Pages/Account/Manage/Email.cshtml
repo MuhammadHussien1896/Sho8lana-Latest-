@@ -7,74 +7,55 @@
 
 @*<h3 class="float-left">الهوية الشخصية و الإيميل</h3>*@
 <partial name="_StatusMessage" for="StatusMessage" />
-
+    <div class="col-lg-6 col-md-8 col-10 d-flex m-auto my-5" dir="rtl">
         <form id="email-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
- <div class="row my-5 container justify-content-center" dir="rtl">
-            <div class="col-8  border border-Secondery">
-                 @if (Model.IsEmailConfirmed)
-            {
-                <div class="form-floating input-group">
-                    <input asp-for="Email" class="form-control" disabled />
-                        <div class="input-group-append">
-                            <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
+                    <div class="mt-3">
+                        @if (Model.IsEmailConfirmed)
+                        {
+                            <div class="form-floating mt-3 text-white fw-bolder">
+                                <label asp-for="Email" class="form-label">الإيميل</label>
+                                <input  asp-for="Email" class="form-control py-0 bg-success text-white fw-bolder" disabled />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-floating mt-3">
+                                <label asp-for="Email" class="form-label">الإيميل</label>
+                                <input asp-for="Email" class="form-control py-0" disabled />
+                                <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">إرسال إيميل التحقق</button>
+                            </div>
+                        }
+                        <div class="form-floating mt-3">
+                            <label asp-for="Input.NewEmail" class="form-label">الإيميل الجديد</label>
+                            <input asp-for="Input.NewEmail" class="form-control py-0" autocomplete="email" aria-required="true" />
+                            <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
                         </div>
-                    <label asp-for="Email" class="form-label">الإيميل</label>
-                </div>
-            }
-            else
-            {
-                <div class="form-floating">
-                    <label asp-for="Email" class="form-label">الإيميل</label>
-                    <input asp-for="Email" class="form-control" disabled />
-                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">إرسال إيميل التحقق</button>
-                </div>
-            }
-            <div class="form-floating">
-                <label asp-for="Input.NewEmail" class="form-label">الإيميل الجديد</label>
-                <input asp-for="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" />
-                <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
-            </div>
    
-          <div class="form-group">
-                     <label asp-for="Input.NationalIdPicture" class="w-100">الهوية الشخصية</label>
-                @if (Model.Input.NationalIdPicture != null)
-                {
-                    <img id="NationalIdPicture" alt="NationalIdPicture" src="data:image/*;base64,@(Convert.ToBase64String(Model.Input.NationalIdPicture))"
-                    style="width:450px;height:200px"
-                    />
-                }
-                else
-                {
-                    <img id="NationalIdPicture" alt="NationalIdPicture"  src="~/Images/20225.jpg"
-                    style="width:450px;height:200px"
-                    />
-                    
-                }
-                <div class="custom-file mt-2 mb-2">
-                    <label class="custom-file-label btn btn-success" asp-for="Input.NationalIdPicture">تغير الهوية الشخصية</label>
-                    <input type="file" accept="image/*"
-                    asp-for="Input.NationalIdPicture"
-                    class="custom-file-input"
-                    onchange="document.getElementById(`NationalIdPicture`).src=window.URL.createObjectURL(this.files[0])"
-                    style="display: none;"
-                    />
-                    @*<label class="custom-file-label" asp-for="Input.ProfilePicture"></label>*@
-                   <span asp-validation-for="Input.NationalIdPicture" class="text-danger"></span>
-
+                      <div class="form-group text-center">
+                         <label asp-for="Input.NationalIdPicture" class="w-100 text-center my-3 fw-bold fs-5">الهوية الشخصية</label>
+                            @if (Model.Input.NationalIdPicture != null)
+                            {
+                                <img id="NationalIdPicture" alt="NationalIdPicture" class="w-75 h-75" src="data:image/*;base64,@(Convert.ToBase64String(Model.Input.NationalIdPicture))"/>
+                            }
+                            else
+                            {
+                                <img id="NationalIdPicture" alt="NationalIdPicture" class="w-75 h-75" src="~/Images/DefaultImage/IdImg.jpg"/>
+                                <label class="text-danger">من فضلك قم بإرفاق صورة البطاقة وذلك لضمان ايجاد فرص افضل</label>
+                            }
+                            <div class="custom-file mt-2 mb-2">
+                                <label class="custom-file-label btn btn-info" asp-for="Input.NationalIdPicture">تغير الهوية الشخصية</label>
+                                <input type="file" accept="image/*" asp-for="Input.NationalIdPicture" class="custom-file-input" onchange="document.getElementById(`NationalIdPicture`).src=window.URL.createObjectURL(this.files[0])" style="display: none;"/>
+                                @*<label class="custom-file-label" asp-for="Input.ProfilePicture"></label>*@
+                                <span asp-validation-for="Input.NationalIdPicture" class="text-danger"></span>
+                            </div>
+                    </div>
+                    <div class="custom-file mt-2 mb-2 d-flex justify-content-center">
+                        <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-75 btn btn-lg myBtn m-auto">حفظ التعديلات</button>
+                    </div>
                 </div>
-            </div>
-
-            <div class="custom-file mt-2 mb-2">
-
-            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">حفظ التعديلات</button>            </div>
-
-
-
-               
-            </div>
-         </div>
-        </form>
+           </form>
+      </div>
 
 
 @section Scripts {

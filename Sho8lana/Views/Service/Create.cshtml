@@ -5,7 +5,7 @@
 }
 
 
-<div class="w-50 my-5 mx-auto" dir="rtl">
+<div class="w-75 my-5 mx-auto" dir="rtl">
     <div class="row justify-content-center">
         <p class="h4 col-12 my-3 text-center">اضافة خدمة جديدة</p>
         <div class="col-md-6 col-lg-12">
@@ -48,7 +48,7 @@
                 <div class="form-group mb-3">
                     <p class="w-100">قسم الصور </p>
                     <div class="wrapper row justify-content-around ">
-                      <div class="box col-2 p-0 position-relative">
+                      <div class="box col-lg-2 col-md-6 col-7 mb-5 p-0 position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
                           <label>
@@ -58,7 +58,7 @@
                         <i class="fa-solid fa-xmark cover position-absolute top-0 start-0 DeleteButton"></i>
                         <div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>
                       </div>
-                      <div class="box col-2 p-0 position-relative">
+                      <div class="box col-lg-2 col-md-6 col-7 mb-5 p-0 position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
                           <label>
@@ -67,7 +67,7 @@
                         </div>
                         <i class="fa-solid fa-xmark position-absolute top-0 start-0 DeleteButton"></i>
                         </div>
-                      <div class="box col-2 p-0 position-relative">
+                      <div class="box col-lg-2 col-md-6 col-7 mb-5 p-0 position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
                           <label>
@@ -76,7 +76,7 @@
                       </div>
                       <i class="fa-solid fa-xmark position-absolute top-0 start-0 DeleteButton"></i>
                       </div>
-                      <div class="box col-2 p-0 position-relative">
+                      <div class="box col-lg-2 col-md-6 col-7 p-0 mb-5 position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
                           <label>
@@ -118,7 +118,7 @@
                 </div>
                
             
-                <div class="form-group mb-3 mx-auto col-3 my-2">
+                <div class="form-group mb-3 mx-auto col-lg-3 col-8 my-2 d-flex justify-content-center">
                     <input type="submit" value="اضافة الخدمة" class="btn btn-dark btn-lg" />
                 </div>
             </form>
@@ -151,7 +151,7 @@
             $(document).on("click",".DeleteButton",()=>{
                 $(event.target).parent().remove();
                 $(".wrapper").append(
-                    `<div class="box col-2 p-0  position-relative">
+                    `<div class="box col-lg-2 col-md-6 col-7 p-0  position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
                         <label>

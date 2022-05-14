@@ -17,7 +17,7 @@
                 data-onstyle="primary" data-offstyle="success" id="checkbox">
             </form>            
         </div>
-        <div class="col-2" style="direction:rtl">
+        <div class="col-lg-2 col-md-4 col-sm-5" style="direction:rtl">
             <div class="d-flex flex-column flex-shrink-0 mb-5 icon-box iconbox-blue w-100" style="width: 280px;direction:rtl">
                 <a href="/" class="d-flex align-items-center justify-content-center link-dark text-decoration-none">
                     <span class="fs-4">خدماتنا</span>
@@ -52,7 +52,7 @@
                </form>
             </div>
         </div>
-        <div class="col-9" >
+        <div class="col-lg-10 col-md-8 col-sm-7 " >
             <div class="card-deck row justify-content-start services-section"> </div>
         </div>
     </section>
@@ -199,4 +199,8 @@
             }
         })
     }
+    $("#SearchForm").on("submit",(e)=>{
+        e.preventDefault();
+        getDataFromSearch();
+    })
     </script>

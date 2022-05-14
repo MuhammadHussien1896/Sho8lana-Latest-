@@ -5,93 +5,57 @@
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-
+<div class="myBtn my-2 w-25 m-auto text-center">تعديل البيانات</div>
 <partial name="_StatusMessage" for="StatusMessage" />
-     <form id="profile-form" method="post" enctype="multipart/form-data">
+     <form id="profile-form" class="row justify-content-center" method="post" enctype="multipart/form-data">
 
          <div class="row my-5 container justify-content-center" dir="rtl">
             <div class="col-8  border border-Secondery">
                 <div class="text-center">
                      <label asp-for="Input.ProfilePicture" class="w-100">الصورة الشخصية</label>
-                      @if (Model.Input.ProfilePicture != null)
-                      {
-                      <img id="ProfilePicture" alt="Profile" class="profile-picture rounded-circle"
-                      
-                          src="data:image/*;base64,@(Convert.ToBase64String(Model.Input.ProfilePicture))" />
-                      }
-                      else
-                      {
-                      <img id="ProfilePicture" alt="Profile" class="profile-picture rounded-circle" src="~/Images/DefaultImage/UserDefaultImage.png"
-                     
-                      />
+                        @if (Model.Input.ProfilePicture != null)
+                        {
+                          <img id="ProfilePicture" alt="Profile" class="profile-picture rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(Model.Input.ProfilePicture))" />
+                        }
+                        else
+                        {
+                           <img id="ProfilePicture" alt="Profile" class="profile-picture rounded-circle" src="~/Images/DefaultImage/UserDefaultImage.png"/>
+                        }
+                    <div class="custom-file mt-2 mb-2">
+                        <label class="custom-file-label btn btn-success" asp-for="Input.ProfilePicture">تغير الصورة الشخصية</label>
+                        <input type="file" accept="image/*" asp-for="Input.ProfilePicture" class="custom-file-input"
+                        onchange="document.getElementById(`ProfilePicture`).src=window.URL.createObjectURL(this.files[0])" style="display: none;" /> 
+                        <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="custom-file mt-2 mb-2">
+                    <label asp-for="Input.AboutMe" class="form-label">نبذة عني</label>
+                    <textarea asp-for="Input.AboutMe" class="form-control" rows="6" ></textarea>
+                    <span asp-validation-for="Input.AboutMe" class="text-danger"></span>
+                </div>
+                <div class="custom-file mt-2 mb-2">
+                    <label asp-for="Input.FirstName" class="form-label">الاسم</label>
+                    <input asp-for="Input.FirstName" class="form-control"  />
+                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                </div>
+                <div class="custom-file mt-2 mb-2">
+                     <label asp-for="Input.LastName" class="form-label">اسم العائلة</label>
+                     <input asp-for="Input.LastName" class="form-control"  />
+                     <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                </div>
+                <div class="custom-file mt-2 mb-2">
+                     <label asp-for="Input.PhoneNumber" class="form-label">رقم الجوال</label>
+                      <input asp-for="Input.PhoneNumber" class="form-control" />
+                     <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                </div>
 
-                      }
-                  
-            <div class="custom-file mt-2 mb-2">
-                <label class="custom-file-label btn btn-success" asp-for="Input.ProfilePicture">تغير الصورة الشخصية</label>
-                <input type="file" accept="image/*" asp-for="Input.ProfilePicture" class="custom-file-input"
-                    onchange="document.getElementById(`ProfilePicture`).src=window.URL.createObjectURL(this.files[0])" style="display: none;" />
-                
-                <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+                <partial name="_ManageNav" />
 
-            </div>
-             </div>
-
-            <div class="custom-file mt-2 mb-2">
-            <label asp-for="Input.AboutMe" class="form-label">نبذة عني</label>
-            <textarea asp-for="Input.AboutMe" class="form-control" ></textarea>
-             <span asp-validation-for="Input.AboutMe" class="text-danger"></span>
-            </div>
-
-
-
-
-
-             <div class="custom-file mt-2 mb-2">
-             <label asp-for="Input.FirstName" class="form-label">الاسم</label>
-            <input asp-for="Input.FirstName" class="form-control"  />
-            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-            </div>
-
-
-
-
-
-
-            <div class="custom-file mt-2 mb-2">
-             <label asp-for="Input.LastName" class="form-label">اسم العائلة</label>
-             <input asp-for="Input.LastName" class="form-control"  />
-             <span asp-validation-for="Input.LastName" class="text-danger"></span>
-            </div>
-
-
-
-
-
-             <div class="custom-file mt-2 mb-2">
-             <label asp-for="Input.PhoneNumber" class="form-label">رقم الجوال</label>
-              <input asp-for="Input.PhoneNumber" class="form-control" />
-             <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-
-             <partial name="_ManageNav" />
-
-            <div class="custom-file mt-2 mb-2">
-
-             <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">حفظ التعديلات</button>
-            </div>
-
-
-
-               
+                <div class="custom-file mt-2 mb-2 d-flex justify-content-center">
+                    <button id="update-profile-button" type="submit" class="col-lg-6 col-md-6 col-11 my-2  btn btn-lg myBtn">حفظ التعديلات</button>
+                </div>
             </div>
          </div>
-
-
-
-
-
-
      </form>
 
 @section Scripts {

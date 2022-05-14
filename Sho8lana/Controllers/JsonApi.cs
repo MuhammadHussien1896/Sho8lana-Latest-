@@ -173,7 +173,7 @@ namespace Sho8lana.Controllers
                 return NotFound();
 
             //////paging section
-            const int PageSize = 1;
+            const int PageSize = 16;
             int RecsCount = services.Count();
             var pager = new pagination(RecsCount, pg, PageSize);
             int rescPage = (pg - 1) * PageSize;
@@ -213,7 +213,7 @@ namespace Sho8lana.Controllers
                 return NotFound();
 
             //////paging section
-            const int PageSize = 1;
+            const int PageSize = 16;
             int RecsCount = services.Count();
             var pager = new pagination(RecsCount, pg, PageSize);
             int rescPage = (pg - 1) * PageSize;

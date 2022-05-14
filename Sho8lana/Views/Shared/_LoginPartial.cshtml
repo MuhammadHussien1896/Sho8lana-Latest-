@@ -144,26 +144,20 @@ else
     });
 
     connection.on("receiveNotification",(content)=>{
-                 toastr.info(content,"Notification :");
-                  $.ajax({  
-                        type: 'Get',  
-                        url: '@Url.Action("UnReadNotifcation","JsonApi")',  
-                        dataType: "json",  
-                        success: (data)=> {
-                            if(data>0){
-                                $(".counter").html(data).removeClass("d-none")   
-                            }
-                        },  
-                        error: function (ex) {  
-                        }
-                  });  
-                 
-            });
-
-
-
-    
-    
- })
+        toastr.info(content,"Notification :");
+            $.ajax({  
+                type: 'Get',  
+                url: '@Url.Action("UnReadNotifcation","JsonApi")',  
+                dataType: "json",  
+                success: (data)=> {
+                    if(data>0){
+                        $(".counter").html(data).removeClass("d-none")   
+                    }
+                },  
+                error: function (ex) {  
+                }
+            });      
+    });
+    })
     </script> 
 }

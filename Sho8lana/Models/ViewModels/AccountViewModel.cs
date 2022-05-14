@@ -7,6 +7,6 @@
             Services = new List<Service>();
         }
         public Customer Customer { get; set; }
-        public ICollection<Service> Services { get; set; }
+        public IEnumerable<Service> Services { get; set; }
     }
 }

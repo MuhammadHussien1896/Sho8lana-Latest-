@@ -29,9 +29,14 @@ namespace Sho8lana.Controllers
         }
         public async Task<IActionResult> account(string id)
         {
+            IEnumerable<Service> services = new List<Service>();
             var customer = await context.Customers.GetBy(c => c.Id == id);
             if (customer == null) { return NotFound(); }
-            var services = await context.Services.GetAllEagerLodingAsync(s => s.CustomerId == id, new string[] { "Medias", "Contracts" });
+            string userId= userManager.GetUserId(User);
+            if(userId == id)
+                services = await context.Services.GetAllEagerLodingAsync(s => s.CustomerId == id, new string[] { "Medias", "Contracts" });
+            else
+                services= await context.Services.GetAllEagerLodingAsync(s => s.CustomerId == id&&s.IsAccepted==true, new string[] { "Medias", "Contracts" });
             AccountViewModel model = new AccountViewModel() { Customer = customer,Services = services };
             return View(model);
             

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 <div class="row my-5 justify-content-around" dir="rtl">
-    <div class="col-7">
+    <div class="col-lg-7 col-md-7 col-11 mb-5">
         <!-- =======  Carsouel section  ======= -->
         <div class="row justify-content-center">
             <div id="carouselExampleIndicators" class="carousel slide my-1" data-bs-ride="carousel">
@@ -177,18 +177,18 @@
                             <div class="row justify-content-start align-items-center d-flex">
                                 @if (@comment.Customer.ProfilePicture == null)
                                 {
-                                    <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle col-1"/>
+                                    <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle col-lg-1 col-md-2 col-3"/>
                                 }
                                 else
                                 {
-                                    <img class="rounded-circle col-1" src="data:image/*;base64,@Convert.ToBase64String(@comment.Customer.ProfilePicture)" />
+                                    <img class="rounded-circle col-lg-1 col-md-3 col-3" src="data:image/*;base64,@Convert.ToBase64String(@comment.Customer.ProfilePicture)" />
                                 }
-                               <div class="col-8">
+                               <div class="col-lg-8 col-md-7 col-6">
                                     <p class="fw-bold fs-5 p-0 m-0 text-primary">@comment.Customer.FirstName @comment.Customer.LastName</p>
                                     <p class="p-0 m-0">@comment.EndDate.Date.ToShortDateString()</p>
                                 </div>
-                                <div class="ratings me-0 col-3"> 
-                                    <div class="rateyo" data-rateyo-rating=@comment.ContractRateStars data-rateyo-star-width="25px" data-rateyo-read-Only=true></div>
+                                <div class="ratings me-0 col-lg-3 col-md-2 col-3"> 
+                                    <div class="rateyo" data-rateyo-rating=@comment.ContractRateStars data-rateyo-star-width="18px" data-rateyo-read-Only=true></div>
                                 </div>
                             </div>
                             <div class="col-12 my-3 fs-5 fw-bold">
@@ -199,7 +199,7 @@
                 }
            </div>
     </div>
-    <div class="col-4">
+    <div class="col-lg-4 col-md-4 col-9 gx-0 mx-auto">
       <!-- =======  Price section  ======= -->
         <div class="row my-1 justify-content-center border border-Secondery">
             <p class="fs-1"><strong>@Model.Price $</strong></p>
@@ -268,16 +268,16 @@
                 @{
                     if (@Model.Customer.ProfilePicture == null)
                     {
-                        <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle col-3"/>
+                        <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle px-md-0 col-lg-3 col-md-3"/>
                     }
                     else
                     {
-                        <img class="rounded-circle col-3" src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
+                        <img class="rounded-circle col-lg-3 col-md-3 px-md-0 " src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
                     }
 
                 }
                 
-                <div class="col-8 d-flex flex-column pe-5">
+                <div class="col-lg-8 col-md-9 d-flex flex-column pe-lg-5 px-md-0 mt-2 text-md-center text-lg-end text-center ">
                     <a asp-controller="customer" asp-action="account" asp-route-id="@Model.CustomerId">
                     <span>@Model.Customer.FirstName @Model.Customer.LastName</span></a>
                     <span>عضو منذ عام @Model.Customer.RegisterationDate.Year</span>
@@ -286,8 +286,11 @@
                 </div>
                @{
                     
-                    <a asp-controller="Customer" asp-action="account" asp-route-id="@Model.CustomerId" class="col-1 fs-3 btn" style="font-weight:bolder">
+                    <a asp-controller="Customer" asp-action="account" asp-route-id="@Model.CustomerId" class="col-1 d-lg-flex d-none fs-3 btn" style="font-weight:bolder">
                         &gt;
+                    </a>
+                    <a asp-controller="Customer" asp-action="account" asp-route-id="@Model.CustomerId" class="btn myBtn col-12 my-3 d-lg-none">
+                        الذهاب الي صفحة البائع
                     </a>
                     
                 }
@@ -296,7 +299,7 @@
                 if(userManger.GetUserId(User)!=@Model.CustomerId)
                 {
                     //<a class="btn btn-dark col-8 my-3" asp-route-id="@Model.ServiceId" asp-action="SendMessage">التواصل مع البائع</a>
-                    <button type="button" class="btn btn-dark col-8 my-3" data-bs-toggle="modal" data-bs-target="#exampleModal" >التواصل مع البائع</button>
+                    <button type="button" class="btn btn-dark col-lg-8 col-md-8 col-11 my-3" data-bs-toggle="modal" data-bs-target="#exampleModal" >التواصل مع البائع</button>
 
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog">

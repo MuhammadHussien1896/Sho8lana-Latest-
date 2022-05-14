@@ -4,7 +4,6 @@
 
 @{
     ViewData["Title"] = "Account";
-
 }
 
 <div class="row my-5" dir="rtl">
@@ -41,175 +40,162 @@
 </div>
 
 <div class="row my-5 justify-content-around" dir="rtl">
-    <div class="col-7">
-           <div class="row my-5 justify-content-center border border-Secondery ">
-           <h3 class="h4 my-3 fw-bold">نبذة عني</h3>
-           <hr />
-           <h4>@Model.Customer.AboutMe</h4>
-         </div>
-
-
+    <div class="col-lg-7 col-10">
         <div class="row my-5 justify-content-center border border-Secondery ">
-           <h3 class="h4 my-3 fw-bold">خدماتي</h3>
-           <hr />
-           <div class="row gy-4">
-<div class="card-deck row justify-content-start">
-    @{
-    foreach (var service in Model.Services)
-    {
-    <div class="card col-lg-3 col-md-4 col-sm-6 border-0 my-5 px-2 bg-light">
-        <div class="h-50">
-            <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">
-                @{
-                if (@service.Medias.FirstOrDefault()!=null)
-                {
-                <img class="card-img-top h-100" src="~/Images/services/@service.Medias.FirstOrDefault().MediaPath">
-                }
-                else
-                {
-                <img class="card-img-top h-100" src="~/Images/Defaultimage/defaultService.jpg">
-                }
-                }
-            </a>
-           
-        </div>
-        <div class="card-body">
-            <p class="card-title mb-3 fw-bold">@service.Title</p>
-            <div style="text-align:start;direction:rtl">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="ratings me-0">
-                        <div class="rateyo" data-rateyo-rating=@service.Rate data-rateyo-star-width="25px" data-rateyo-read-Only=true></div>
-                    </div>
-                </div>
-                <div class="fw-normal">تبدأ من : <span class="fw-bold">@service.Price $</span></div>
-                @{
-                if (@service.IsCash)
-                {
-                <div class="fw-bold">متاح التعامل بالكاش او الفيزا</div>
-                }
-                else
-                {
-                <div class="fw-bold">متاح التعامل بالفيزا فقط </div>
-                }
-                }
-
-                <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Count(s=>s.IsDone==true)</span></div>
-
-                <div class="fw-normal">تاريخ النشر :<span
-                        class="fw-bold">@service.PublishDate.ToString("MM/dd/yyyy")</span></div>
-            </div>
+            <h3 class="h4 my-3 fw-bold">نبذة عني</h3>
+            <hr />
+            <h4>@Model.Customer.AboutMe</h4>
+         </div>
+        <div class="row my-5 justify-content-center border border-Secondery ">
+            <h3 class="h4 my-3 fw-bold">الخدمات</h3>
+            <hr />
+            <div class="row gy-4">
+                <div class="card-deck row justify-content-start">
+                    @foreach (var service in Model.Services)
+                    {
+                            @if (service.IsFreelancer == true)
+                            {
+                                <div class="card col-lg-4 col-md-4 col-sm-6 border-0 my-5 px-2">
+                                    <div class="h-50">
+                                        <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">
+                                            @if (@service.Medias.FirstOrDefault()!=null)
+                                            {
+                                            <img class="card-img-top h-100" src="~/Images/services/@service.Medias.FirstOrDefault().MediaPath">
+                                            }
+                                            else
+                                            {
+                                            <img class="card-img-top h-100" src="~/Images/Defaultimage/defaultService.jpg">
+                                            }
+                                        </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-title mb-3 fw-bold">@service.Title</p>
+                                        <div style="text-align:start;direction:rtl">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="ratings me-0">
+                                                    <div class="rateyo" data-rateyo-rating=@service.Rate data-rateyo-star-width="25px" data-rateyo-read-Only=true></div>
+                                                </div>
+                                            </div>
+                                            <div class="fw-normal">تبدأ من : <span class="fw-bold">@service.Price $</span></div>
+                                            @if (@service.IsCash)
+                                            {
+                                            <div class="fw-bold">متاح التعامل بالكاش فقط</div>
+                                            }
+                                            else
+                                            {
+                                            <div class="fw-bold">متاح التعامل بالفيزا فقط </div>
+                                            }
+                                            <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Count(s=>s.IsDone==true)</span></div>
+                                            <div class="fw-normal">تاريخ النشر :<span class="fw-bold">@service.PublishDate.ToString("MM/dd/yyyy")</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                    }
+               </div>
+           </div>
+       </div>
+        <div class="row my-5 justify-content-center border border-Secondery ">
+            <h3 class="h4 my-3 fw-bold">الطلبات</h3>
+            <hr />
+            <div class="row gy-4">
+                <div class="card-deck row justify-content-start">
+                    @foreach (var service in Model.Services)
+                    {
+                            @if (service.IsFreelancer == false)
+                            {
+                                <div class="card col-lg-4 col-md-4 col-sm-6 border-0 my-5 px-2">
+                                    <div class="h-50">
+                                        <a asp-action="Details" asp-controller="Service" asp-route-id="@service.ServiceId">
+                                            @if (@service.Medias.FirstOrDefault()!=null)
+                                            {
+                                            <img class="card-img-top h-100" src="~/Images/services/@service.Medias.FirstOrDefault().MediaPath">
+                                            }
+                                            else
+                                            {
+                                            <img class="card-img-top h-100" src="~/Images/Defaultimage/defaultService.jpg">
+                                            }
+                                        </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-title mb-3 fw-bold">@service.Title</p>
+                                        <div style="text-align:start;direction:rtl">
+                                            <div class="d-flex justify-content-between align-items-center">       
+                                        </div>
+                                            <div class="fw-normal">تبدأ من : <span class="fw-bold">@service.Price $</span></div>
+                                            @if (@service.IsCash)
+                                            {
+                                            <div class="fw-bold">متاح التعامل بالكاش فقط</div>
+                                            }
+                                            else
+                                            {
+                                            <div class="fw-bold">متاح التعامل بالفيزا فقط </div>
+                                            }
+                                            <div class="fw-normal"> عدد المشترين :<span class="fw-bold">@service.Contracts.Count(s=>s.IsDone==true)</span></div>
+                                            <div class="fw-normal">تاريخ النشر :<span class="fw-bold">@service.PublishDate.ToString("MM/dd/yyyy")</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                    }
+               </div>
+           </div>
         </div>
     </div>
-    }
-    }
-</div>
-        </div>
-        </div>
-
-
-     </div>
-
-     <div class="col-4">
-         <div class="row my-5 justify-content-center border border-Secondery ">
-           <h3 class="h4 my-3 fw-bold">إحصائيات</h3>
-           <hr />
-         <div class="row my-2 justify-content-between">
-          <span class="col-6 text-secondary">
-              العنوان
-          </span>
-     
-        <span class="col-6">
-            @Model.Customer.Country/@Model.Customer.City/@Model.Customer.Area
-        </span>
-          
-    
-      </div>
-         <div class="row my-2 justify-content-between">
-          <span class="col-6 text-secondary">
-              تاريخ التسجيل
-          </span>
-     
-        <span class="col-6">
-            @Model.Customer.RegisterationDate
-        </span>
-      </div>
-               <div class="row my-2 justify-content-between">
-          <span class="col-6 text-secondary">
-              عدد الخدمات المنشورة
-          </span>
-     
-        <span class="col-6">
-            @Model.Services.Count
-        </span>
-          
-    
-      </div>
+    <div class="col-lg-4 col-10">
+        <div class="row my-5 justify-content-center border border-Secondery ">
+            <h3 class="h4 my-3 fw-bold">إحصائيات</h3>
+            <hr />
+            <div class="row my-2 justify-content-between">
+                <span class="col-6 text-secondary">العنوان</span>
+                <span class="col-6">@Model.Customer.Country/@Model.Customer.City/@Model.Customer.Area</span>
+            </div>
+            <div class="row my-2 justify-content-between">
+                <span class="col-6 text-secondary">تاريخ التسجيل</span>
+                <span class="col-6">@Model.Customer.RegisterationDate.ToShortDateString()</span>
+            </div>
+            <div class="row my-2 justify-content-between">
+                <span class="col-6 text-secondary">عدد الخدمات المنشورة</span>
+                <span class="col-6">@Model.Services.Count()</span>
+            </div>
          </div>
-
-
-
-
-         <div class="row my-5 justify-content-center border border-Secondery ">
-           <h3 class="h4 my-3 fw-bold">توثيقات</h3>
-           <hr />
-         <div class="row my-2 justify-content-between">
-       <span class="col-6 text-secondary">
-                   @if (Model.Customer.EmailConfirmed == true)
+        <div class="row my-5 justify-content-center border border-Secondery ">
+             <h3 class="h4 my-3 fw-bold">توثيقات</h3>
+             <hr />
+             <div class="row my-2 justify-content-between">
+                 <span class="col-6 text-secondary my-2">
+                     @if (Model.Customer.EmailConfirmed == true)
+                     {      
+                         <span ><i class="bi bi-check-square-fill" style="color:green;"></i></span>
+                     } 
+                     else
+                     {
+                         <span ><i class="bi bi-x-square-fill" style="color:red"></i></span>
+                     }
+                    البريد الإلكتروني 
+                 </span>
+                 <span class="col-6 text-secondary my-2">
+                    @if (Model.Customer.PhoneNumber != null)
                     {
-                        
-                        <span >
-                            <i class="bi bi-check-square-fill" style="color:green;"></i>
-                        </span>
-                    } 
+                        <span ><i class="bi bi-check-square-fill " style="color:green"></i></span>
+                    }
                     else
                     {
-                        <span >
-                            
-                            <i class="bi bi-x-square-fill" style="color:red"></i>
-                        </span>
+                        <span ><i class="bi bi-x-square-fill" style="color:red"></i></span>
                     }
-              البريد الإلكتروني
-          </span>
-
-         <span class="col-6 text-secondary">
-           @if (Model.Customer.PhoneNumber != null)
-            {
-                <span >
-                    <i class="bi bi-check-square-fill " style="color:green"></i>
+                    رقم الجوال    
+                 </span>
+                 <span class="col-6 text-secondary my-2">
+                     @if (Model.Customer.NationalIdPicture!=null)
+                     {
+                        <span ><i class="bi bi-check-square-fill " style="color:green"></i></span>
+                     }
+                    else
+                    {
+                        <span ><i class="bi bi-x-square-fill" style="color:red"></i></span>
+                    }
+                    الهوية الشخصية        
                 </span>
-            } 
-            else
-            {
-                <span >
-                    <i class="bi bi-x-square-fill" style="color:red"></i>
-                </span>
-            }
-          رقم الجوال
-          </span>
-    
-      </div>
-               <div class="row my-2 justify-content-between">
-                 <span class="col-6 text-secondary">
-           @if (Model.Customer.NationalIdPicture!=null)
-            {
-                <span >
-                    <i class="bi bi-check-square-fill " style="color:green"></i>
-                </span>
-            } 
-            else
-            {
-                <span >
-                    <i class="bi bi-x-square-fill" style="color:red"></i>
-                </span>
-            }
-          الهوية الشخصية
-          </span>
-      </div>
- 
-
-
-      </div>
-
-
-
- </div>
+         </div>
+   </div>
+</div>
