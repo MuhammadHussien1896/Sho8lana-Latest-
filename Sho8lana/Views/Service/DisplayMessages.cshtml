@@ -23,25 +23,27 @@
                         @if (UserManager.GetUserId(User) == item.CustomerId)
                         {
                             @*<h4>You : @item.MessageContent</h4>*@
-                            <p class="fs-5">عنوان الخدمة : @item.Service.Title</p>
+                            <p class="fs-5 border-bottom border-secondrey pb-2">عنوان الخدمة : @item.Service.Title</p>
                             <p class="d-none">@(receiver = item.ReceiverId)</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="user d-flex flex-row align-items-center"> 
-                                    <img src=@(item.Customer.ProfilePicture != null ? "data:image/*;base64,"+@Convert.ToBase64String(@item.Customer.ProfilePicture) : "/images/DefaultImage/UserDefaultImage.png")  class="avatar rounded-circle ms-3"> 
+                            <div class="row align-items-center">
+                                <div class="user col-lg-10 col-12 align-items-center"> 
+                                    <img src=@(item.Customer.ProfilePicture != null ? "data:image/*;base64,"+@Convert.ToBase64String(@item.Customer.ProfilePicture) : "/images/DefaultImage/UserDefaultImage.png")  class="avatar rounded-circle"> 
                                     <span><small class="fs-5 text-primary">أنت :</small> <small class="fs-5">@item.MessageContent</small></span> 
-                                </div> <small>@item.MessageDate</small>
+                                </div> 
+                                <small class="col-lg-2 col-12" style="direction:ltr">@item.MessageDate</small>
                             </div>
                         }
                         else
                         {
                            @* <h4>@item.Customer.FirstName @item.Customer.LastName : @item.MessageContent</h4>*@
-                           <p class="fs-5">عنوان الخدمة : @item.Service.Title</p>
+                           <p class="fs-5 border-bottom border-secondrey pb-2">عنوان الخدمة : @item.Service.Title</p>
                             <p class="d-none">@(receiver = item.CustomerId)</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="user d-flex flex-row align-items-center"> 
-                                    <img src=@(item.Service.Customer.ProfilePicture != null ? "data:image/*;base64,"+@Convert.ToBase64String(@item.Service.Customer.ProfilePicture) : "/images/DefaultImage/UserDefaultImage.png") class="avatar rounded-circle ms-3"> 
+                                <div class="user col-lg-10 col-12 align-items-center"> 
+                                    <img src=@(item.Service.Customer.ProfilePicture != null ? "data:image/*;base64,"+@Convert.ToBase64String(@item.Service.Customer.ProfilePicture) : "/images/DefaultImage/UserDefaultImage.png") class="avatar rounded-circle"> 
                                     <span><small class="fs-5 text-primary">@item.Service.Customer.FirstName @item.Service.Customer.LastName :</small> <small class="fs-5">@item.MessageContent</small></span> 
-                                </div> <small>@item.MessageDate</small>
+                                </div>
+                                <small class="col-lg-2 col-12" style="direction:ltr">@item.MessageDate</small>
                             </div>
                         }
                         @*<small>@item.MessageDate</small>*@
