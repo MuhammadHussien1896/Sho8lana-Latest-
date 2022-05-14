@@ -71,8 +71,8 @@
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html" class="logo"><img src="~/assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
-            <nav id="navbar" class="navbar col-6 justify-content-start my-2">
-                <ul>
+            <nav id="navbar" class="navbar nav-bar-small col-4 justify-content-start my-2">
+                <ul class="NavBarList">
                     <li class="p-0 mx-2"><a class="nav-link scrollto fw-bold fa-3 active" asp-controller="Home" asp-action="index" asp-fragment="hero" style="font-family:'Noto Kufi arabic'" >الرئيسية</a></li>
                     <li class="p-0 mx-2"><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="services" style="font-family:'Noto Kufi arabic'">الخدمات</a></li>
                     <li class="p-0 mx-2"><a class="nav-link scrollto" asp-controller="Home" asp-action="index" asp-fragment="about" style="font-family:'Noto Kufi arabic'">من نحن</a></li>
@@ -80,10 +80,10 @@
                     <li class="dropdown p-0 mx-2"><i class="fa-solid fa-magnifying-glass nav-link text-light"></i></li>
                     @*<li><a class="getstarted scrollto" href="#about">Get Started</a></li>*@
                 </ul>
-                <i class="bi bi-list mobile-nav-toggle"></i>
+                <i class="bi bi-list mobile-nav-toggle me-auto"></i>
             </nav><!-- .navbar -->
-            <nav id="navbar" class="navbar col-4 justify-content-end my-2">
-                 <ul>
+            <nav id="navbar" class="navbar UserIcons col-6 justify-content-end my-2">
+                 <ul class="UserIconsList">
                     @if (SignInManager.IsSignedIn(User))
                     {
                         if (User.IsInRole("Admin"))
@@ -252,6 +252,35 @@
                     return $("#PopoverContent").html();
                 }
             });
+         })
+         let userIcons=$(".UserIconsList").children()
+         $(window).on("resize load",()=>{
+            if($(document).width()<1110){
+                $(".UserIcons").css("display","none");
+                $(".NavBarList").append(userIcons)
+            }
+            else{
+                $(".UserIcons").css("display","flex");
+                $(".UserIconsList").append(userIcons)
+                $(".NavBarList").remove(userIcons)
+         }
+         })
+         let clicked=false
+         $(".bi-list").on("click",()=>{
+             if(!clicked){
+                $(".nav-bar-small").removeClass("col-4");
+                $(".nav-bar-small").addClass("col-12");
+                $(".NavBarList li i").removeClass("text-light");
+                $(".NavBarList li i").addClass("text-dark");
+                clicked=true;
+             }
+             else{
+                $(".nav-bar-small").removeClass("col-12");
+                $(".nav-bar-small").addClass("col-4");
+                $(".NavBarList li i").addClass("text-light");
+                $(".NavBarList li i").removeClass("text-dark");
+                clicked=false;
+             }
          })
          $(".rateyo").rateYo();
     </script>
