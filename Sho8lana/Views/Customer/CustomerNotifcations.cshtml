@@ -3,34 +3,22 @@
     ViewData["Title"] = "Notifcations";
 
 }
-<div class="row justify-content-center services section-bg" dir="rtl">
+<div class="row justify-content-center services section-bg gx-0" dir="rtl">
     @{
         foreach (var item in Model.Notifications)
         {
-                <div class="col-8 border-bottom my-3">
-                    <div class="icon-box iconbox-blue p-3 row">
-                        <div class="col-2 d-flex justify-content-center align-items-center">
-                            <a class="nav-link scrollto" asp-controller="customer" asp-action="account" asp-route-id="@item.CustomerId" title="Manage">
-                                @if (Model.customerImage != null)
-                                {
-                                    <img class="rounded-circle w-100" alt="Profile" src="data:image/*;base64,@(Convert.ToBase64String(Model.customerImage))" />
-                                }
-                                else
-                                {
-                                    <img class="rounded-circle w-100" alt="Profile" src="~/Images/DefaultImage/UserDefaultImage.png" />
-                                }
-                              </a>
-                        </div>
-                        <div class="col-10">
+                <div class="col-md-8 col-10 border-bottom my-3">
+                    <div class="icon-box iconbox-blue p-3 row gx-0">
+                        <div class="col-md-10 col-12">
                             @if (item.IsRead == false)
                             {
-                                <div class="fs-5 p-3 fw-bold text-end">
+                                <div class="fs-md-5 p-md-3 fw-bold text-end mb-2">
                                     @item.Content
                                 </div>
                             }
                             else
                             {
-                                <div class="fs-5 p-3 text-end">
+                                <div class="fs-md-5 p-md-3 text-end mb-2">
                                     @item.Content
                                 </div>   
                             }
