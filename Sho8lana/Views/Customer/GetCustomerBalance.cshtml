@@ -5,26 +5,26 @@
 }
 
 <div class="row justify-content-around mb-5" style="direction:rtl">
-    <div class="col-7 m-5 pb-2 border-secondrey border-bottom">
+    <div class="col-md-7 col-12 m-5 pb-2 border-secondrey border-bottom">
         <p class="h1 text-center">رصيدك</p>
     </div>
     <!-- Customer Balance -->
-    <div class="col-7 m-5">
+    <div class="col-md-8 col-lg-7 col-10 m-5">
         <div class="row justify-content-around">
-            <div class="col-5 text-center">
+            <div class="col-md-6 col-lg-5 text-center">
                 <p class="fw-bold h3 py-3">الرصيد القابل للسحب</p>
                 <p class="fs-2 bg-success text-white rounded-pill py-5">@Model.Balance $</p>
                 <p class="text-secondery">الرصيد القابل للسحب هو الرصيد الذي يمكنك سحبه في أي وقت أو شراء به الخدمات من موقعنا</p>
             </div>
-            <div class="col-5 text-center">
+            <div class="col-md-6 col-lg-5 text-center">
                 <p class="fw-bold h3 py-3">الرصيد المعلق</p>
                 <p class="fs-2 bg-danger text-white rounded-pill py-5">@Model.PendingBalance $</p>
                 <p class="text-secondery">الرصيد المعلق هو الخاص بالخدمات التي تم الانتهاء منها حديثاَ ويجب ان تنتظر مدة 14 يوما ليتحول إلى الرصيد القابل للسحب</p>
             </div>
         </div>
     </div>
-    <div class="col-7 m-3">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <div class="col-7 d-md-block d-flex flex-column justify-content-center m-3">
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
             شحن الرصيد
         </button>
 
@@ -55,8 +55,8 @@
             </div>
           </div>
         </div>
-        <a class="btn btn-success">استلام الرصيد</a>
-        <a class="btn myBtn" asp-action="BalanceDetails">تفاصيل الرصيد</a>
+        <a class="btn btn-success mb-3">استلام الرصيد</a>
+        <a class="btn myBtn mb-3" asp-action="BalanceDetails">تفاصيل الرصيد</a>
     </div>
     
 </div>

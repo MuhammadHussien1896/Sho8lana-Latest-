@@ -1,5 +1,5 @@
 ﻿@model Sho8lana.Models.ViewModels.CustomerBalanceDetailsViewModel
-<nav class="w-75 m-auto mt-5">
+<nav class="col-9 m-auto mt-5">
   <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
     <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-orders" type="button" role="tab" aria-controls="nav-home" aria-selected="true">الطلبات</button>
     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-boughtservices" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">خدمات تم شرائها</button>
@@ -7,71 +7,72 @@
     <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-charges" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">  الرصيد المحول</button>
   </div>
 </nav>
-<div class="tab-content w-50 m-auto" id="nav-tabContent">
+<div class="tab-content col-lg-8 col-md-10 col-10 m-auto" id="nav-tabContent">
   <div class="tab-pane fade show active" id="nav-orders" role="tabpanel" aria-labelledby="nav-home-tab">
-            <table class="table table-bordered table-hover table-striped text-center table-responsive mt-3" dir="rtl">
-          <thead class="myBtn">
-              <tr>
-                  <th scope="col">الاسم</th>
-                  <th scope="col">تاريخ العملية</th>
-                  <th scope="col">طريقة الدفع</th>
-                  <th scope="col">المبلغ</th>
-                  <th scope="col">البائع</th>
-                  <th scope="col">تفاصيل الخدمة</th>
-              </tr>
-          </thead>
-          <tbody>
-              @foreach (var item in @Model.orders)
-              {
-              <tr>
-                  <th scope="row">@item.Customer.FirstName</th>
-                  <td>@item.CreatedDate</td>
-                  <td>@item.PaymentType</td>
-                  <td>@(item.TotalAmount/100)</td>
-                  <td><a asp-controller="Customer" asp-action="account" asp-route-id="@item.Contract.CustomerId">@item.Contract.Customer.FirstName @item.Contract.Customer.LastName</a></td>
-                  <td><a class="btn btn-primary" asp-controller="service" asp-action="Details" asp-route-id="@item.Contract.ServiceId">تفاصيل الخدمة</a></td>
-              </tr>   
-              }
-          </tbody>
-      </table>
-      <div class="col-3 ms-auto my-4" dir="rtl">
-          <div class="text-center fw-bold">إجمالي مبلغ الطلبات</div>
+      <div class="table-responsive table-body text-nowrap">
+        <table class="table table-bordered table-hover table-striped text-center mt-3" dir="rtl">
+              <thead class="myBtn">
+                  <tr>
+                      <th scope="col">تاريخ العملية</th>
+                      <th scope="col">طريقة الدفع</th>
+                      <th scope="col">المبلغ</th>
+                      <th scope="col">البائع</th>
+                      <th scope="col">تفاصيل الخدمة</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @foreach (var item in @Model.orders)
+                  {
+                  <tr>
+                      <td>@item.CreatedDate</td>
+                      <td>@item.PaymentType</td>
+                      <td>@(item.TotalAmount/100)</td>
+                      <td><a asp-controller="Customer" asp-action="account" asp-route-id="@item.Contract.CustomerId">@item.Contract.Customer.FirstName @item.Contract.Customer.LastName</a></td>
+                      <td><a class="btn btn-primary" asp-controller="service" asp-action="Details" asp-route-id="@item.Contract.ServiceId">تفاصيل الخدمة</a></td>
+                  </tr>   
+                  }
+              </tbody>
+          </table>
+      </div>
+      <div class="col-md-3 col-6 ms-auto my-4" dir="rtl">
+          <div class="text-center fw-bold mb-3">إجمالي مبلغ الطلبات</div>
           <div class="fs-2 bg-danger text-white rounded-pill text-center">@Model.orders.Sum(s=>s.TotalAmount/100)</div>
       </div>
   </div>
   <div class="tab-pane fade" id="nav-boughtservices" role="tabpanel" aria-labelledby="nav-profile-tab">
-            <table class="table table-bordered table-hover table-striped text-center table-responsive mt-3" dir="rtl">
-          <thead class="myBtn">
-              <tr>
-                  <th scope="col">الاسم</th>
-                  <th scope="col">تاريخ العملية</th>
-                  <th scope="col">طريقة الدفع</th>
-                  <th scope="col">المبلغ</th>
-                  <th scope="col">البائع</th>
-                  <th scope="col">تفاصيل الخدمة</th>
-              </tr>
-          </thead>
-          <tbody>
-              @foreach (var item in @Model.boughtServices)
-              {
-              <tr>
-                  <th scope="row">@item.Customer.FirstName</th>
-                  <td>@item.CreatedDate</td>
-                  <td>@item.PaymentType</td>
-                  <td>@(item.TotalAmount/100)</td>
-                  <td><a asp-controller="Customer" asp-action="account" asp-route-id="@item.Contract.Service.CustomerId">@item.Contract.Service.Customer.FirstName @item.Contract.Service.Customer.LastName</a></td>
-                  <td><a class="btn btn-primary" asp-controller="service" asp-action="Details" asp-route-id="@item.Contract.ServiceId">تفاصيل الخدمة</a></td>
-              </tr>   
-              }
-          </tbody>
-      </table>
-      <div class="col-3 ms-auto my-4" dir="rtl">
+        <div class="table-responsive table-body text-nowrap">
+          <table class="table table-bordered table-hover table-striped text-center table-responsive mt-3" dir="rtl">
+              <thead class="myBtn">
+                  <tr>
+                      <th scope="col">تاريخ العملية</th>
+                      <th scope="col">طريقة الدفع</th>
+                      <th scope="col">المبلغ</th>
+                      <th scope="col">البائع</th>
+                      <th scope="col">تفاصيل الخدمة</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  @foreach (var item in @Model.boughtServices)
+                  {
+                  <tr>
+                      <td>@item.CreatedDate</td>
+                      <td>@item.PaymentType</td>
+                      <td>@(item.TotalAmount/100)</td>
+                      <td><a asp-controller="Customer" asp-action="account" asp-route-id="@item.Contract.Service.CustomerId">@item.Contract.Service.Customer.FirstName @item.Contract.Service.Customer.LastName</a></td>
+                      <td><a class="btn btn-primary" asp-controller="service" asp-action="Details" asp-route-id="@item.Contract.ServiceId">تفاصيل الخدمة</a></td>
+                  </tr>   
+                  }
+              </tbody>
+          </table>
+      </div>
+      <div class="col-md-3 col-6 ms-auto my-4" dir="rtl">
           <div class="text-center fw-bold">إجمالي مبلغ الخدمات التى تم شرائها</div>
           <div class="fs-2 bg-danger text-white rounded-pill text-center">@Model.boughtServices.Sum(s=>s.TotalAmount/100)</div>
       </div>
   </div>
   <div class="tab-pane fade" id="nav-selledservices" role="tabpanel" aria-labelledby="nav-profile-tab">
-            <table class="table table-bordered table-hover table-striped text-center table-responsive mt-3" dir="rtl">
+    <div class="table-responsive table-body text-nowrap">
+      <table class="table table-bordered table-hover table-striped text-center table-responsive mt-3" dir="rtl">
           <thead class="myBtn">
               <tr>
                   <th scope="col">تاريخ العملية</th>
@@ -98,24 +99,26 @@
                   {
                       <td class="bg-danger text-info">معلق</td>
                   }
-                  <td><a asp-controller="Customer" asp-action="account" asp-route-id="@item.CustomerId">@item.Customer.FirstName @item.Contract.Service.Customer.LastName</a></td>
+                  <td><a asp-controller="Customer" asp-action="account" asp-route-id="@item.CustomerId">@item.Customer.FirstName @item.Customer.LastName</a></td>
                   <td><a class="btn btn-primary" asp-controller="service" asp-action="Details" asp-route-id="@item.Contract.ServiceId">تفاصيل الخدمة</a></td>
               </tr>   
               }
           </tbody>
       </table>
+    </div>
       <div class="row justify-content-start">
-          <div class="col-3 ms-auto my-4" dir="rtl">
+          <div class="col-md-3 col-6 ms-auto my-4" dir="rtl">
               <div class="text-center fw-bold">خدمات تم بيعها (مبلغ تم تحويله)</div>
               <div class="fs-2 bg-success text-white rounded-pill text-center">@Model.payedServices.Where(s=>(s.Contract.EndDate.AddDays(14) - DateTime.Now).Minutes<0).Sum(s=>s.TotalAmount/100)</div>
           </div>
-          <div class="col-3 ms-auto my-4" dir="rtl">
+          <div class="col-md-3 col-6 ms-auto my-4" dir="rtl">
               <div class="text-center fw-bold">خدمات تم بيعها (مبلغ معلق)</div>
               <div class="fs-2 bg-danger text-white rounded-pill text-center">@Model.payedServices.Where(s=>(s.Contract.EndDate.AddDays(14) - DateTime.Now).Minutes>0).Sum(s=>s.TotalAmount/100)</div>
           </div>
       </div>
   </div>
   <div class="tab-pane fade" id="nav-charges" role="tabpanel" aria-labelledby="nav-contact-tab">
+    <div class="table-responsive table-body text-nowrap">
       <table class="table table-bordered table-hover table-striped text-center table-responsive mt-3" dir="rtl">
           <thead class="myBtn">
               <tr>
@@ -137,7 +140,8 @@
               }
           </tbody>
       </table>
-      <div class="col-3 ms-auto my-4" dir="rtl">
+   </div>
+      <div class="col-md-3 col-6 ms-auto my-4" dir="rtl">
           <div class="text-center fw-bold">إجمالي الرصيد المحول</div>
           <div class="fs-2 bg-success text-white rounded-pill text-center">@Model.balanceCharges.Sum(s=>s.TotalAmount/100)</div>
       </div>

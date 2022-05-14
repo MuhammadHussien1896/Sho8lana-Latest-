@@ -17,23 +17,30 @@
                 data-onstyle="primary" data-offstyle="success" id="checkbox">
             </form>            
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-5" style="direction:rtl">
+        <div class="col-lg-3 col-md-4 col-sm-5" style="direction:rtl">
             <div class="d-flex flex-column flex-shrink-0 mb-5 icon-box iconbox-blue w-100" style="width: 280px;direction:rtl">
                 <a href="/" class="d-flex align-items-center justify-content-center link-dark text-decoration-none">
                     <span class="fs-4">خدماتنا</span>
                 </a>
                 <form asp-action="search" method="get">
                     <input type="hidden" value="Hiring" name="type" />
-                    <input type="Text" value="@text" name="text" class="form-control my-3" placeholder="أكتب ماتريد البحث عنه">                   
-                    <select class="form-select text-center selectCategories" name="CatId" size="8" aria-label="size 3 select example">
-                    @foreach (var item in Model.categories)
-                    {
-                        <option value="@item.CategoryId" class="CategoryOptions">@item.Name</option>    
-                    }
-                    </select>
-                    <div>
-                        <div class="my-3" >الترتيب حسب السعر</div>
-                        <select class="my-3 form-select PriceSelect"   name="Price" >
+                    <div class="d-flex flex-column">
+                        <i class="fa-solid fa-xmark text-start DeleteButton my-2"></i>
+                        <input type="Text" value="@text" name="text" class="form-control mt-1 mb-4" placeholder="أكتب ماتريد البحث عنه">
+                    </div>
+                    <div class="d-flex flex-column">
+                        <i class="fa-solid fa-xmark text-start DeleteButton mb-2"></i>
+                        <select class="form-select text-center selectCategories" name="CatId" size="8" aria-label="size 3 select example">
+                            @foreach (var item in Model.categories)
+                            {
+                                <option value="@item.CategoryId" class="CategoryOptions">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mt-3 text-center" >الترتيب حسب السعر</div>
+                    <div class="d-flex flex-column">
+                        <i class="fa-solid fa-xmark text-start DeleteButton mt-2"></i>
+                        <select class="my-3 form-select PriceSelect w-75 text-center m-auto"  name="Price" >
                             <option value="negogation">غير محدد</option>
                             <option value="5">5$</option>
                             <option value="10">10$</option>
@@ -52,7 +59,7 @@
                </form>
             </div>
         </div>
-        <div class="col-lg-10 col-md-8 col-sm-7 " >
+        <div class="col-lg-9 col-md-8 col-sm-7 " >
             <div class="card-deck row justify-content-start services-section"> </div>
         </div>
     </section>
@@ -199,8 +206,17 @@
             }
         })
     }
-    $("#SearchForm").on("submit",(e)=>{
-        e.preventDefault();
+    function SearchformSubmit(){
+        event.preventDefault();
+        getDataFromSearch();
+    }
+    $(document).on("submit","#SearchForm",SearchformSubmit)
+    $(document).on("click",".DeleteButton",(e)=>{
+        $(e.target).next().val("");
+        getDataFromSearch();
+    })
+    $(document).on("click",".DeleteButtonRate",(e)=>{
+        $(e.target).parent().children().children("input").prop("checked",false);
         getDataFromSearch();
     })
     </script>
