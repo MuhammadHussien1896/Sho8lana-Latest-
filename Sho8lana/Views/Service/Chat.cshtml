@@ -4,25 +4,9 @@
     ViewData["Title"] = "Chat";
 }
 <div class="row my-5 justify-content-around" dir="rtl">
-    <!--=====Service Section=====-->
-    <div class="col-3 border-start px-5">
-        <div class="row mt-4 mb-3 py-5 justify-content-around border border-Secondery">
-            <p class="h5 text-center pb-5">الخدمة "@Model.ServiceTitle"</p>
-            <a class="btn btn-outline-info col-6" asp-controller="service" asp-action="details" asp-route-id="@Model.ServiceId" >تفاصيل الخدمة</a>
-        </div>
-        <div class="row my-5 justify-content-center border border-Secondery ">
-           <p class="h4 my-3 fw-bold">نصائح</p>
-           <ul class="col-11">
-               <li class="my-2">يفضل التعامل من خلال الموقع لضمان حقوقك</li>
-               <li class="my-2">لا ترسل وسائل تواصل خارجية</li>
-               <li class="my-2">اسأل مقدم الخدمة ما تريد معرفته عن هذه الخدمة</li>
-               <li class="my-2">قم بالاتفاق على كافة التفاصيل في هذه المحادثة</li>
-               <li class="my-2">في حال حدوث خلاف سيتم الرجوع للمحادثة لتحديد السبب</li>
-           </ul>
-        </div>
-    </div>
+    
     <!--=====Chat Section=====-->
-    <div class="col-8 mb-5">
+    <div class="col-lg-8 col-12 mb-5 mx-sm-2">
         
         <div class="row px-0 justify-content-start mb-3 border-bottom border-secondery pb-3">
         
@@ -46,8 +30,8 @@
             {
                 <div class="row justify-content-start mt-3">
                     @*<div class="col-7  rounded bg-success text-white py-3">@message.MessageContent</div>*@
-                    <div class="col-7  rounded text-white py-3" style="background-color:#8227DA">@message.MessageContent</div>
-                    <small class="col-2 text-end" style="direction:ltr">
+                    <div class="col-lg-7 col-11  rounded text-white py-3" style="background-color:#8227DA">@message.MessageContent</div>
+                    <small class="col-lg-2 col-6 text-end" style="direction:ltr">
                         @if(message.MessageDate.Date == DateTime.Now.Date)
                         {
                             @message.MessageDate.ToShortTimeString()
@@ -63,8 +47,8 @@
             {
                 <div class="row justify-content-start mt-3" style="direction:ltr">
                     @*<div class="col-7 rounded bg-dark text-white py-3" style="direction:rtl">@message.MessageContent</div>*@
-                    <div style="direction:rtl" class="col-7 rounded bg-light py-3 border border-secondary">@message.MessageContent</div>
-                    <small class="col-2">
+                    <div style="direction:rtl" class="col-lg-7 col-11 rounded bg-light py-3 border border-secondary">@message.MessageContent</div>
+                    <small class="col-lg-2 col-6">
                         @if(message.MessageDate.Date == DateTime.Now.Date)
                         {
                             @message.MessageDate.ToShortTimeString()
@@ -79,9 +63,26 @@
           
         }
         </div> 
-        <div class="row justify-content-start mt-3 border-top border-secondery pt-3">
-            <input id="txtInput" type="text" class="col-9"  onkeypress="fire(event)"/>
-            <button id="sendBtn" type="submit" class="btn btn-outline-success col-2 mx-2" onclick="send('@Model.ReceiverId', '@Model.ServiceId')">ارسال</button>
+        <div class="row justify-content-around mt-3 border-top border-secondery pt-3">
+            <input id="txtInput" type="text" class="col-lg-9 col-11"  onkeypress="fire(event)"/>
+            <button id="sendBtn" type="submit" class="btn btn-outline-success col-lg-2 col-4 mt-2 mt-lg-0 mx-1" onclick="send('@Model.ReceiverId', '@Model.ServiceId')">ارسال</button>
+        </div>
+    </div>
+    <!--=====Service Section=====-->
+    <div class="col-lg-3 col-12 mx-2">
+        <div class="row mt-4 mb-3 py-5 justify-content-around border border-Secondery">
+            <p class="h5 text-center pb-5">الخدمة "@Model.ServiceTitle"</p>
+            <a class="btn btn-outline-info col-6" asp-controller="service" asp-action="details" asp-route-id="@Model.ServiceId" >تفاصيل الخدمة</a>
+        </div>
+        <div class="row my-5 justify-content-center border border-Secondery ">
+           <p class="h4 my-3 fw-bold">نصائح</p>
+           <ul class="col-11">
+               <li class="my-2">يفضل التعامل من خلال الموقع لضمان حقوقك</li>
+               <li class="my-2">لا ترسل وسائل تواصل خارجية</li>
+               <li class="my-2">اسأل مقدم الخدمة ما تريد معرفته عن هذه الخدمة</li>
+               <li class="my-2">قم بالاتفاق على كافة التفاصيل في هذه المحادثة</li>
+               <li class="my-2">في حال حدوث خلاف سيتم الرجوع للمحادثة لتحديد السبب</li>
+           </ul>
         </div>
     </div>
     
@@ -96,13 +97,13 @@
             //$('#mylist').prepend('<li>'+ name +' : '+ message + '<br/><small>'+ date +'</small></li>');
             if(senderId == '@Model.SenderId'){
                 $('#chat').append(`<div class="row justify-content-start mt-3">
-                <div class="col-7  rounded text-white py-3" style="background-color:#8227DA">${message}</div>
-                <small class="col-2 text-end" style="direction:ltr">${date}</small>
+                <div class="col-lg-7 col-11 rounded text-white py-3" style="background-color:#8227DA">${message}</div>
+                <small class="col-lg-2 col-6 text-end" style="direction:ltr">${date}</small>
                 </div>`);
             }else{
                 $('#chat').append(`<div class="row justify-content-start mt-3" style="direction:ltr">
-                <div style="direction:rtl" class="col-7 rounded bg-light py-3 border border-secondary">${message}</div>
-                <small class="col-2">${date}</small>
+                <div style="direction:rtl" class="col-lg-7 col-11 rounded bg-light py-3 border border-secondary">${message}</div>
+                <small class="col-lg-2 col-6">${date}</small>
                 </div>`);
             }
             chat.scrollTop = chat.scrollHeight;
