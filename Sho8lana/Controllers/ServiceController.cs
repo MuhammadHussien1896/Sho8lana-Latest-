@@ -128,7 +128,7 @@ namespace Sho8lana.Controllers
                     }
                     await _context.complete();
                     await jobs.AddNotification(service.CustomerId, $"تم انشاء خدمة {service.Title} وهى الان في مرحلة المراجعة ");
-                    return RedirectToAction("Details", new { id = s.ServiceId });
+                    return RedirectToAction("Details",new {id = s.ServiceId});
                 }
                 ////////////////////////////////////////////////////////////
                 //return RedirectToAction(nameof(Index));
@@ -158,7 +158,7 @@ namespace Sho8lana.Controllers
             _context.Services.Delete(service);
             await _context.complete();
             await jobs.AddNotification(service.CustomerId, $"تم حذف خدمة {service.Title} ");
-            return RedirectToAction("account", "Customer", new { id = customerId });
+            return RedirectToAction("account", "Customer", new {id=customerId});
 
         }
 
@@ -265,7 +265,7 @@ namespace Sho8lana.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Details", new { id = id });
+                return RedirectToAction("Details",new {id=id});
             }
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
             return View(service);

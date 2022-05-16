@@ -152,7 +152,7 @@ namespace Sho8lana.Controllers
                 services = await context.Services
                  .GetAllEagerLodingAsync(service => service.IsAccepted
                   && service.IsFreelancer == (type == "services" ? true : false)
-                  && service.Rate <= (Rate ?? 10)
+                  && service.Rate <= (Rate ?? 10) 
                   && service.Price <= (Price ?? int.MaxValue)
                   && (service.Description.Contains(text) || service.Title.Contains(text))
                   , new string[] { "Medias", "Contracts", "Customer" });
@@ -219,7 +219,7 @@ namespace Sho8lana.Controllers
                 services = await context.Services
                     .GetAllEagerLodingAsync(s => s.IsFreelancer == (type == "services" ? true : false)
                     && s.IsAccepted,
-                    rescPage, pager.PageSize,
+                    rescPage,pager.PageSize,
                     new string[] { "Medias", "Contracts", "Customer" });
             }
 
@@ -237,12 +237,12 @@ namespace Sho8lana.Controllers
                      .GetAllEagerLodingAsync(s => s.IsFreelancer == (type == "services" ? true : false)
                      && s.IsAccepted
                      && s.CategoryId == id,
-                     rescPage, pager.PageSize,
+                     rescPage,pager.PageSize,
                      new string[] { "Medias", "Contracts", "Customer" });
             }
-            if (services == null)
+            if(services==null)
                 return NotFound();
-
+            
             var model = services.Select(s => new ServiceDisplay
             {
                 Title = s.Title,
@@ -258,7 +258,7 @@ namespace Sho8lana.Controllers
                 BuyersCount = s.Contracts.Where(s => s.IsDone == true).Count(),
             }).ToList();
 
-            var Viewmodel = new { model = model, pager = pager };
+            var Viewmodel = new {model=model,pager=pager};
 
             return Json(Viewmodel);
 

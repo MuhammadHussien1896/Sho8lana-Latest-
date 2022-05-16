@@ -26,6 +26,6 @@ namespace Sho8lana.Models.Repositories
 
         public Task<int> Count();
         public Task<int> Count(Expression<Func<T, bool>> expression);
-        public Task<IList<T>> GetAllEagerLodingAsync(Expression<Func<T, bool>> expression, int skip, int take, string[] includes = null);
+        public Task <IList<T>> GetAllEagerLodingAsync(Expression<Func<T, bool>> expression, int skip,int take,string[] includes = null);
     }
 }
