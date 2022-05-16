@@ -112,7 +112,7 @@ namespace Sho8lana.Models.Repositories
             //{
             //    throw new Exception();
             //}
-                 appDbContext.Set<T>().UpdateRange(entities);
+            appDbContext.Set<T>().UpdateRange(entities);
             appDbContext.SaveChanges();
 
         }
@@ -127,6 +127,16 @@ namespace Sho8lana.Models.Repositories
             return await appDbContext.Set<T>().CountAsync(expression);
         }
 
+        public async Task<IList<T>> GetAllEagerLodingAsync(Expression<Func<T, bool>> expression, int skip, int take, string[] includes = null)
+        {
+            IQueryable<T> query = appDbContext.Set<T>();
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                    query = query.Include(include);
+            }
+            return await query.Where(expression).Skip(skip).Take(take).ToListAsync();
 
+        }
     }
 }

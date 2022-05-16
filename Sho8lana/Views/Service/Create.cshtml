@@ -14,7 +14,7 @@
                     <div class="form-group mb-3">
                         <label asp-for="Title" class="control-label"> العنوان</label>
                         <input asp-for="Title" class="form-control my-2" />
-                        <span class="text-secondary">قم بإضافة بعض الكلمات المفتاحية لعنوان الخدمة مثل <strong> (برمجة ، ترجمة ، تسجيل صوتي)</strong></span>
+                        <p class="text-secondary mb-0">قم بإضافة بعض الكلمات المفتاحية لعنوان الخدمة مثل <strong> (برمجة ، ترجمة ، تسجيل صوتي)</strong></p>
                         <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
 
@@ -30,7 +30,7 @@
                 <div class="form-group mb-3">
                     <label asp-for="Description" class="control-label">وصف الخدمة</label>
                     <textarea rows="6" asp-for="Description" class="form-control my-2"></textarea>
-                    <span class="text-secondary">قم بوضع وصف ملائم للخدمة</span>
+                    <p class="text-secondary mb-0">قم بوضع وصف ملائم للخدمة</p>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
                
@@ -48,7 +48,7 @@
                 <div class="form-group mb-3">
                     <p class="w-100">قسم الصور </p>
                     <div class="wrapper row justify-content-around ">
-                      <div class="box col-lg-2 col-md-6 col-7 mb-5 p-0 position-relative">
+                      <div class="box col-lg-2 col-md-5 col-7 mb-5 p-0 position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
                           <label>
@@ -58,7 +58,7 @@
                         <i class="fa-solid fa-xmark cover position-absolute top-0 start-0 DeleteButton"></i>
                         <div class="h-25 w-75  position-absolute d-flex justify-content-center align-items-center fw-bold" style="left: 7%;top:35%;background-color:rgb(44 188 57 / 65%)"> الغلاف</div>
                       </div>
-                      <div class="box col-lg-2 col-md-6 col-7 mb-5 p-0 position-relative">
+                      <div class="box col-lg-2 col-md-5 col-7 mb-5 p-0 position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
                           <label>
@@ -67,7 +67,7 @@
                         </div>
                         <i class="fa-solid fa-xmark position-absolute top-0 start-0 DeleteButton"></i>
                         </div>
-                      <div class="box col-lg-2 col-md-6 col-7 mb-5 p-0 position-relative">
+                      <div class="box col-lg-2 col-md-5 col-7 mb-5 p-0 position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
                           <label>
@@ -76,7 +76,7 @@
                       </div>
                       <i class="fa-solid fa-xmark position-absolute top-0 start-0 DeleteButton"></i>
                       </div>
-                      <div class="box col-lg-2 col-md-6 col-7 p-0 mb-5 position-relative">
+                      <div class="box col-lg-2 col-md-5 col-7 p-0 mb-5 position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
                           <label>
@@ -151,7 +151,7 @@
             $(document).on("click",".DeleteButton",()=>{
                 $(event.target).parent().remove();
                 $(".wrapper").append(
-                    `<div class="box col-lg-2 col-md-6 col-7 p-0  position-relative">
+                    `<div class="box col-lg-2 col-md-6 col-7 p-0 mb-5  position-relative">
                         <div class="js--image-preview"></div>
                         <div class="upload-options">
                         <label>

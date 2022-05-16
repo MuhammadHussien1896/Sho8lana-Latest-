@@ -67,10 +67,10 @@ namespace Sho8lana.Controllers
             return Json(result);
         }
         [HttpPost]
-        public async Task <IActionResult> UploadImage(IFormFile Pic,int ServiceId,int updateNo)
+        public async Task<IActionResult> UploadImage(IFormFile Pic, int ServiceId, int updateNo)
         {
-            var service=await context.Services.GetEagerLodingAsync(s => s.ServiceId == ServiceId,new string[] { "Medias" });
-            var name = service.ServiceId + "-" + service.Title + "-" + Guid.NewGuid()+ ".jpg";
+            var service = await context.Services.GetEagerLodingAsync(s => s.ServiceId == ServiceId, new string[] { "Medias" });
+            var name = service.ServiceId + "-" + service.Title + "-" + Guid.NewGuid() + ".jpg";
             if (updateNo < service.Medias.Count)
             {
                 if (updateNo == 0)
@@ -79,7 +79,7 @@ namespace Sho8lana.Controllers
                 }
                 else
                 {
-                    name = service.Medias.Skip(updateNo+1).Take(1).FirstOrDefault().MediaPath;
+                    name = service.Medias.Skip(updateNo + 1).Take(1).FirstOrDefault().MediaPath;
                 }
             }
             var path = "./wwwroot/Images/services/" + name;
@@ -107,15 +107,15 @@ namespace Sho8lana.Controllers
             return Json(Medias);
         }
         [HttpDelete]
-        public async Task <IActionResult>DeleteImage(int mediaId)
+        public async Task<IActionResult> DeleteImage(int mediaId)
         {
-            var Media=await context.Medias.GetById(mediaId);
-            var serviceid=Media.ServiceId;
+            var Media = await context.Medias.GetById(mediaId);
+            var serviceid = Media.ServiceId;
             context.Medias.Delete(Media);
             var path = "./wwwroot/Images/services/" + Media.MediaPath;
             System.IO.File.Delete(path);
             await context.complete();
-            var Medias=(await context.Medias.GetAllBy(s=>s.ServiceId==serviceid)).Select(s => new
+            var Medias = (await context.Medias.GetAllBy(s => s.ServiceId == serviceid)).Select(s => new
             {
                 mediaId = s.MediaId,
                 mediaPath = s.MediaPath,
@@ -124,7 +124,7 @@ namespace Sho8lana.Controllers
             return Json(Medias);
         }
         [HttpGet]
-        public  IActionResult GetImages(int serviceId)
+        public IActionResult GetImages(int serviceId)
         {
             var medias = context.Medias.GetAllBy(s => s.ServiceId == serviceId).Result.Select(s => new
             {
@@ -141,17 +141,21 @@ namespace Sho8lana.Controllers
             if (text == null)
             {
                 services = await context.Services
-                                 .GetAllEagerLodingAsync(s => s.IsAccepted
-                                  && s.IsFreelancer == (type=="services"?true:false)
-                                  && s.Rate <= (Rate ?? 10) && s.Price <= (Price ?? int.MaxValue), new string[] { "Medias", "Contracts", "Customer" });
+                    .GetAllEagerLodingAsync(service => service.IsAccepted
+                    && service.IsFreelancer == (type == "services" ? true : false)
+                    && service.Rate <= (Rate ?? 10)
+                    && service.Price <= (Price ?? int.MaxValue),
+                    new string[] { "Medias", "Contracts", "Customer" });
             }
             else
             {
                 services = await context.Services
-                 .GetAllEagerLodingAsync(s => s.IsAccepted
-                  && s.IsFreelancer == (type == "services" ? true : false)
-                  && s.Rate <= (Rate ?? 10) && s.Price <= (Price ?? int.MaxValue)
-                  && (s.Description.Contains(text) || s.Title.Contains(text)), new string[] { "Medias", "Contracts", "Customer" });
+                 .GetAllEagerLodingAsync(service => service.IsAccepted
+                  && service.IsFreelancer == (type == "services" ? true : false)
+                  && service.Rate <= (Rate ?? 10)
+                  && service.Price <= (Price ?? int.MaxValue)
+                  && (service.Description.Contains(text) || service.Title.Contains(text))
+                  , new string[] { "Medias", "Contracts", "Customer" });
 
             }
             if (!(CatId is null))
@@ -180,7 +184,8 @@ namespace Sho8lana.Controllers
             var data = services.Skip(rescPage).Take(pager.PageSize).ToList();
             //////
 
-            var model = data.Select(s => new ServiceDisplay{
+            var model = data.Select(s => new ServiceDisplay
+            {
                 Title = s.Title,
                 ServiceId = s.ServiceId,
                 ServiceHeader = s.Medias.FirstOrDefault()?.MediaPath,
@@ -190,7 +195,7 @@ namespace Sho8lana.Controllers
                 IsCash = s.IsCash,
                 CustomerImage = s.Customer.ProfilePicture,
                 CreatedDate = s.PublishDate.ToShortDateString(),
-                customerId=s.CustomerId,
+                customerId = s.CustomerId,
                 BuyersCount = s.Contracts.Where(s => s.IsDone == true).Count()
             }).ToList();
             var Viewmodel = new { model = model, pager = pager };
@@ -199,28 +204,46 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> Index(int? id, string type, int pg = 1)
         {
             IEnumerable<Service> services = new List<Service>();
+            const int PageSize = 1;
+            pagination pager;
+            int servicesCount;
             if (id == null)
+            {
+                servicesCount = await context.Services
+                    .Count(s => s.IsFreelancer == (type == "services" ? true : false)
+                    && s.IsAccepted);
+
+                pager = new pagination(servicesCount, pg, PageSize);
+                int rescPage = (pg - 1) * PageSize;
+
                 services = await context.Services
-                 .GetAllEagerLodingAsync(s => s.IsFreelancer == (type == "services" ? true : false) 
-                                      && s.IsAccepted, new string[] { "Medias", "Contracts", "Customer" });
-            
+                    .GetAllEagerLodingAsync(s => s.IsFreelancer == (type == "services" ? true : false)
+                    && s.IsAccepted,
+                    rescPage, pager.PageSize,
+                    new string[] { "Medias", "Contracts", "Customer" });
+            }
+
             else
+            {
+                servicesCount = await context.Services.Count(s => s.IsFreelancer == (type == "services" ? true : false)
+                && s.IsAccepted
+                && s.CategoryId == id
+                );
+
+                pager = new pagination(servicesCount, pg, PageSize);
+                int rescPage = (pg - 1) * PageSize;
+
                 services = await context.Services
-                 .GetAllEagerLodingAsync(s => s.IsFreelancer == (type == "services" ? true : false)
-                                      && s.IsAccepted && s.CategoryId == id, new string[] { "Medias", "Contracts", "Customer" });
-            
-            if(services==null)
+                     .GetAllEagerLodingAsync(s => s.IsFreelancer == (type == "services" ? true : false)
+                     && s.IsAccepted
+                     && s.CategoryId == id,
+                     rescPage, pager.PageSize,
+                     new string[] { "Medias", "Contracts", "Customer" });
+            }
+            if (services == null)
                 return NotFound();
 
-            //////paging section
-            const int PageSize = 16;
-            int RecsCount = services.Count();
-            var pager = new pagination(RecsCount, pg, PageSize);
-            int rescPage = (pg - 1) * PageSize;
-            var data = services.OrderByDescending(s => s.Rate).Skip(rescPage).Take(pager.PageSize).ToList();
-            //////
-            
-            var model = data.Select(s => new ServiceDisplay
+            var model = services.Select(s => new ServiceDisplay
             {
                 Title = s.Title,
                 ServiceId = s.ServiceId,
@@ -234,10 +257,11 @@ namespace Sho8lana.Controllers
                 customerId = s.CustomerId,
                 BuyersCount = s.Contracts.Where(s => s.IsDone == true).Count(),
             }).ToList();
-            var Viewmodel = new {model=model,pager=pager};
+
+            var Viewmodel = new { model = model, pager = pager };
+
             return Json(Viewmodel);
 
         }
-
     }
 }

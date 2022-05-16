@@ -22,7 +22,7 @@
                 <a href="/" class="d-flex align-items-center justify-content-center link-dark text-decoration-none">
                     <span class="fs-4">خدماتنا</span>
                 </a>
-                <form asp-action="search" method="get">
+                <form id="SearchForm" method="get">
                     <input type="hidden" value="Hiring" name="type" />
                     <div class="d-flex flex-column">
                         <i class="fa-solid fa-xmark text-start DeleteButton my-2"></i>
@@ -84,8 +84,16 @@
                 dataType: "json",
                 data:$("#SearchForm").serialize()+`&pg=${pageNo}`,
                 success: (data)=> {
+                    if(data.length==0){
+                      $(".services-section").html("");
+                      $(".services-section").append(
+                    `<div class="row d-flex justify-content-center align-items-center" style="height:50vh"> <p class="text-danger h4 fw-bold text-center" >  عذرا لم يتم العثور على خدمات جرب اختيارات بحث اخري</p></div>`
+                      )
+                    }
+                    else{
                     drawData(data.model);
                     DrawPages(data.pager,getDataFromSearch)
+                    }
                 },
                 error: function (ex) {
                     console.log(ex)
@@ -198,8 +206,18 @@
             dataType: "json",
             data:{id:catId,type:"Hiring",pg:pageno},
             success: (data)=> {
+              if(data.length==0){
+              $(".services-section").html("");
+              $(".services-section").append(
+
+                  `<div class="row d-flex justify-content-center align-items-center " style="height:50vh"> <p class="text-center text-danger h4 fw-bold" >عذرا لم يتم العثور على خدمات في هذا القسم</p></div>`
+                )
+              }
+                else{
                 drawData(data.model);
                 DrawPages(data.pager,loadData)
+                }
+
             },
             error: function (ex) {
                   console.log(ex)
