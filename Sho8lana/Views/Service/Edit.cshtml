@@ -15,7 +15,7 @@
                 <div class="form-group mb-3">
                     <label asp-for="Title" class="control-label"> العنوان</label>
                     <input asp-for="Title" class="form-control my-2" />
-                    <span class="text-secondary">قم بإضافة بعض الكلمات المفتاحية لعنوان الخدمة مثل <strong> (برمجة ، ترجمة ، تسجيل صوتي)</strong></span>
+                    <p class="text-secondary mb-0">قم بإضافة بعض الكلمات المفتاحية لعنوان الخدمة مثل <strong> (برمجة ، ترجمة ، تسجيل صوتي)</strong></p>
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
                 
@@ -31,7 +31,7 @@
                 <div class="form-group mb-3">
                     <label asp-for="Description" class="control-label">وصف الخدمة</label>
                     <textarea rows="6" asp-for="Description" class="form-control my-2"></textarea>
-                    <span class="text-secondary">قم بوضع وصف ملائم للخدمة</span>
+                    <p class="text-secondary mb-0">قم بوضع وصف ملائم للخدمة</p>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
                

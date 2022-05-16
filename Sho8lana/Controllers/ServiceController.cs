@@ -49,7 +49,7 @@ namespace Sho8lana.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("NotFoundView");
             }
             var service = await _context.Services
                 .GetEagerLodingAsync(s => s.ServiceId == id
@@ -57,7 +57,7 @@ namespace Sho8lana.Controllers
 
             if(service == null)
             {
-                return NotFound();
+                return View("NotFoundView");
             }
 
             return View("Details_modified",service);
@@ -127,6 +127,7 @@ namespace Sho8lana.Controllers
                         i++;
                     }
                     await _context.complete();
+                    await jobs.AddNotification(service.CustomerId, $"تم انشاء خدمة {service.Title} وهى الان في مرحلة المراجعة ");
                     return RedirectToAction("Details",new {id = s.ServiceId});
                 }
                 ////////////////////////////////////////////////////////////
@@ -156,7 +157,8 @@ namespace Sho8lana.Controllers
             }
             _context.Services.Delete(service);
             await _context.complete();
-            return RedirectToAction("Index", "Categories");
+            await jobs.AddNotification(service.CustomerId, $"تم حذف خدمة {service.Title} ");
+            return RedirectToAction("account", "Customer", new {id=customerId});
 
         }
 
@@ -167,7 +169,7 @@ namespace Sho8lana.Controllers
             var service = await _context.Services.GetById(id);
             if(id == null || service == null)
             {
-                return NotFound();
+                return View("NotFoundView");
             }
             if (customerId != service.CustomerId)
             {
@@ -204,7 +206,7 @@ namespace Sho8lana.Controllers
             }
             if (id != service.ServiceId)
             {
-                return NotFound();
+                return View("NotFoundView");
             }
 
             if (ModelState.IsValid)
@@ -263,7 +265,7 @@ namespace Sho8lana.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index", "Categories");
+                return RedirectToAction("Details",new {id=id});
             }
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
             return View(service);

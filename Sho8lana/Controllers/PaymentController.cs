@@ -92,7 +92,7 @@ namespace server.Controllers
                 StripCustId = customer.Id,
                 CreatedDate = DateTime.Now,
                 PaymentType = paymentIntent.PaymentMethodTypes.First(),
-                TotalAmount = (int)paymentIntent.Amount/100,
+                TotalAmount = (int)paymentIntent.Amount,
             };
             _context.Payments.Add(payment);
             Target.StartDate = DateTime.Now;
@@ -166,19 +166,8 @@ namespace server.Controllers
             };
             _context.BalanceCharges.Add(charge);
             TargetCustomer.Balance += (int)charge.TotalAmount / 100;
-            //_context.Customers.Update(TargetCustomer);
             await jobs.AddNotification(customerId, $"تم اضافة {charge.TotalAmount / 100}  دولار الي الرصيد بنجاح");
-            //Notification notification = new Notification()
-            //{
-            //    CustomerId = customerId,
-            //    Date = DateTime.Now,
-            //    IsRead = false,
-            //    Content = $"تم اضافة {charge.TotalAmount / 100}  دولار الي الرصيد بنجاح"
-
-            //};
-            //_context.Notifications.Add(notification);
             await _context.complete();
-
             return RedirectToAction("customercontracts", "customer");
         }
         [Authorize(Roles = "User")]
@@ -192,6 +181,10 @@ namespace server.Controllers
             if (contract.BuyerId != customerId)
             {
                 return LocalRedirect("~/Identity/Account/AccessDenied");
+            }
+            else if (customer == null)
+            {
+                return LocalRedirect("~/Identity/Account/Login");
             }
             else
             {
@@ -226,7 +219,7 @@ namespace server.Controllers
                 StripCustId = null,
                 CreatedDate = DateTime.Now,
                 PaymentType = "Balance",
-                TotalAmount = (int)contract.ContractPrice,
+                TotalAmount = (int)contract.ContractPrice*100,
             };
             _context.Payments.Add(payment);
             contract.StartDate = DateTime.Now;
