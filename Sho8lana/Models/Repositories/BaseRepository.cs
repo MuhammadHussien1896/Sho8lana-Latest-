@@ -112,7 +112,7 @@ namespace Sho8lana.Models.Repositories
             //{
             //    throw new Exception();
             //}
-                 appDbContext.Set<T>().UpdateRange(entities);
+            appDbContext.Set<T>().UpdateRange(entities);
             appDbContext.SaveChanges();
 
         }

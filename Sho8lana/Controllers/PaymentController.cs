@@ -23,10 +23,10 @@ namespace server.Controllers
         public PaymentController(IUnitOfWork context, UserManager<Sho8lana.Models.Customer> userManager, IHubContext<ChatHub> hubContext)
         {
             StripeConfiguration.ApiKey = "sk_test_51KtYXkEZF7e3vou0wl1X7ldWcbh4MUH7TdxiJfz3Ce4b4KYuqC2S7rSPHeZ8z8YMjdWjIARMCV2K2XvrrQn2GDzW00nB9Lf7gf";
-            
+
             _context = context;
             this.userManager = userManager;
-            this.jobs = new ContractJobs(context,hubContext);
+            this.jobs = new ContractJobs(context, hubContext);
         }
         public IActionResult index()
         {
@@ -36,8 +36,8 @@ namespace server.Controllers
         [HttpPost("create-checkout-session")]
         public ActionResult CreateCheckoutSession(int ContractId, string customerId)
         {
-            var Target=_context.Contracts.GetEagerLodingAsync(c=> c.ContractId == ContractId,new string[] { "Service" }).Result;
-            var TargetCustomer=_context.Customers.GetById(customerId).Result;
+            var Target = _context.Contracts.GetEagerLodingAsync(c => c.ContractId == ContractId, new string[] { "Service" }).Result;
+            var TargetCustomer = _context.Customers.GetById(customerId).Result;
             var options = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>
@@ -58,7 +58,7 @@ namespace server.Controllers
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = "https://localhost:7009/payment/success?session_id={CHECKOUT_SESSION_ID}"+ $"&&ContractId={ContractId}"+ $"&&customerId={customerId}",
+                SuccessUrl = "https://localhost:7009/payment/success?session_id={CHECKOUT_SESSION_ID}" + $"&&ContractId={ContractId}" + $"&&customerId={customerId}",
                 CancelUrl = "https://example.com/cancel",
             };
             var service = new SessionService();
@@ -68,7 +68,7 @@ namespace server.Controllers
             return new StatusCodeResult(303);
         }
         [HttpGet("/payment/success")]
-        public  async Task<IActionResult> OrderSuccess([FromQuery] string session_id,int ContractId, string customerId)
+        public async Task<IActionResult> OrderSuccess([FromQuery] string session_id, int ContractId, string customerId)
         {
             var Target = _context.Contracts.GetById(ContractId).Result;
             var TargetCustomer = _context.Customers.GetById(customerId).Result;
@@ -77,7 +77,7 @@ namespace server.Controllers
             options.AddExpand("payment_intent");
 
             var sessionService = new SessionService();
-            Session session = sessionService.Get(session_id,options);
+            Session session = sessionService.Get(session_id, options);
 
             var customerService = new CustomerService();
             var customer = customerService.Get(session.CustomerId);
@@ -86,7 +86,7 @@ namespace server.Controllers
 
             Payments payment = new Payments()
             {
-                PaymentId=paymentIntent.Id,
+                PaymentId = paymentIntent.Id,
                 CustomerId = customerId,
                 ContractId = ContractId,
                 StripCustId = customer.Id,
@@ -98,19 +98,19 @@ namespace server.Controllers
             Target.StartDate = DateTime.Now;
             Target.EndDate = Target.StartDate.AddDays(Target.DeliveryTime);
             //hangfire job will run at the end of the contract
-            
-            var jobId = BackgroundJob.Schedule(() =>jobs.EndContract(ContractId), TimeSpan.FromDays(Target.DeliveryTime));
+
+            var jobId = BackgroundJob.Schedule(() => jobs.EndContract(ContractId), TimeSpan.FromDays(Target.DeliveryTime));
             Target.JobId = jobId;//adding job id to be able to delete the job earlier 
             //_context.Contracts.Update(Target);
             await jobs.AddNotification(customerId, "تهانينا تم دفع سعر الخدمة بنجاح !");
             await _context.complete();
-            
-            return RedirectToAction("customercontracts","customer");
+
+            return RedirectToAction("customercontracts", "customer");
         }
         [HttpPost("charge-checkout-session")]
-        public ActionResult ChargingBalance(string customerId,int amount)
+        public ActionResult ChargingBalance(string customerId, int amount)
         {
-            var TargetCustomer =_context.Customers.GetById(customerId);
+            var TargetCustomer = _context.Customers.GetById(customerId);
             var options = new SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>
@@ -140,7 +140,7 @@ namespace server.Controllers
             return new StatusCodeResult(303);
         }
         [HttpGet("/Charge/success")]
-        public async Task<IActionResult> ChargeSuccess([FromQuery] string session_id,string customerId)
+        public async Task<IActionResult> ChargeSuccess([FromQuery] string session_id, string customerId)
         {
             var TargetCustomer = _context.Customers.GetById(customerId).Result;
 
@@ -230,7 +230,7 @@ namespace server.Controllers
             customer.Balance -= contract.ContractPrice;
             await jobs.AddNotification(customerId, $"تم دفع {contract.ContractPrice}$ من رصيدك بنجاح");
             await _context.complete();
-            return RedirectToAction("CustomerContracts","customer");
+            return RedirectToAction("CustomerContracts", "customer");
         }
 
     }

@@ -20,14 +20,14 @@ namespace Sho8lana.Controllers
 {
     public class ServiceController : Controller
     {
-        string [] supportedTypes = new[] { "jpg", "jpeg", "png", "gif", "JPG", "JPEG", "PNG", "GIF" };
-        
+        string[] supportedTypes = new[] { "jpg", "jpeg", "png", "gif", "JPG", "JPEG", "PNG", "GIF" };
 
-        private readonly IUnitOfWork _context ;
+
+        private readonly IUnitOfWork _context;
         private readonly UserManager<Customer> userManager;
         private readonly ContractJobs jobs;
 
-        public ServiceController(IUnitOfWork context,UserManager<Customer> userManager,IHubContext<ChatHub> hubContext)
+        public ServiceController(IUnitOfWork context, UserManager<Customer> userManager, IHubContext<ChatHub> hubContext)
         {
             _context = context;
             this.userManager = userManager;
@@ -43,7 +43,7 @@ namespace Sho8lana.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
         */
-        
+
         // GET: Service/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -53,24 +53,24 @@ namespace Sho8lana.Controllers
             }
             var service = await _context.Services
                 .GetEagerLodingAsync(s => s.ServiceId == id
-                ,new string[] { "Category","Medias","Category", "Contracts.Customer","Customer" });
+                , new string[] { "Category", "Medias", "Category", "Contracts.Customer", "Customer" });
 
-            if(service == null)
+            if (service == null)
             {
                 return View("NotFoundView");
             }
 
-            return View("Details_modified",service);
+            return View("Details_modified", service);
 
 
         }
         // GET: Service/Create
-        [Authorize(Roles ="User")]
+        [Authorize(Roles = "User")]
         public IActionResult Create()
         {
-            var categories =_context.Categories.GetAllSync();
+            var categories = _context.Categories.GetAllSync();
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name");
-                       
+
             return View();
         }
 
@@ -80,12 +80,12 @@ namespace Sho8lana.Controllers
         [Authorize(Roles = "User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,Rate,CategoryId,CustomerId")] Service service,List<IFormFile> Medias)
+        public async Task<IActionResult> Create([Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,Rate,CategoryId,CustomerId")] Service service, List<IFormFile> Medias)
         {
             int i = 1;
             if (ModelState.IsValid)
             {
-               
+
                 // publish date
                 service.PublishDate = DateTime.Now;
 
@@ -93,7 +93,7 @@ namespace Sho8lana.Controllers
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 var customerId = claims.Value;
-                
+
                 service.CustomerId = customerId;
                 //add service to database
                 if (Medias.Count > 4)
@@ -135,25 +135,25 @@ namespace Sho8lana.Controllers
             }
             var categories = _context.Categories.GetAllSync();
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "Name", service.CategoryId);
-            
+
             return View(service);
         }
-       // POST: Service/Delete/5
+        // POST: Service/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customerId = userManager.GetUserId(User);
-            var service = await _context.Services.GetEagerLodingAsync(s => s.ServiceId == id,new string[] { "CustomerRequests", "Contracts" });
+            var service = await _context.Services.GetEagerLodingAsync(s => s.ServiceId == id, new string[] { "CustomerRequests", "Contracts" });
             if (customerId != service.CustomerId)
             {
                 return LocalRedirect("~/Identity/Account/AccessDenied");
             }
             if (id == 0) { return NotFound(); }
-            
-            if(service.CustomerRequests.Count > 0 || service.Contracts.Count > 0)
+
+            if (service.CustomerRequests.Count > 0 || service.Contracts.Count > 0)
             {
-                return RedirectToAction(nameof(Details),new {id});
+                return RedirectToAction(nameof(Details), new { id });
             }
             _context.Services.Delete(service);
             await _context.complete();
@@ -167,7 +167,7 @@ namespace Sho8lana.Controllers
         {
             var customerId = userManager.GetUserId(User);
             var service = await _context.Services.GetById(id);
-            if(id == null || service == null)
+            if (id == null || service == null)
             {
                 return View("NotFoundView");
             }
@@ -181,7 +181,7 @@ namespace Sho8lana.Controllers
             //    return NotFound();
             //}
 
-            
+
             //if (service == null)
             //{
             //    return NotFound();
@@ -195,7 +195,7 @@ namespace Sho8lana.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,Rate,CategoryId,CustomerId")] Service service,List<IFormFile> Medias)
+        public async Task<IActionResult> Edit(int id, [Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,Rate,CategoryId,CustomerId")] Service service, List<IFormFile> Medias)
         {
             //int i = 1;
             var categories = _context.Categories.GetAllSync();
@@ -223,7 +223,7 @@ namespace Sho8lana.Controllers
                     //    IsRead = false,
                     //    CustomerId = service.CustomerId,
                     //};
-                     //_context.Notifications.Add(notification);
+                    //_context.Notifications.Add(notification);
                     await _context.complete();
 
                     //var allImages = _context.Medias.GetAllBy(m=>m.ServiceId==service.ServiceId);
@@ -256,7 +256,7 @@ namespace Sho8lana.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (await ServiceExists(service.ServiceId)==false)
+                    if (await ServiceExists(service.ServiceId) == false)
                     {
                         return NotFound();
                     }
@@ -271,12 +271,12 @@ namespace Sho8lana.Controllers
             return View(service);
         }
 
-        
-        
-        private async Task <bool> ServiceExists(int id)
+
+
+        private async Task<bool> ServiceExists(int id)
         {
-            var service =  await _context.Services.GetBy(e => e.ServiceId == id);
-            if(service == null) { return true; }
+            var service = await _context.Services.GetBy(e => e.ServiceId == id);
+            if (service == null) { return true; }
             else { return false; }
         }
 
@@ -293,13 +293,13 @@ namespace Sho8lana.Controllers
         public IActionResult DisplayMessages()
         {
             var id = userManager.GetUserId(User);
-            if(id == null)
+            if (id == null)
             {
                 return NotFound();
             }
             var allMessages = _context.ServiceMessages
                                 .GetAllEagerLodingAsync(m => m.CustomerId == id || m.ReceiverId == id
-                                ,new string[] {"Customer","Service.Customer"}).Result
+                                , new string[] { "Customer", "Service.Customer" }).Result
                                 .OrderByDescending(m => m.MessageDate)
                                 .GroupBy(m => m.ServiceId);
             var latestMessages = new List<ServiceMessage>();
@@ -309,7 +309,7 @@ namespace Sho8lana.Controllers
             }
             return View(latestMessages);
         }
-        public async Task<IActionResult> Chat(int id,string receiverId)
+        public async Task<IActionResult> Chat(int id, string receiverId)
         {
             var userId = userManager.GetUserId(User);
             var receiver = await _context.Customers.GetBy(c => c.Id == receiverId);
@@ -319,7 +319,7 @@ namespace Sho8lana.Controllers
                 return NotFound();
             }
             var chatMessages = _context.ServiceMessages
-                .GetAllBy(m => ((m.CustomerId == userId && m.ReceiverId == receiverId) 
+                .GetAllBy(m => ((m.CustomerId == userId && m.ReceiverId == receiverId)
                 || (m.CustomerId == receiverId && m.ReceiverId == userId))
                 && m.ServiceId == id).Result;
             var receiverName = $"{receiver.FirstName} {receiver.LastName}";
@@ -335,14 +335,14 @@ namespace Sho8lana.Controllers
                 IsReceiverOnline = onlineReceiver != null
             };
             var unreadMessages = await _context.ServiceMessages.GetAllBy(m => m.ReceiverId == userId && m.ServiceId == id && m.IsRead == false);
-            foreach(var messsage in unreadMessages)
+            foreach (var messsage in unreadMessages)
             {
                 messsage.IsRead = true;
             }
             //_context.ServiceMessages.UpdateList(unreadMessages.ToList());
             await _context.complete();
             return View(model);
-            
+
         }
     }
 }

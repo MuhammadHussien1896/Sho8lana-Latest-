@@ -67,10 +67,10 @@ namespace Sho8lana.Controllers
             return Json(result);
         }
         [HttpPost]
-        public async Task <IActionResult> UploadImage(IFormFile Pic,int ServiceId,int updateNo)
+        public async Task<IActionResult> UploadImage(IFormFile Pic, int ServiceId, int updateNo)
         {
-            var service=await context.Services.GetEagerLodingAsync(s => s.ServiceId == ServiceId,new string[] { "Medias" });
-            var name = service.ServiceId + "-" + service.Title + "-" + Guid.NewGuid()+ ".jpg";
+            var service = await context.Services.GetEagerLodingAsync(s => s.ServiceId == ServiceId, new string[] { "Medias" });
+            var name = service.ServiceId + "-" + service.Title + "-" + Guid.NewGuid() + ".jpg";
             if (updateNo < service.Medias.Count)
             {
                 if (updateNo == 0)
@@ -79,7 +79,7 @@ namespace Sho8lana.Controllers
                 }
                 else
                 {
-                    name = service.Medias.Skip(updateNo+1).Take(1).FirstOrDefault().MediaPath;
+                    name = service.Medias.Skip(updateNo + 1).Take(1).FirstOrDefault().MediaPath;
                 }
             }
             var path = "./wwwroot/Images/services/" + name;
@@ -107,15 +107,15 @@ namespace Sho8lana.Controllers
             return Json(Medias);
         }
         [HttpDelete]
-        public async Task <IActionResult>DeleteImage(int mediaId)
+        public async Task<IActionResult> DeleteImage(int mediaId)
         {
-            var Media=await context.Medias.GetById(mediaId);
-            var serviceid=Media.ServiceId;
+            var Media = await context.Medias.GetById(mediaId);
+            var serviceid = Media.ServiceId;
             context.Medias.Delete(Media);
             var path = "./wwwroot/Images/services/" + Media.MediaPath;
             System.IO.File.Delete(path);
             await context.complete();
-            var Medias=(await context.Medias.GetAllBy(s=>s.ServiceId==serviceid)).Select(s => new
+            var Medias = (await context.Medias.GetAllBy(s => s.ServiceId == serviceid)).Select(s => new
             {
                 mediaId = s.MediaId,
                 mediaPath = s.MediaPath,
@@ -124,7 +124,7 @@ namespace Sho8lana.Controllers
             return Json(Medias);
         }
         [HttpGet]
-        public  IActionResult GetImages(int serviceId)
+        public IActionResult GetImages(int serviceId)
         {
             var medias = context.Medias.GetAllBy(s => s.ServiceId == serviceId).Result.Select(s => new
             {
