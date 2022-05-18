@@ -219,7 +219,7 @@ namespace server.Controllers
                 StripCustId = null,
                 CreatedDate = DateTime.Now,
                 PaymentType = "Balance",
-                TotalAmount = (int)contract.ContractPrice * 100,
+                TotalAmount = (int)contract.ContractPrice*100,
             };
             _context.Payments.Add(payment);
             contract.StartDate = DateTime.Now;
