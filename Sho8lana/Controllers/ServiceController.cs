@@ -195,7 +195,7 @@ namespace Sho8lana.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,Rate,CategoryId,CustomerId")] Service service, List<IFormFile> Medias)
+        public async Task<IActionResult> Edit(int id, [Bind("ServiceId,Description,Title,Price,CustomerInstructions,IsCash,IsFreelancer,PublishDate,CategoryId,CustomerId")] Service service, List<IFormFile> Medias)
         {
             //int i = 1;
             var categories = _context.Categories.GetAllSync();
