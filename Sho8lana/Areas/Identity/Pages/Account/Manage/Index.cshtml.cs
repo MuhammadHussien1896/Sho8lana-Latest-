@@ -66,7 +66,8 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             [Display(Name = "LastName")]
             public string LastName { get; set; }
 
-            [Phone]
+            [Remote(action: "ConfirmUniquePhoneNumber", controller: "JsonApi", ErrorMessage = "PhoneNumber already exists!")]
+            [RegularExpression("^01[0-2,5]{1}[0-9]{8}$")]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 

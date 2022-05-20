@@ -1,0 +1,21 @@
+﻿@page
+@model Sho8lana.Areas.Identity.Pages.Account.SendVerficationCodeModel
+@{
+}
+@{
+   ViewData["Title"] = "تفعيل رقم الهاتف";
+}
+
+
+<div class="row mt-5 d-flex justify-content-center align-items-center gx-0" direction="rtl" style="height:40vh">
+   <div class="col-md-8 d-flex flex-column Justify-content-center align-items-center">
+       <p class="text-center text-success h3 fw-bold mb-4">@ViewData["Title"]</p>
+       <form method="post" class="d-flex flex-column jutify-content-center align-items-center">
+           <p direction="rtl" class="fw-bold">
+              سنقوم بإرسال رمز التفعيل الى الرقم @Model.PhoneNumber
+           </p>
+           <div asp-validation-summary="All" class="text-danger"></div>
+           <button type="submit" class="btn btn-primary m-auto">أرسال رمز التفعيل</button>
+       </form>
+   </div>
+</div>

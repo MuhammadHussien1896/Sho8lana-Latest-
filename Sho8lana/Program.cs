@@ -1,12 +1,17 @@
+using exp.Services;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Sho8lana.Areas.Identity.Pages.Account;
 using Sho8lana.Data;
 using Sho8lana.Hubs;
 using Sho8lana.Models;
+using Sho8lana.Services;
 using Sho8lana.Unit_Of_Work;
 using System.Text.Json.Serialization;
+using Twilio;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +28,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     .UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<Customer,IdentityRole>()
+builder.Services.AddIdentity<Customer, IdentityRole>(
+    options => options.SignIn.RequireConfirmedAccount = true
+    )
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
@@ -56,6 +63,11 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
            options.ClientSecret = "482adbb890fb5e901a5603f6b22a36d5";
 
        });
+services.Configure<TwilioVerifySettings>(builder.Configuration.GetSection("Twilio"));
+var accountSid = builder.Configuration["Twilio:AccountSID"];
+var authToken = builder.Configuration["Twilio:AuthToken"];
+TwilioClient.Init(accountSid, authToken);
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

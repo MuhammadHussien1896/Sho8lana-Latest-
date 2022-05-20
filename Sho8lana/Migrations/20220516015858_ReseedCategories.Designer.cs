@@ -12,8 +12,8 @@ using Sho8lana.Data;
 namespace Sho8lana.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220516015858_test")]
-    partial class test
+    [Migration("20220516015858_ReseedCategories")]
+    partial class ReseedCategories
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

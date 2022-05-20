@@ -33,12 +33,14 @@ namespace Sho8lana.Data
             builder.Entity<Customer>().Property(m => m.FirstName).IsRequired(false);
             builder.Entity<Customer>().Property(m => m.LastName).IsRequired(false);
             builder.Entity<Customer>().Property(m => m.Gender).IsRequired(false);
+            builder.Entity<Customer>().Property(m => m.PhoneNumber).IsRequired(false);
+            builder.Entity<Customer>().HasIndex(m => m.PhoneNumber).IsUnique();
 
-        
+
             base.OnModelCreating(builder);
-            builder.Entity<Customer>().Ignore(i => i.PhoneNumberConfirmed);
+            //builder.Entity<Customer>().Ignore(i => i.PhoneNumberConfirmed);
             builder.Entity<OnlineUser>().HasKey(k => new {k.UserId,k.ConnectionId});
         }
-
+        
     }
 }

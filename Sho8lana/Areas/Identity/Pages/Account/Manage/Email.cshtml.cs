@@ -117,6 +117,19 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             }
 
             var email = await _userManager.GetEmailAsync(user);
+            if (Request.Form.Files.Count > 0)
+            {
+                var file1 = Request.Form.Files.LastOrDefault();
+
+                using (var dataStream1 = new MemoryStream())
+                {
+                    await file1.CopyToAsync(dataStream1);
+                    user.NationalIdPicture = dataStream1.ToArray();
+                }
+                await _userManager.UpdateAsync(user);
+
+
+            }
             if (Input.NewEmail != email)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
@@ -135,21 +148,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
                 StatusMessage = "Confirmation link to change email sent. Please check your email.";
                 return RedirectToPage();
             }
-            if (Request.Form.Files.Count > 0)
-            {
-                var file1 = Request.Form.Files.LastOrDefault();
-
-                using (var dataStream1 = new MemoryStream())
-                {
-                    await file1.CopyToAsync(dataStream1);
-                    user.NationalIdPicture = dataStream1.ToArray();
-                }
-                await _userManager.UpdateAsync(user);
-
-
-            }
-
-            StatusMessage = "Your email is unchanged.";
+            //StatusMessage = "Your email is unchanged.";
             return RedirectToPage();
         }
 

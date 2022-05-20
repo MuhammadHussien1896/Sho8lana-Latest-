@@ -175,7 +175,7 @@
                     البريد الإلكتروني 
                  </span>
                  <span class="col-6 text-secondary my-2">
-                    @if (Model.Customer.PhoneNumber != null)
+                    @if (Model.Customer.PhoneNumberConfirmed==true)
                     {
                         <span ><i class="bi bi-check-square-fill " style="color:green"></i></span>
                     }
@@ -186,7 +186,7 @@
                     رقم الجوال    
                  </span>
                  <span class="col-6 text-secondary my-2">
-                     @if (Model.Customer.NationalIdPicture!=null)
+                     @if (Model.Customer.NationalIdPicture!=null&&Model.Customer.IsVerified==true)
                      {
                         <span ><i class="bi bi-check-square-fill " style="color:green"></i></span>
                      }

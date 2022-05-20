@@ -4,8 +4,10 @@
 }
 <ul class="nav justify-content-around pe-0">
     @*<li class="nav-item"><a class="btn btn-primary nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Edit Profile</a></li>*@
-    <li class="nav-item col-lg-4 col-md-5 my-2 col-11"><a class="nav-link px-0 @ManageNavPages.EmailNavClass(ViewContext) btn btn-info text-black " id="email" asp-page="./Email">الهوية الشخصية و الإيميل </a></li>
-    <li class="nav-item col-lg-4 col-md-4 my-2 col-11"><a class="nav-link px-0 @ManageNavPages.ChangePasswordNavClass(ViewContext) btn btn-success text-white " id="change-password" asp-page="./ChangePassword">تغير كلمة المرور</a></li>
+    <li class="nav-item col-lg-3 col-md-4 my-2 col-11"><a class="nav-link px-0 @ManageNavPages.EmailNavClass(ViewContext) btn btn-info text-black " id="email" asp-page="./Email">الهوية الشخصية و الإيميل </a></li>
+    <li class="nav-item col-lg-3 col-md-3 my-2 col-11"><a class="nav-link px-0 @ManageNavPages.ChangePasswordNavClass(ViewContext) btn btn-success text-white " id="change-password" asp-page="./ChangePassword">تغير كلمة المرور</a></li>
+    <li class="nav-item col-lg-3 col-md-3 my-2 col-11"><a class="nav-link px-0  btn btn-primary text-white " asp-page="/Account/SendVerficationCode">تفعيل الهاتف</a></li>
+
 @*    @if (hasExternalLogins)
     {
         <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>

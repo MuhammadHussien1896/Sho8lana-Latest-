@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace Sho8lana.Models
 {
-
+    [Index(nameof(PhoneNumber), IsUnique = true)]
     public class Customer : IdentityUser
     {
         public Customer()
@@ -55,7 +56,6 @@ namespace Sho8lana.Models
         public float Balance { get; set; }
         public float PendingBalance { get; set; }
         
-
         //navigation properties
         public virtual ICollection<Service> Services { get; set; }
         public virtual ICollection<CustomerRequest> CustomerRequests { get; set; }
@@ -64,5 +64,5 @@ namespace Sho8lana.Models
         public virtual ICollection<Notification> Notifications { get; set; }
 
     }
-
+    
 }
