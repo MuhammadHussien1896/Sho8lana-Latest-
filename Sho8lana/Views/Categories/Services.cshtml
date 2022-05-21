@@ -285,12 +285,12 @@
             }
             if((item.customerImage)==null){
                 $(`.customerProfileImage${i}`).append(
-                    `<img src="/Images/DefaultImage/UserDefaultImage.png" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light"/>`
+                    `<img src="/Images/DefaultImage/UserDefaultImage.png" class="position-absolute bottom-0 start-0 rounded-circle w-25 h-25 bg-light"/>`
                 )
             }
             else{
                 $(`.customerProfileImage${i}`).append(
-                    `<img src="data:image/png;base64,${item.customerImage}" class="position-absolute bottom-0 start-0 rounded-circle w-25 bg-light"/>`
+                    `<img src="data:image/png;base64,${item.customerImage}" class="position-absolute bottom-0 start-0 rounded-circle w-25 h-25 bg-light"/>`
                 )
             }
             if(item.isCash==true){

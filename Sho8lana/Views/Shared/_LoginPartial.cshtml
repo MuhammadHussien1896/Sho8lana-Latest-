@@ -57,7 +57,7 @@
             {
                 <img class="avatar rounded-circle" alt="Profile" src="~/Images/DefaultImage/UserDefaultImage.png" />
             }
-                <span class="me-2 fw-bolder">@User.Identity?.Name</span>
+                <span class="me-2 fw-bolder">@UserManager.GetUserAsync(User).Result.FirstName</span>
           </a>
     </li>
     <li class="p-0 mx-2">

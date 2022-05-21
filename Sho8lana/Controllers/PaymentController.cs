@@ -58,7 +58,7 @@ namespace server.Controllers
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = "https://localhost:7009/payment/success?session_id={CHECKOUT_SESSION_ID}" + $"&&ContractId={ContractId}" + $"&&customerId={customerId}",
+                SuccessUrl = Url.ActionLink("OrderSuccess", "payment")+"?session_id={CHECKOUT_SESSION_ID}" + $"&&ContractId={ContractId}" + $"&&customerId={customerId}",
                 CancelUrl = "https://example.com/cancel",
             };
             var service = new SessionService();
@@ -131,7 +131,7 @@ namespace server.Controllers
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = "https://localhost:7009/Charge/success?session_id={CHECKOUT_SESSION_ID}" + $"&&customerId={customerId}",
+                SuccessUrl = Url.ActionLink("ChargeSuccess","payment") +"?session_id={CHECKOUT_SESSION_ID}" + $"&&customerId={customerId}",
                 CancelUrl = "https://example.com/cancel",
             };
             var service = new SessionService();

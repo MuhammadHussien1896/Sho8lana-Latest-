@@ -4,7 +4,6 @@
     ViewData["Title"] = "Register confirmation";
 }
 
-<h1>@ViewData["Title"]</h1>
 @{
     if (@Model.DisplayConfirmAccountLink)
     {
@@ -15,9 +14,9 @@
     }
     else
     {
-<p>
-        Please check your email to confirm your account.
-</p>
+<div class="w-50 m-auto d-flex justify-content-center align-items-center text-danger fw-bold fs-5 mt-5" style="height:50vh">
+       <p>من فضلك قم بالتوجة الى البريد الالكتروني للقيام بتأكيد التسجيل</p>
+</div>
     }
 }
 

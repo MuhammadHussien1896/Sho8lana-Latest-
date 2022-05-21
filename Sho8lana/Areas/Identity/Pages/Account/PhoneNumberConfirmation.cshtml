@@ -1,0 +1,31 @@
+﻿@page
+@model Sho8lana.Areas.Identity.Pages.Account.PhoneNumberConfirmationModel
+@{
+   ViewData["Title"] = "تفعيل رقم الهاتف";
+}
+
+<div class="row mt-5 d-flex justify-content-center align-items-center gx-0" direction="rtl" style="height:40vh">
+   <div class="col-md-6 col-10 d-flex flex-column Justify-content-center align-items-center">
+       <p class="text-center text-success h3 fw-bold mb-4">@ViewData["Title"]</p>
+       <form method="post" class="text-center">
+           <p>
+                قمنا بإرسال الرقم التأكيدي الي الرقم @Model.PhoneNumber 
+           </p>
+           <p>
+               برجاء إدخال الكود لتأكيد رقم الهاتف 
+           </p>
+           <div asp-validation-summary="All" class="text-danger"></div>
+
+           <div class="form-group">
+               <label asp-for="VerificationCode" class="text-center mb-2 col-12"> الكود</label>
+               <input asp-for="VerificationCode" class="form-control mb-2" type="number" />
+               <span asp-validation-for="VerificationCode" class="text-danger"></span>
+           </div>
+           <button type="submit" class="btn btn-primary col-4 m-auto">تأكيد</button>
+       </form>
+   </div>
+</div>
+
+@section Scripts {
+   <partial name="_ValidationScriptsPartial" />
+}

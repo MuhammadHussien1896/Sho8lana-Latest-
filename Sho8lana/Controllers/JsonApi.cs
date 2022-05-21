@@ -275,5 +275,12 @@ namespace Sho8lana.Controllers
             return Json(Viewmodel);
 
         }
+        [AcceptVerbs("GET", "POST")]
+        public async Task<IActionResult> ConfirmUniquePhoneNumber([Bind(Prefix = "Input.PhoneNumber")] string phoneNumber)
+        {
+            bool NotExists=(await context.Customers.GetBy(s=>s.PhoneNumber==phoneNumber)==null)?true:false;
+            return Json(NotExists);
+
+        }
     }
 }

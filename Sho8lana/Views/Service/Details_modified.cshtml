@@ -154,16 +154,16 @@
             </div>
                 <!-- End Details section  -->
             <div class="mx-auto d-flex flex-wrap justify-content-around border-bottom my-2 border-secondary" style="width:95%">
-                <p class="h5 my-3 text-secondary col-12 fw-bold">العنوان</p>
+                <p class="h5 my-3 col-12 fw-bold">العنوان</p>
                 <p class="text-secondary col-12">@Model.Title</p>
            </div>
            <div class="mx-auto d-flex flex-wrap justify-content-around border-bottom my-2 border-secondary" style="width:95%">
-                <p class="h5 my-3 text-secondary col-12 fw-bold">تفاصيل الخدمة</p>
-                <pre class="text-secondary col-12 fs-5" style="direction:rtl;overflow:unset;font-family:'Noto Kufi arabic'">@Model.Description</pre>
+                <p class="h5 my-3 col-12 fw-bold">تفاصيل الخدمة</p>
+                <pre class="text-secondary col-12 fs-6" style="direction:rtl;overflow:unset;white-space:break-spaces;font-family:'Noto Kufi arabic'">@Model.Description</pre>
            </div>
            <div class="mx-auto d-flex flex-wrap justify-content-around my-2 border-secondary" style="width:95%">
-                <p class="h5 my-3 text-secondary col-12 fw-bold">توصيات صاحب الخدمة</p>
-                <pre class="text-secondary col-12 fs-5" style="direction:rtl;overflow:unset;font-family:'Noto Kufi arabic'">@Model.CustomerInstructions</pre>
+                <p class="h5 my-3 col-12 fw-bold">توصيات صاحب الخدمة</p>
+                <pre class="text-secondary col-12 fs-6" style="direction:rtl;overflow:unset;font-family:'Noto Kufi arabic'">@Model.CustomerInstructions</pre>
            </div>
         </div>
     <!-- End Details section  -->
@@ -177,11 +177,11 @@
                             <div class="row justify-content-start align-items-center d-flex">
                                 @if (@comment.Customer.ProfilePicture == null)
                                 {
-                                    <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle col-lg-1 col-md-2 col-3"/>
+                                    <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle col-lg-1 h-75 col-md-2 col-3"/>
                                 }
                                 else
                                 {
-                                    <img class="rounded-circle col-lg-1 col-md-3 col-3" src="data:image/*;base64,@Convert.ToBase64String(@comment.Customer.ProfilePicture)" />
+                                    <img class="rounded-circle h-75 col-lg-1 col-md-3 col-3" src="data:image/*;base64,@Convert.ToBase64String(@comment.Customer.ProfilePicture)" />
                                 }
                                <div class="col-lg-8 col-md-7 col-6">
                                     <p class="fw-bold fs-5 p-0 m-0 text-primary">@comment.Customer.FirstName @comment.Customer.LastName</p>
@@ -262,17 +262,17 @@
         </div>
         <!-- End Of Price section  -->
         <!-- =======  Seller section  ======= -->
-        <div class="row my-5 justify-content-center border border-Secondery ">
+        <div class="row my-md-5 justify-content-center border border-Secondery ">
             <p class="h4 my-3 fw-bold">البائع</p>
-            <div class="row my-2 justify-content-center align-items-center align-content-center">
+            <div class="row my-2 justify-content-md-center align-items-md-center align-content-md-center align-content-around">
                 @{
                     if (@Model.Customer.ProfilePicture == null)
                     {
-                        <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle px-md-0 col-lg-3 col-md-3"/>
+                        <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle px-md-0 col-lg-3 col-md-3 h-md-100 h-75"/>
                     }
                     else
                     {
-                        <img class="rounded-circle col-lg-3 col-md-3 px-md-0 " src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
+                        <img class="rounded-circle col-lg-3 col-md-3 px-md-0 h-md-100 h-75 " src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
                     }
 
                 }
@@ -334,7 +334,7 @@
                <li class="my-2">يفضل التعامل من خلال الموقع لضمان حقوقك</li>
                <li class="my-2">لاتقم بعمل الخدمة الا بعد التأكد من تحويل المبلغ المطلوب</li>
                <li class="my-2">قم بتفعيل الاكونت الخاص بك لتحصل على فرص اكبر</li>
-               <li class="my-2">بواقي زيت الطعام بواقي زيت السمك بواقي زيت الفراخ بنشتري الكيلو ب 15 جنيه</li>
+               <li class="my-2">تذكر ان تراسل البائع من خلال الموقع لضمان كافة حقوقك</li>
            </ul>
         </div>
                 <!-- End Of Safety section  -->

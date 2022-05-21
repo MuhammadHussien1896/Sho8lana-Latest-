@@ -45,12 +45,12 @@
                     {
                         @if (@Model.Customer.ProfilePicture == null)
                         {
-                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75"/>
+                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75 h-50"/>
                             <p class="text-center fw-bold fs-5 mt-3">@Model.Customer.FirstName</p>
                         }
                         else
                         {
-                            <img class="rounded-circle w-75" src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
+                            <img class="rounded-circle w-75 h-50" src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
                             <p class="text-center fw-bold fs-5 mt-3">@Model.Customer.FirstName</p>
                         }
                     }
@@ -58,12 +58,12 @@
                     {
                        @if (@Model.Service.Customer.ProfilePicture == null)
                        {
-                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75"/>
+                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75 h-50"/>
                             <p class="text-center fw-bold fs-5 mt-3">@Model.Service.Customer.FirstName</p>
                        }
                         else
                        {
-                            <img class="rounded-circle w-75 " src="data:image/*;base64,@Convert.ToBase64String(@Model.Service.Customer.ProfilePicture)" />
+                            <img class="rounded-circle w-75 h-50 " src="data:image/*;base64,@Convert.ToBase64String(@Model.Service.Customer.ProfilePicture)" />
                             <p class="text-center fw-bold fs-5 mt-3">@Model.Service.Customer.FirstName</p>
                        }
                     }
@@ -76,12 +76,12 @@
                    {
                         @if (@Model.Service.Customer.ProfilePicture == null)
                         {
-                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75"/>
+                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75 h-50"/>
                             <p class="text-center fw-bold fs-5 mt-3">@Model.Service.Customer.FirstName</p>
                         }
                         else
                         {
-                            <img class="rounded-circle w-75" src="data:image/*;base64,@Convert.ToBase64String(@Model.Service.Customer.ProfilePicture)" />
+                            <img class="rounded-circle w-75 h-50" src="data:image/*;base64,@Convert.ToBase64String(@Model.Service.Customer.ProfilePicture)" />
                             <p class="text-center fw-bold fs-5 mt-3">@Model.Service.Customer.FirstName</p>
                         }
                    }
@@ -89,12 +89,12 @@
                    {
                        @if (@Model.Customer.ProfilePicture == null)
                        {
-                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75"/>
+                            <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle w-75 h-50"/>
                             <p class="text-center fw-bold fs-5 mt-3">@Model.Customer.FirstName</p>
                        }
                         else
                        {
-                            <img class="rounded-circle w-75" src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
+                            <img class="rounded-circle w-75 h-50" src="data:image/*;base64,@Convert.ToBase64String(@Model.Customer.ProfilePicture)" />
                             <p class="text-center fw-bold fs-5 mt-3">@Model.Customer.FirstName</p>
                        }
                    }
