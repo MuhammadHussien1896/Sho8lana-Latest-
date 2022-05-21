@@ -12,12 +12,12 @@
         
             @if (Model.IsReceiverOnline)
             {
-               <p class="h5">محادثة مع @Model.ReceiverName <i title="متصل" style="color:green;font-size:10px" class="fa-solid fa-circle align-top"></i></p>
+               <p class="h5">محادثة مع <a asp-controller="Customer" asp-action="account" asp-route-id="@Model.ReceiverId">@Model.ReceiverName</a> <i title="متصل" style="color:green;font-size:10px" class="fa-solid fa-circle align-top"></i></p>
            
             }
             else
             {
-                <p class="h5">محادثة مع @Model.ReceiverName <i title="غير متصل" style="color:grey;font-size:10px" class="fa-solid fa-circle align-top"></i></p>
+                <p class="h5">محادثة مع <a asp-controller="Customer" asp-action="account" asp-route-id="@Model.ReceiverId">@Model.ReceiverName</a> <i title="غير متصل" style="color:grey;font-size:10px" class="fa-solid fa-circle align-top"></i></p>
             }
         </div>
     
@@ -92,7 +92,7 @@
     $(function(){
         var chat = document.getElementById("chat");
         chat.scrollTop = chat.scrollHeight;
-        connection.on("receiveMessage",(message,senderId,senderName,date)=>{
+        connection.on("receiveMessage",(message,senderId,senderName,date,messageId)=>{
             
             //$('#mylist').prepend('<li>'+ name +' : '+ message + '<br/><small>'+ date +'</small></li>');
             if(senderId == '@Model.SenderId'){
@@ -105,6 +105,18 @@
                 <div style="direction:rtl" class="col-lg-7 col-11 rounded bg-light py-3 border border-secondary">${message}</div>
                 <small class="col-lg-2 col-6">${date}</small>
                 </div>`);
+                var link = '@Url.Action("ReadMessage","JsonApi",new {id= "-1"})';
+                link = link.replace("-1",messageId);
+                $.ajax({  
+                        type: 'Get',  
+                        url: link,  
+                        dataType: "json",  
+                        success: (data)=> {
+                            console.log(data);
+                        },  
+                        error: function (ex) {  
+                        }
+                  });
             }
             chat.scrollTop = chat.scrollHeight;
         });

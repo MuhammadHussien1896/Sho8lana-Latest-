@@ -103,6 +103,7 @@ namespace server.Controllers
             Target.JobId = jobId;//adding job id to be able to delete the job earlier 
             //_context.Contracts.Update(Target);
             await jobs.AddNotification(customerId, "تهانينا تم دفع سعر الخدمة بنجاح !");
+            await jobs.AddNotification(Target.SellerId, "لقد دفع المشتري سعر الخدمة ، يمكنك البدأ بالعمل الان");
             await _context.complete();
 
             return RedirectToAction("customercontracts", "customer");

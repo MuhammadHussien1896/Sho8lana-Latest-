@@ -20,32 +20,33 @@
                     @foreach(var item in Model)
                     {
                       <div class="card p-3 mb-5">
-                        @*@if (UserManager.GetUserId(User) == item.CustomerId)
-                        {*@
+                        @if (UserManager.GetUserId(User) == item.CustomerId)
+                        {
                             @*<h4>You : @item.MessageContent</h4>*@
                             <p class="fs-5 border-bottom border-secondrey pb-2">عنوان الخدمة : @item.Service.Title</p>
                             <p class="d-none">@(receiver = item.ReceiverId)</p>
                             <div class="row align-items-center">
                                 <div class="user col-lg-10 col-12 align-items-center"> 
                                     <img src=@(item.Customer.ProfilePicture != null ? "data:image/*;base64,"+@Convert.ToBase64String(@item.Customer.ProfilePicture) : "/images/DefaultImage/UserDefaultImage.png")  class="avatar rounded-circle"> 
-                                    <span><small class="fs-5 text-primary">@item.Customer.FirstName @item.Customer.LastName :</small> <small class="fs-5">@item.MessageContent</small></span> 
+                                    <span><small class="fs-5 text-primary">انت :</small> <small class="fs-5">@item.MessageContent</small></span> 
                                 </div> 
                                 <small class="col-lg-2 col-12" style="direction:ltr">@item.MessageDate</small>
                             </div>
-                        @*}*@
-                        @*else
+                        }
+                        else
                         {
                            
                            <p class="fs-5 border-bottom border-secondrey pb-2">عنوان الخدمة : @item.Service.Title</p>
                             <p class="d-none">@(receiver = item.CustomerId)</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="user col-lg-10 col-12 align-items-center"> 
-                                    <img src=@(item.Service.Customer.ProfilePicture != null ? "data:image/*;base64,"+@Convert.ToBase64String(@item.Service.Customer.ProfilePicture) : "/images/DefaultImage/UserDefaultImage.png") class="avatar rounded-circle"> 
-                                    <span><small class="fs-5 text-primary">@item.Service.Customer.FirstName @item.Service.Customer.LastName :</small> <small class="fs-5">@item.MessageContent</small></span> 
+                                    <img src=@(item.Customer.ProfilePicture != null ? "data:image/*;base64,"+@Convert.ToBase64String(@item.Customer.ProfilePicture) : "/images/DefaultImage/UserDefaultImage.png") class="avatar rounded-circle"> 
+                                    <span><small class="fs-5 text-primary"><a asp-controller="Customer" asp-action="account" asp-route-id="@item.CustomerId">@item.Customer.FirstName @item.Customer.LastName</a> :</small> <small class="fs-5">@item.MessageContent</small></span> 
+                                
                                 </div>
                                 <small class="col-lg-2 col-12" style="direction:ltr">@item.MessageDate</small>
                             </div>
-                        }*@
+                        }
                         <br />
                         @*<a class="btn btn-primary" asp-controller="service" asp-action="chat" asp-route-id="@item.ServiceId" asp-route-receiverId="@receiver" >Send Message</a>*@
                     
