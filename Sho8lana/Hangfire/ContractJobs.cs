@@ -74,7 +74,7 @@ namespace Sho8lana.Hangfire
             context.Notifications.Add(notification);
             await SendNotification(customerId, content);
         }
-        public async Task SendNotification(string receiverId, string content)
+        private async Task SendNotification(string receiverId, string content)
         {
             var receiverConnectionIds = context.OnlineUsers.GetAllBy(u => u.UserId == receiverId).Result.Select(u => u.ConnectionId);
             if (receiverConnectionIds != null)

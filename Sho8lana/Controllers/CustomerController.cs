@@ -34,10 +34,21 @@ namespace Sho8lana.Controllers
             if (customer == null) { return NotFound(); }
             string userId= userManager.GetUserId(User);
             if(userId == id)
+            {
                 services = await context.Services.GetAllEagerLodingAsync(s => s.CustomerId == id, new string[] { "Medias", "Contracts" });
+            }
             else
-                services= await context.Services.GetAllEagerLodingAsync(s => s.CustomerId == id&&s.IsAccepted==true, new string[] { "Medias", "Contracts" });
-            AccountViewModel model = new AccountViewModel() { Customer = customer,Services = services };
+            {
+                services = await context.Services.GetAllEagerLodingAsync(s => s.CustomerId == id && s.IsAccepted == true, new string[] { "Medias", "Contracts" });
+            }
+            var contracts = context.Contracts.GetAllEagerLodingAsync(c => (c.SellerId == id || c.BuyerId == id) && c.IsDone, new string[] { "Service.Customer" }).Result.ToList();
+            AccountViewModel model = new AccountViewModel() {
+                Customer = customer,
+                Services = services,
+                Contracts = contracts.Where(c => c.SellerId == id && c.ContractRateDone && c.SericeOwnerId != id),
+                BoughtServices = contracts.Count(c => c.BuyerId == id),
+                SelledServices = contracts.Count(c => c.SellerId == id)
+            };
             return View(model);
             
 
@@ -184,6 +195,11 @@ namespace Sho8lana.Controllers
                     contract.SellerAccepted = true;
                 }
                 //context.Contracts.Update(contract);
+                if(customerId == contract.CustomerId)
+                {
+                    await jobs.AddNotification(contract.SericeOwnerId, "لقد وافق العميل على الشروط المحددة في العقد ، من فضلك اذهب للعقود لمعرفة التفاصيل");
+                }
+                
                 await context.complete();
                 return RedirectToAction(nameof(CustomerContracts));
             }
@@ -281,6 +297,7 @@ namespace Sho8lana.Controllers
                 contract.ContractRateDone = true;
                 //context.Contracts.Update(contract);
                 await jobs.AddNotification(contract.BuyerId, $"تم إضافة تقييمك لخدمة '{contract.Service.Title}' بنجاح");
+                await jobs.AddNotification(contract.SellerId, $"تم إضافة تقييم جديد لخدمة '{contract.Service.Title}' ");
                 await jobs.CalculateOverallRate(contract.ServiceId, contract.ContractRateStars);
                 await context.complete();
             }

@@ -81,7 +81,7 @@ else
     @if (Context.Request.Path != Url.Action("chat", "Service"))
     {
         <script>
-            connection.on("receiveMessage",(message,senderId,senderName,date)=>{ 
+            connection.on("receiveMessage",(message,senderId,senderName,date,messageId)=>{ 
                 if(senderId != '@UserManager.GetUserId(User)'){
                     toastr.info(message,senderName);
                   $.ajax({  
@@ -107,7 +107,7 @@ else
         toastr.options = {
           "closeButton": true,
           "newestOnTop": true,
-          "positionClass": "toast-top-right",
+          "positionClass": "toast-bottom-right",
           "showDuration": "300",
           "hideDuration": "2000",
           "timeOut": "5000",

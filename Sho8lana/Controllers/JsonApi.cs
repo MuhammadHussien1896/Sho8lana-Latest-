@@ -43,6 +43,18 @@ namespace Sho8lana.Controllers
             return Json(MessageCount);
         }
         [HttpGet]
+        public async Task<IActionResult> ReadMessage(int  id)
+        {
+            var message = await context.ServiceMessages.GetById(id);
+            if (message != null)
+            {
+                message.IsRead = true;
+                await context.complete();
+            }
+            
+            return Json("success");
+        }
+        [HttpGet]
         public async Task<IActionResult> UnReadNotifcationChange()
         {
             var customerId = userManager.GetUserId(User);

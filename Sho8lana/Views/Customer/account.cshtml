@@ -141,6 +141,41 @@
                </div>
            </div>
         </div>
+        @if(Model.Contracts.Count()>0){
+        <div class="row mt-5 justify-content-center border border-Secondery">
+               <p class="h4 py-3 fw-bold border-bottom border-Secondery">التقييمات على الطلبات التي تم تنفيذها</p>
+               @foreach (var contract in @Model.Contracts)
+               {
+                    
+                        <div class="row justify-content-start py-3 border-bottom border-Secondery">
+                            <div class="col-12 my-3 fs-5 fw-bold">
+                                تقييم لخدمة "@contract.Service.Title"
+                            </div>
+                            <div class="row justify-content-start align-items-center d-flex">
+                                @if (contract.Service.Customer.ProfilePicture == null)
+                                {
+                                    <img src="~/Images/DefaultImage/UserDefaultImage.png" class="rounded-circle col-lg-1 col-md-2 col-3"/>
+                                }
+                                else
+                                {
+                                    <img class="rounded-circle col-lg-1 col-md-3 col-3" src="data:image/*;base64,@Convert.ToBase64String(contract.Service.Customer.ProfilePicture)" />
+                                }
+                               <div class="col-lg-8 col-md-7 col-6">
+                                    <p class="fw-bold fs-5 p-0 m-0 text-primary">@contract.Service.Customer.FirstName @contract.Service.Customer.LastName</p>
+                                    <p class="p-0 m-0">@contract.EndDate.Date.ToShortDateString()</p>
+                                </div>
+                                <div class="ratings me-0 col-lg-3 col-md-2 col-3"> 
+                                    <div class="rateyo" data-rateyo-rating=@contract.ContractRateStars data-rateyo-star-width="18px" data-rateyo-read-Only=true></div>
+                                </div>
+                            </div>
+                            <div class="col-12 my-3 fs-5 fw-bold">
+                                @contract.ContractRateComment
+                            </div>
+                        </div>
+                    
+                }
+           </div>
+           }
     </div>
     <div class="col-lg-4 col-10">
         <div class="row my-5 justify-content-center border border-Secondery ">
@@ -157,6 +192,14 @@
             <div class="row my-2 justify-content-between">
                 <span class="col-6 text-secondary">عدد الخدمات المنشورة</span>
                 <span class="col-6">@Model.Services.Count()</span>
+            </div>
+            <div class="row my-2 justify-content-between">
+                <span class="col-6 text-secondary">عدد الخدمات المباعة</span>
+                <span class="col-6">@Model.SelledServices</span>
+            </div>
+            <div class="row my-2 justify-content-between">
+                <span class="col-6 text-secondary">عدد الخدمات المشتراه</span>
+                <span class="col-6">@Model.BoughtServices</span>
             </div>
          </div>
         <div class="row my-5 justify-content-center border border-Secondery ">
