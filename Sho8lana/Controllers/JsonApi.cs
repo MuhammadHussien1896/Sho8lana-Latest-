@@ -278,6 +278,7 @@ namespace Sho8lana.Controllers
             return Json(NotExists);
 
         }
+
         public async Task<IActionResult> ConfirmUniquePhoneNumberEditing([Bind(Prefix = "Input.PhoneNumber")] string phoneNumber, [Bind(Prefix = "Input.Userid")] string Userid)
         {
             var user= await userManager.FindByIdAsync(Userid);
@@ -290,6 +291,19 @@ namespace Sho8lana.Controllers
             {
                 NotExists=true;
             }
+            return Json(NotExists);
+        }
+
+        public async Task<IActionResult> ConfirmUniqueEmail([Bind(Prefix = "Input.Email")] string email)
+        {
+            bool NotExists = (await context.Customers.GetBy(s => s.Email == email) == null) ? true : false;
+            return Json(NotExists);
+
+        }       
+        public async Task<IActionResult> ConfirmUniqueEmaillogin([Bind(Prefix = "Input.Email")] string email)
+        {
+            bool NotExists = (await context.Customers.GetBy(s => s.Email == email) == null) ? false : true;
+
             return Json(NotExists);
 
         }

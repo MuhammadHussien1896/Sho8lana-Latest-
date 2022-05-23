@@ -7,6 +7,7 @@
 
 @*<h1>@ViewData["Title"]</h1>*@
 <section class="login">
+
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             @*/////*@
@@ -20,17 +21,17 @@
                     <div class="card shadow-2-strong" style="border-radius: 1rem;">
                         <div class="card-body p-5 text-center">
 
-                            <h3 class="mb-5">Sign in</h3>
-
+                            <h3 class="mb-5">تسجيل الدخول</h3>
+                              <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-outline mb-4">
-                                <input type="text" asp-for="Input.Email" id="typeEmailX-2" class="form-control form-control-lg" placeholder="Email Or UserName" aria-required="true" />
+                                <input type="text" asp-for="Input.Email" id="typeEmailX-2" class="form-control form-control-lg" placeholder="البريد الإلكترونى" aria-required="true" />
                                 <span asp-validation-for="Input.Email" class="text-danger"></span>
 
 
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="password" asp-for="Input.Password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="Password" aria-required="true" />
+                                <input type="password" asp-for="Input.Password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="الرقم السرى" aria-required="true" />
                                 <span asp-validation-for="Input.Password" class="text-danger"></span>
 
                             </div>

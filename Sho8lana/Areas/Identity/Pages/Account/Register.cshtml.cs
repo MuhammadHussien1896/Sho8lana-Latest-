@@ -90,16 +90,17 @@ namespace Sho8lana.Areas.Identity.Pages.Account
         public class InputModel
         {
 
-            [Required, StringLength(15, MinimumLength = 3, ErrorMessage = "Firstname must be between 3-15 characters")]
-            [RegularExpression("[a-zA-z]+")]
+            [RegularExpression(@"[a-zA-z|\u0621-\u064A]+", ErrorMessage = "من فضلك ادلخل الإسم بطريقة صحيحة ")]
+            [Required(ErrorMessage = "من فضلك ادلخل الإسم الأول للمستخدم "), StringLength(15, MinimumLength = 3, ErrorMessage = "يجب أن يكون الإسم الأول لا يقل عن 3 حروف أو يذيد عن 15 حرف ")]
             public string FirstName { get; set; }
-            [Required, StringLength(15, MinimumLength = 3, ErrorMessage = "Lastname must be between 3-15 characters")]
-            [RegularExpression("[a-zA-z]+")]
+            [Required(ErrorMessage = "من فضلك ادلخل الإسم الثانى للمستخدم "), StringLength(15, MinimumLength = 3, ErrorMessage = "يجب أن يكون الإسم الأول لا يقل عن 3 حروف أو يذيد عن 15 حرف ")]
+            [RegularExpression(@"[a-zA-z|\u0621-\u064A]+", ErrorMessage = "من فضلك ادلخل الإسم بطريقة صحيحة ")]
+
             public string LastName { get; set; }
 
            
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "من فضلك ادخل الرقم السرى")]
+            [StringLength(100, ErrorMessage = "يجب أن يحتوى الرقم السري على حروف وارقام ولا يقل عن 6 حروف ولا يزيد عن 15 حرف", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -107,28 +108,29 @@ namespace Sho8lana.Areas.Identity.Pages.Account
             
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Compare("Password", ErrorMessage = "الرقم السرى وتأكيد الرقم السرى لا يتطابقان ")]
             public string ConfirmPassword { get; set; }
-          
-            [Required]
-            [EmailAddress]
+
+            [Remote(action: "ConfirmUniqueEmail", controller: "JsonApi",ErrorMessage = "هذا البريد الإلكترونى موجود مسبقاً ")]
+            [Required(ErrorMessage = "من فضلك أدخل البريد الإلكترونى")]
+            [EmailAddress(ErrorMessage = "من فضلك أدخل بريد إلكترونى صحيح ")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Remote(action: "ConfirmUniquePhoneNumber", controller: "JsonApi",ErrorMessage = "PhoneNumber already exists!")]
+            [Remote(action: "ConfirmUniquePhoneNumber", controller: "JsonApi",ErrorMessage = "هذا الرقم موجود بالفعل ")]
             [RegularExpression("^01[0-2,5]{1}[0-9]{8}$")]
             [Display(Name = "PhoneNumber")]
             public string PhoneNumber { get; set; }
             public string? AboutMe { get; set; }
-            [Required, MaxLength(6)]
+            [Required(ErrorMessage = "من فضلك أدخل ذكر أم أنثى "), MaxLength(6)]
 
             public string Gender { get; set; }
             // Address
-            [Required]
+            [Required(ErrorMessage = "من فضلك أدخل الدولة ")]
             public string Country { get; set; }
-            [Required]
+            [Required(ErrorMessage = "من فضلك أدخل المحافظة ")]
             public string City { get; set; }
-            [Required]
+            [Required(ErrorMessage = "من فضلك أدخل إسم المدينة ")]
             public string Area { get; set; }
 
             public string ProfileImage { get; set; }
