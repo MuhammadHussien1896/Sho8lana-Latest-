@@ -103,6 +103,12 @@
         ////// apending data 
         function drawData(data){
             $(".services-section").html("");
+            if(data.length==0){
+                $(".services-section").append(
+                `<div class="text-danger row justify-content-center align-items-center fw-bold fs-5" style="height:60vh"> لايوجد نتائج</div>`
+                )
+            }
+            else{
             $(data).each((i,item)=>{
                 $(".services-section").append(
                     `<div class="card col-lg-3 col-md-4 col-sm-6 border-0 mb-5 px-2 bg-light" style="height:60vh">
@@ -156,6 +162,7 @@
                     `<span> متاح التعامل بالفيزا فقط</span>`
                 )
             }})
+            }
            $(".rateyo").rateYo();
     }
     ////appending pages

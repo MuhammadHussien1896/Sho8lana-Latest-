@@ -124,7 +124,7 @@ namespace Sho8lana.Controllers
             {
                 customers = await _context.Customers.GetAllBy(c => c.IsVerified == false
                                                 && c.NationalIdPicture != null
-                                                && c.PhoneNumber != null
+                                                && c.PhoneNumberConfirmed==true
                                                 && c.ProfilePicture != null);
             }
             else if (type == "Rest")
@@ -231,9 +231,9 @@ namespace Sho8lana.Controllers
                     _context.Services.Update(service);
                     await _context.complete();
                     //// add Notifi
-                    if (messagenotfi == null) { messagenotfi = "هذة الخدمة لا تطابق السياسة الخاصة بموقع شغلانة نرجو تعديل تلك الخدمة مرة اخرى "; }
+                    if (messagenotfi == null) { messagenotfi =$"خدمة {service.Title} لا تطابق السياسة الخاصة بموقع شغلانة نرجو تعديل تلك الخدمة مرة اخرى "; }
                     //user.IsVerified = true;
-                    await jobs.AddNotification(user.Id, messagenotfi);
+                    await jobs.AddNotification(user.Id, $"رفض لخدمة{service.Title} : "+messagenotfi);
                     //Notification notification = new Notification()
                     //{
                     //    CustomerId = user.Id,
