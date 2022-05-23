@@ -21,7 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("SmarterAsp");
+var connectionString = builder.Configuration.GetConnectionString("Connection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options
     .UseLazyLoadingProxies()

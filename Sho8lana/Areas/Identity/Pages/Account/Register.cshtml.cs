@@ -169,7 +169,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account
                     PasswordHash=Input.Password,
                     Gender=Input.Gender,
                     Email=Input.Email,
-                    PhoneNumber="+2"+Input.PhoneNumber,
+                    PhoneNumber=Input.PhoneNumber==null?null:"+2"+Input.PhoneNumber,
                     AboutMe=Input.AboutMe,
                     Country=Input.Country,
                     City=Input.City,

@@ -126,8 +126,9 @@ namespace Sho8lana.Controllers
                         }
                         i++;
                     }
-                    await _context.complete();
                     await jobs.AddNotification(service.CustomerId, $"تم انشاء خدمة {service.Title} وهى الان في مرحلة المراجعة ");
+                    await _context.complete();
+                    
                     return RedirectToAction("Details",new {id = s.ServiceId});
                 }
                 ////////////////////////////////////////////////////////////

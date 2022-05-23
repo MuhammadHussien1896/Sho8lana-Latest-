@@ -218,7 +218,7 @@
                     البريد الإلكتروني 
                  </span>
                  <span class="col-6 text-secondary my-2">
-                    @if (Model.Customer.PhoneNumberConfirmed==true)
+                    @if (Model.Customer.IsVerified||Model.Customer.PhoneNumberConfirmed)
                     {
                         <span ><i class="bi bi-check-square-fill " style="color:green"></i></span>
                     }
