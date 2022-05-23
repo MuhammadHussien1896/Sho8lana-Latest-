@@ -58,7 +58,7 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> ReviewRolesToUser()
         {
             //var roles =await _userManager.GetRolesAsync();
-            var users = _userManager.Users.Select(user => new UserViewModel
+            var users =  _userManager.Users.Select(user => new UserViewModel
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -136,7 +136,7 @@ namespace Sho8lana.Controllers
             }
 
             //////paging section
-            const int PageSize = 2;
+            const int PageSize = 16;
             int RecsCount = customers.Count();
             var pager = new pagination(RecsCount, pg, PageSize);
             int rescPage = (pg - 1) * PageSize;
@@ -420,12 +420,9 @@ namespace Sho8lana.Controllers
         
         public async Task<IActionResult> ReplayAdminToComplaint(int id,string message=null)
         {
-
-           
-
             var complaint = await _context.Complains.GetEagerLodingAsync(c => c.ComplainId == id, new string[] { "Contract" });
             string userAdminId = _userManager.GetUserId(User);
-            var userAdmin=await _context.Customers.GetById(userAdminId);
+            var userAdmin=await _userManager.FindByIdAsync(userAdminId);
 
             if (complaint == null) { return NotFound(); }
             else
@@ -436,7 +433,7 @@ namespace Sho8lana.Controllers
                     var userid = complaint.Contract.BuyerId;
                     var user = _context.Customers.GetById(userid);
                     //// add Notifi
-                    await jobs.AddNotification(userid, message ?? "تم مراجعة الشكوى وسوف نقوم بالاجراء اللازم تجاه تلك العملية ");
+                    jobs.AddNotification(userid, message ?? "تم مراجعة الشكوى وسوف نقوم بالاجراء اللازم تجاه تلك العملية ");
                     //Notification notification = new Notification()
                     //{
                     //    CustomerId = user.id,
@@ -451,7 +448,7 @@ namespace Sho8lana.Controllers
                 catch
                 {
                     
-                    return View();
+                    return RedirectToAction(nameof(ShowComplains));
 
                 }
             }

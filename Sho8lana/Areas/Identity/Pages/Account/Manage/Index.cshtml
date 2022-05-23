@@ -8,7 +8,7 @@
 <div class="myBtn my-2 w-25 m-auto text-center">تعديل البيانات</div>
 <partial name="_StatusMessage" for="StatusMessage" />
      <form id="profile-form" class="row justify-content-center" method="post" enctype="multipart/form-data">
-
+         <input asp-for="Input.Userid" type="hidden"  />
          <div class="row my-5 container justify-content-center" dir="rtl">
             <div class="col-8  border border-Secondery">
                 <div class="text-center">
@@ -45,7 +45,7 @@
                 </div>
                 <div class="custom-file mt-2 mb-2">
                      <label asp-for="Input.PhoneNumber" class="form-label">رقم الجوال</label>
-                      <input asp-for="Input.PhoneNumber" class="form-control" />
+                     <input asp-for="Input.PhoneNumber" class="form-control" />
                      <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                 </div>
 

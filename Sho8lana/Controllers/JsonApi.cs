@@ -156,8 +156,7 @@ namespace Sho8lana.Controllers
                     .GetAllEagerLodingAsync(service => service.IsAccepted
                     && service.IsFreelancer == (type == "services" ? true : false)
                     && service.Rate <= (Rate ?? 10)
-                    && service.Price <= (Price ?? int.MaxValue),
-                    new string[] { "Medias", "Contracts", "Customer" });
+                    && service.Price <= (Price ?? int.MaxValue));
             }
             else
             {
@@ -166,8 +165,7 @@ namespace Sho8lana.Controllers
                   && service.IsFreelancer == (type == "services" ? true : false)
                   && service.Rate <= (Rate ?? 10) 
                   && service.Price <= (Price ?? int.MaxValue)
-                  && (service.Description.Contains(text) || service.Title.Contains(text))
-                  , new string[] { "Medias", "Contracts", "Customer" });
+                  && (service.Description.Contains(text) || service.Title.Contains(text)));
 
             }
             if (!(CatId is null))
@@ -216,7 +214,7 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> Index(int? id, string type, int pg = 1)
         {
             IEnumerable<Service> services = new List<Service>();
-            const int PageSize = 1;
+            const int PageSize = 12;
             pagination pager;
             int servicesCount;
             if (id == null)
@@ -231,8 +229,7 @@ namespace Sho8lana.Controllers
                 services = await context.Services
                     .GetAllEagerLodingAsync(s => s.IsFreelancer == (type == "services" ? true : false)
                     && s.IsAccepted,
-                    rescPage,pager.PageSize,
-                    new string[] { "Medias", "Contracts", "Customer" });
+                    rescPage,pager.PageSize);
             }
 
             else
@@ -249,8 +246,7 @@ namespace Sho8lana.Controllers
                      .GetAllEagerLodingAsync(s => s.IsFreelancer == (type == "services" ? true : false)
                      && s.IsAccepted
                      && s.CategoryId == id,
-                     rescPage,pager.PageSize,
-                     new string[] { "Medias", "Contracts", "Customer" });
+                     rescPage,pager.PageSize);
             }
             if(services==null)
                 return NotFound();
@@ -282,6 +278,22 @@ namespace Sho8lana.Controllers
             return Json(NotExists);
 
         }
+
+        public async Task<IActionResult> ConfirmUniquePhoneNumberEditing([Bind(Prefix = "Input.PhoneNumber")] string phoneNumber, [Bind(Prefix = "Input.Userid")] string Userid)
+        {
+            var user= await userManager.FindByIdAsync(Userid);
+            bool NotExists=false;
+            if (await context.Customers.GetBy(s => s.PhoneNumber == phoneNumber) == null)
+            {
+                NotExists = true;
+            }
+            else if(user.PhoneNumber==phoneNumber)
+            {
+                NotExists=true;
+            }
+            return Json(NotExists);
+        }
+
         public async Task<IActionResult> ConfirmUniqueEmail([Bind(Prefix = "Input.Email")] string email)
         {
             bool NotExists = (await context.Customers.GetBy(s => s.Email == email) == null) ? true : false;
@@ -291,6 +303,7 @@ namespace Sho8lana.Controllers
         public async Task<IActionResult> ConfirmUniqueEmaillogin([Bind(Prefix = "Input.Email")] string email)
         {
             bool NotExists = (await context.Customers.GetBy(s => s.Email == email) == null) ? false : true;
+
             return Json(NotExists);
 
         }
