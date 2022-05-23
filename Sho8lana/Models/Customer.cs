@@ -23,11 +23,11 @@ namespace Sho8lana.Models
             ProfilePicture      = null;
         }
 
-        [Required,StringLength(15,MinimumLength =3,ErrorMessage ="Firstname must be between 3-15 characters")]
-        [RegularExpression("[a-zA-z]+")]
+        [RegularExpression(@"[a-zA-z|\u0621-\u064A]+", ErrorMessage = "من فضلك ادلخل الإسم بطريقة صحيحة ")]
+        [Required, StringLength(15, MinimumLength = 3, ErrorMessage = "يجب أن يكون الإسم الأول لا يقل عن 3 حروف أو يذيد عن 15 حرف ")]
         public string FirstName { get; set; }
-        [Required, StringLength(15, MinimumLength = 3, ErrorMessage = "Lastname must be between 3-15 characters")]
-        [RegularExpression("[a-zA-z]+")]
+        [Required, StringLength(15, MinimumLength = 3, ErrorMessage = "يجب أن يكون الإسم الثانى لا يقل عن 3 حروف أو يذيد عن 15 حرف ")]
+        [RegularExpression(@"[a-zA-z|\u0621-\u064A]+", ErrorMessage = "من فضلك ادلخل الإسم بطريقة صحيحة ")]
         public string LastName { get; set; }
         
         [Required, StringLength(50, MinimumLength = 3)]
