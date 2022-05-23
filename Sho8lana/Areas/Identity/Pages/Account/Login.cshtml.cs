@@ -66,15 +66,18 @@ namespace Sho8lana.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            
+
+            [Remote(action: "ConfirmUniqueEmaillogin", controller: "JsonApi", ErrorMessage = "هذا البريد الإلكترونى لم يتم التسجيل به فى الموقع ")]
+            [Required(ErrorMessage = "من فضلك أدخل البريد الإلكترونى")]
+            [EmailAddress(ErrorMessage = "من فضلك أدخل بريد إلكترونى صحيح ")]
             public string Email { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "من فضلك أدخل الرقم السرى ")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
