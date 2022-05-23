@@ -210,19 +210,20 @@
         //document.querySelector(".PriceSelect").value=@Price;*@
 
         $(".selectCategories").val(@CatId);
-        let text="@(text==null)"
+        let text="@(text is null)"
         let ele= document.getElementById("checkbox");
         ele.onchange=()=>{setTimeout(()=>{ele.form.submit()
            },500)};
         $(document).ready(()=>{
             console.log($(text)=="True");
-            if($(text)=="True"){
-              loadData(1)
-            }
-            else{
+            getDataFromSearch();
+            //if($(text)=="True"){
+            //   getDataFromSearch()
+            //}
+            //else{
+            //   loadData(1)
 
-              getDataFromSearch()
-            }
+            //}
 
         })
         /////Search Function
@@ -233,6 +234,7 @@
                 dataType: "json",
                 data:$("#SearchForm").serialize()+`&pg=${pageNo}`,
                 success: (data)=> {
+                    console.log(data)
                     drawData(data.model);
                     DrawPages(data.pager,getDataFromSearch)
                 },
@@ -246,7 +248,7 @@
             $(".services-section").html("");
             $(data).each((i,item)=>{
                 $(".services-section").append(
-                    `<div class="card col-lg-3 col-md-4 col-sm-6 border-0 mb-5 px-2 bg-light">
+                    `<div class="card col-lg-3 col-md-4 col-sm-6 border-0 mb-5 px-2 bg-light" style="height:60vh">
                         <div class="position-relative h-50">
                             <a class="serviceImageHeader${i}" role="button" ></a>
                             <a class="customerProfileImage${i}" role="button" ></a>
@@ -348,7 +350,7 @@
     /////loading data
     function loadData(pageno){
 
-        var catId=Number(@(ViewBag.Id))==0?null:@(ViewBag.Id)
+        var catId=@(CatId)
         console.log("");
         $.ajax({
             type:"Get",
@@ -356,6 +358,7 @@
             dataType: "json",
             data:{id:catId,type:"services",pg:pageno},
             success: (data)=> {
+                console.log(data)
                 drawData(data.model);
                 DrawPages(data.pager,loadData);
                

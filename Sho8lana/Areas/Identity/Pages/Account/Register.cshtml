@@ -16,8 +16,8 @@
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <h3 class="register-heading">Register</h3>
                         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="row register-form">
+                                 <div asp-validation-summary="ModelOnly" class="text-danger validation-summary"></div>
                                 <div class="col-md-6">
                                     <div class="form-group  mt-4">
                                         <input type="text" asp-for="Input.FirstName" class="form-control" placeholder="First Name *" value="" />
@@ -139,7 +139,11 @@
     </script>
 
 
-
+        <style>
+    .validation-summary ul {
+        list-style-type:none;
+    }
+    </style>
 
 
 @section Scripts {

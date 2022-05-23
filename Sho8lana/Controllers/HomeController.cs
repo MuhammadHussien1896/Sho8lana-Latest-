@@ -51,8 +51,8 @@ namespace Sho8lana.Controllers
             if (ModelState.IsValid)
             {
                 MailMessage mail = new MailMessage();
-                mail.To.Add(_objModelMail.To);
-                mail.From = new MailAddress(_objModelMail.From);
+                mail.To.Add("sho8lanaservices@gmail.com");
+                mail.From = new MailAddress(_objModelMail.Email);
                 mail.Subject = _objModelMail.Subject;
 
                 StringBuilder Body = new StringBuilder();

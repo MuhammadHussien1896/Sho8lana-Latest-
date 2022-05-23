@@ -57,7 +57,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-
+            public string Userid { get; set; }
             [Required]
             [Display(Name = "FirstName")]
             public string FirstName { get; set; }
@@ -66,13 +66,12 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
             [Display(Name = "LastName")]
             public string LastName { get; set; }
 
-            [Remote(action: "ConfirmUniquePhoneNumber", controller: "JsonApi", ErrorMessage = "PhoneNumber already exists!")]
-            [RegularExpression("^01[0-2,5]{1}[0-9]{8}$")]
+            [Remote(action: "ConfirmUniquePhoneNumberEditing", controller: "JsonApi",AdditionalFields ="Userid", ErrorMessage = "PhoneNumber already exists!")]
+            //[RegularExpression("^01[0-2,5]{1}[0-9]{8}$")]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
 
-            [Required]
             [Display(Name = "AboutMe")]
             public string AboutMe { get; set; }
 
@@ -90,6 +89,7 @@ namespace Sho8lana.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                Userid=user.Id,
                 FirstName=user.FirstName,
                 LastName=user.LastName,
                 PhoneNumber = phoneNumber,

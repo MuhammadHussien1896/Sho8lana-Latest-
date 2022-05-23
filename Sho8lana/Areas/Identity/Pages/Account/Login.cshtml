@@ -7,7 +7,6 @@
 
 @*<h1>@ViewData["Title"]</h1>*@
 <section class="login">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             @*/////*@
@@ -35,6 +34,7 @@
                                 <span asp-validation-for="Input.Password" class="text-danger"></span>
 
                             </div>
+                            <div asp-validation-summary="ModelOnly" class="text-danger fw-bold fs-5 validation-summary"></div>
 
                             <!-- Checkbox -->
 
@@ -190,6 +190,11 @@
     </section>
     </div>
     </div>*@
+    <style>
+    .validation-summary ul {
+        list-style-type:none;
+    }
+    </style>
 
 @section Scripts {
 <partial name="_ValidationScriptsPartial" />
