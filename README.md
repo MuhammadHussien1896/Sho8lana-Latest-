@@ -1,7 +1,7 @@
 # Sho8lana-Latest-
 Sho8lana web application is an application for buying and selling services.
 
-- Sho8lana is a large scale application that have many service categories not just for freelancing online job types.
+- Sho8lana is a large-scale application that have many service categories not just for freelancing online job types.
 
 - There is two types of service, cash and online service, you can post a service as a seller or a buyer who want to hire someone for his posted service,
 as you can be a buyer and seller in one account .
