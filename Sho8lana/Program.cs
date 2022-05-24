@@ -1,11 +1,13 @@
 using exp.Services;
 using Hangfire;
+using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Sho8lana.Areas.Identity.Pages.Account;
 using Sho8lana.Data;
+using Sho8lana.Hangfire;
 using Sho8lana.Hubs;
 using Sho8lana.Models;
 using Sho8lana.Services;
@@ -21,7 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("Connection");
+var connectionString = builder.Configuration.GetConnectionString("SmarterAsp");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options
     .UseLazyLoadingProxies()
@@ -89,7 +91,11 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHangfireDashboard(pathMatch:"/hangfire");
+app.UseHangfireDashboard(pathMatch:"/hangfire",new DashboardOptions
+{
+    Authorization = new [] {new AuthorizationFilter()},
+    IsReadOnlyFunc = (DashboardContext context) => true
+} );
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

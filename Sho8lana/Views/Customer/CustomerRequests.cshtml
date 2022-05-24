@@ -38,6 +38,7 @@
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" onclick="request('@request.RequestId')">
                           إلغاء الطلب
                         </button>
+                        <a class="btn btn-outline-info" asp-controller="service" asp-action="details" asp-route-id="@request.ServiceId" >تفاصيل الخدمة</a>
                         <p class="text-muted text-start"> تاريخ الطلب  @request.RequestDate  </p>
                         </div>
                     </div>
@@ -122,6 +123,7 @@
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="requestI('@request.RequestId')">
                           إلغاء الطلب
                         </button>
+                        <a class="btn btn-outline-info" asp-controller="service" asp-action="details" asp-route-id="@request.ServiceId" >تفاصيل الخدمة</a>
                         <p class="text-muted text-start"> تاريخ الطلب  @request.RequestDate  </p>
 
                         </div>
