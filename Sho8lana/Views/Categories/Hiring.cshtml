@@ -23,14 +23,14 @@
                     <span class="fs-4">خدماتنا</span>
                 </a>
                 <form id="SearchForm" method="get">
-                    <input type="hidden" value="Hiring" name="type" />
+                    <input type="hidden" value="false" name="type" />
                     <div class="d-flex flex-column">
                         <i class="fa-solid fa-xmark text-start DeleteButton my-2"></i>
-                        <input type="Text" value="@text" name="text" class="form-control mt-1 mb-4" placeholder="أكتب ماتريد البحث عنه">
+                        <input type="Text" value="@text" name="Searchtext" class="form-control mt-1 mb-4" placeholder="أكتب ماتريد البحث عنه">
                     </div>
                     <div class="d-flex flex-column">
                         <i class="fa-solid fa-xmark text-start DeleteButton mb-2"></i>
-                        <select class="form-select text-center selectCategories" name="CatId" size="8" aria-label="size 3 select example">
+                        <select class="form-select text-center selectCategories" name="CategoryId" size="8" aria-label="size 3 select example">
                             @foreach (var item in Model.categories)
                             {
                                 <option value="@item.CategoryId" class="CategoryOptions">@item.Name</option>
@@ -40,8 +40,8 @@
                     <div class="mt-3 text-center" >الترتيب حسب السعر</div>
                     <div class="d-flex flex-column">
                         <i class="fa-solid fa-xmark text-start DeleteButton mt-2"></i>
-                        <select class="my-3 form-select PriceSelect w-75 text-center m-auto"  name="Price" >
-                            <option value="negogation">غير محدد</option>
+                        <select class="my-3 form-select PriceSelect w-75 text-center m-auto"  name="ServicePrice" >
+                            <option value="-1">غير محدد</option>
                             <option value="5">5$</option>
                             <option value="10">10$</option>
                             <option value="15">15$</option>
@@ -51,7 +51,7 @@
                     </div>
                     <div class=row>
                         <div class="form-check col-12 my-3">
-                            <input class="form-check-input ms-0 float-none trustseller" type="checkbox" name="Truste" value="true" id="flexCheckDefault">
+                            <input class="form-check-input ms-0 float-none trustseller" type="checkbox" name="Trusted" value="true" id="flexCheckDefault">
                             <label class="form-check-label fw-bold" for="flexCheckDefault">بائع موثوق</label>
                         </div>
                     </div>

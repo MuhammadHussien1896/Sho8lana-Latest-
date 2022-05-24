@@ -162,8 +162,7 @@ namespace Sho8lana.Controllers
 
                 
                 var contracts = await context.Contracts
-                                                .GetAllEagerLodingAsync(c => c.CustomerId == customerId || c.SericeOwnerId == customerId
-                                                ,new string[] {"Customer","Service.Customer", "Complain" });
+                                                .GetAllEagerLodingAsync(c => c.CustomerId == customerId || c.SericeOwnerId == customerId);
                 ContractViewModel model = new ContractViewModel()
                 {
                     PendingContracts            = contracts.Where(c => c.IsDone == false && c.StartDate == default && !(c.BuyerAccepted && c.SellerAccepted)).ToList(),

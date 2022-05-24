@@ -63,10 +63,10 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
            options.ClientSecret = "482adbb890fb5e901a5603f6b22a36d5";
 
        });
-services.Configure<TwilioVerifySettings>(builder.Configuration.GetSection("Twilio"));
-var accountSid = builder.Configuration["Twilio:AccountSID"];
-var authToken = builder.Configuration["Twilio:AuthToken"];
-TwilioClient.Init(accountSid, authToken);
+//services.Configure<TwilioVerifySettings>(builder.Configuration.GetSection("Twilio"));
+//var accountSid = builder.Configuration["Twilio:AccountSID"];
+//var authToken = builder.Configuration["Twilio:AuthToken"];
+//TwilioClient.Init(accountSid, authToken);
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 var app = builder.Build();
 

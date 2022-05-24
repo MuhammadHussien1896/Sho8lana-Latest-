@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Sho8lana.DTOs;
 using Sho8lana.Models;
 using Sho8lana.Models.ViewModels;
 using Sho8lana.Paging;
@@ -147,7 +148,56 @@ namespace Sho8lana.Controllers
             return Json(medias);
         }
         [HttpGet]
-        public async Task<IActionResult> Search(string text, string type, string Truste, int? CatId, int? Rate, int? Price, int pg = 1)
+        public async Task<IActionResult> Search(string Searchtext,bool? Type,bool? Trusted,int? CategoryId,int? ServiceRate,int? ServicePrice,int pg=1)
+        {
+            ServiceSearchProperties serviceSearchProperties = new()
+            {
+                Searchtext = Searchtext,
+                Type = Type,
+                Trusted = Trusted,
+                CategoryId = CategoryId,
+                ServiceRate = ServiceRate,
+                ServicePrice = ServicePrice==-1?null:ServicePrice,
+
+            };
+
+            const int PageSize = 16;
+
+            var ServicesCount = (await context.Services.Search(serviceSearchProperties)).Count();
+
+            var pager = new pagination(ServicesCount, pg, PageSize);
+
+            int rescPage = (pg - 1) * PageSize;
+
+            serviceSearchProperties.Take = PageSize;
+
+            serviceSearchProperties.Skip = rescPage;
+
+            var Service = await context.Services.Search(serviceSearchProperties);
+
+            var model = Service.Select(s => new ServiceDisplay
+            {
+                Title = s.Title,
+                ServiceId = s.ServiceId,
+                ServiceHeader = s.Medias.FirstOrDefault()==null?null: s.Medias.FirstOrDefault().MediaPath,
+                Rate = s.Rate,
+                Price = s.Price,
+                IsFreelance = s.IsFreelancer,
+                IsCash = s.IsCash,
+                CustomerImage = s.Customer.ProfilePicture,
+                CreatedDate = s.PublishDate.ToShortDateString(),
+                customerId = s.CustomerId,
+                BuyersCount = s.Contracts.Where(s => s.IsDone == true).Count()
+            }).ToList();
+
+            var Viewmodel = new { model = model, pager = pager };
+
+            return Json(Viewmodel);
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OldSearch(string text, string type, string Truste, int? CatId, int? Rate, int? Price, int pg = 1)
         {
             IEnumerable<Service> services = new List<Service>();
             if (text == null)
@@ -163,7 +213,7 @@ namespace Sho8lana.Controllers
                 services = await context.Services
                  .GetAllEagerLodingAsync(service => service.IsAccepted
                   && service.IsFreelancer == (type == "services" ? true : false)
-                  && service.Rate <= (Rate ?? 10) 
+                  && service.Rate <= (Rate ?? 10)
                   && service.Price <= (Price ?? int.MaxValue)
                   && (service.Description.Contains(text) || service.Title.Contains(text)));
 
