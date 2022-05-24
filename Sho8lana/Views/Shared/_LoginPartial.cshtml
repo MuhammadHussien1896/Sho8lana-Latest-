@@ -6,39 +6,42 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="p-0 mx-1">
-        <a class="nav-link scrollto" asp-controller="service" asp-action="create" >
-            <i class="bi bi-plus-square fs-3" style="color:white" title="Add Service"></i>
-       </a>
-    </li>
-    <li class="p-0 mx-1">
-
-        <a class="nav-link scrollto fa-layers position-relative"  asp-controller="customer" asp-action="CustomerNotifcations">
-            <i class="bi bi-bell-fill fa-2x fas fs-3 p-0" style="color:white" title="Notifications"></i>
-            <span class="counter-lg counter rounded-circle d-none position-absolute top-0 end-0 bg-danger text-center" style="width:.8rem"></span>
-        </a> 
-    </li>
-    <li class="p-0 mx-1">
-        <a class="nav-link scrollto" asp-controller="customer" asp-action="customerrequests" >
-            <i class="bi bi-arrow-down-up fs-3" style="color: white;" title="Requests"></i>
-        </a>
-    </li>
-    <li class="p-0 mx-1">
-        <a class="nav-link scrollto" asp-controller="service" asp-action="displayMessages" >
-            <i class="bi bi-envelope-fill fs-3" style="color: white;" title="Messages"></i>
-            <span class="counter-lg counter2 rounded-circle d-none position-absolute top-0 end-0 bg-danger text-center" style="width:.8rem"></span>
-        </a>
-    </li>
-    <li class="p-0 mx-1">
-        <a class="nav-link scrollto" asp-controller="customer" asp-action="CustomerContracts">
-            <i class="bi bi-briefcase fs-3" style="color: white;" title="Contracts"></i>
-        </a>
-    </li>
-    <li class="p-0 mx-1">
-           <a class="nav-link scrollto" asp-controller="customer" asp-action="getcustomerbalance">
-               <i class="bi bi-currency-dollar fs-3" style="color: white;" title="Balance"></i>
+    @if(User.IsInRole("User"))
+    {
+        <li class="p-0 mx-1">
+            <a class="nav-link scrollto" asp-controller="service" asp-action="create" >
+                <i class="bi bi-plus-square fs-3" style="color:white" title="اضافة خدمة"></i>
            </a>
-    </li>
+        </li>
+        <li class="p-0 mx-1">
+
+            <a class="nav-link scrollto fa-layers position-relative"  asp-controller="customer" asp-action="CustomerNotifcations">
+                <i class="bi bi-bell-fill fa-2x fas fs-3 p-0" style="color:white" title="الاشعارات"></i>
+                <span class="counter-lg counter rounded-circle d-none position-absolute top-0 end-0 bg-danger text-center" style="width:.8rem"></span>
+            </a> 
+        </li>
+        <li class="p-0 mx-1">
+            <a class="nav-link scrollto" asp-controller="customer" asp-action="customerrequests" >
+                <i class="bi bi-arrow-down-up fs-3" style="color: white;" title="الطلبات"></i>
+            </a>
+        </li>
+        <li class="p-0 mx-1">
+            <a class="nav-link scrollto" asp-controller="service" asp-action="displayMessages" >
+                <i class="bi bi-envelope-fill fs-3" style="color: white;" title="الرسائل"></i>
+                <span class="counter-lg counter2 rounded-circle d-none position-absolute top-0 end-0 bg-danger text-center" style="width:.8rem"></span>
+            </a>
+        </li>
+        <li class="p-0 mx-1">
+            <a class="nav-link scrollto" asp-controller="customer" asp-action="CustomerContracts">
+                <i class="bi bi-briefcase fs-3" style="color: white;" title="العقود"></i>
+            </a>
+        </li>
+        <li class="p-0 mx-1">
+               <a class="nav-link scrollto" asp-controller="customer" asp-action="getcustomerbalance">
+                   <i class="bi bi-currency-dollar fs-3" style="color: white;" title="الرصيد"></i>
+               </a>
+        </li>
+    }
 @*           @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
              {
                 <li class="p-0 mx-2">
