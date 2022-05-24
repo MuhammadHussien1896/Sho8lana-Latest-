@@ -433,7 +433,7 @@ namespace Sho8lana.Controllers
                     var userid = complaint.Contract.BuyerId;
                     var user = _context.Customers.GetById(userid);
                     //// add Notifi
-                    jobs.AddNotification(userid, message ?? "تم مراجعة الشكوى وسوف نقوم بالاجراء اللازم تجاه تلك العملية ");
+                    await jobs.AddNotification(userid,"الرد على الشكوى : "+ message ?? "تم مراجعة الشكوى وسوف نقوم بالاجراء اللازم تجاه تلك العملية ");
                     //Notification notification = new Notification()
                     //{
                     //    CustomerId = user.id,

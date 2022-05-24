@@ -33,8 +33,9 @@ namespace Sho8lana.Hangfire
                 else
                 {
                     await AddBalance(contract.BuyerId, contract.ContractPrice);
-                    await AddNotification(contract.SellerId, $"تم ارجاع {contract.ContractPrice}$" +
+                    await AddNotification(contract.BuyerId, $"تم ارجاع {contract.ContractPrice}$" +
                         $" الى حسابك بسبب عدم تسليم البائع الخدمة  '{contract.Service.Title}' في الوقت المحدد");
+                    await AddNotification(contract.SellerId, $"تم الغاء العقد لخدمة '{contract.Service.Title}' لعدم تسليمها في الوقت المحدد");
                     contract.IsCanceled = true;
                 }
                 //context.Contracts.Update(contract);
