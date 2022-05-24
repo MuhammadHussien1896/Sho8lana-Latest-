@@ -300,7 +300,7 @@ namespace Sho8lana.Controllers
             }
             var allMessages = _context.ServiceMessages
                                 .GetAllEagerLodingAsync(m => m.CustomerId == id || m.ReceiverId == id
-                                , new string[] { "Customer", "Service.Customer" }).Result
+                                ).Result
                                 .OrderByDescending(m => m.MessageDate)
                                 .GroupBy(m => m.ServiceId);
             var latestMessages = new List<ServiceMessage>();
